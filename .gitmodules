@@ -1,12 +1,12 @@
 [submodule "libjson"]
 	path = libjson
 	url = ../libjson.git
-[submodule "wingetopt"]
-	path = wingetopt
-	url = ../wingetopt.git
 [submodule "opensea-common"]
 	path = opensea-common
 	url = ../opensea-common.git
 [submodule "opensea-parser"]
 	path = opensea-parser
 	url = ../opensea-parser.git
+[submodule "win_getopt"]
+	path = win_getopt
+	url = https://github.com/Seagate/win_getopt.git
