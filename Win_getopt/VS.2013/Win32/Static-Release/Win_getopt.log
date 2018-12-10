@@ -1,0 +1,13 @@
+﻿Build started 10/12/2018 8:10:05 AM.
+     1>Project "C:\GITSandbox\openSeaChest_LogParser\ExternalLibs\Win_getopt\VS.2013\Win_getopt.vcxproj" on node 4 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I..\ /Zi /nologo /W3 /WX- /sdl /O2 /Oi /Oy- /GL /D _MBCS /Gm- /EHsc /MT /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Win32\Static-Release\\" /Fd"Win32\Static-Release\vc120.pdb" /Gd /TC /analyze- /errorReport:prompt ..\getopt.c
+         getopt.c
+       Lib:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\Lib.exe /OUT:"Win32\Static-Release\getopt.lib" /NOLOGO /LTCG "Win32\Static-Release\getopt.obj"
+         Win_getopt.vcxproj -> C:\GITSandbox\openSeaChest_LogParser\ExternalLibs\Win_getopt\VS.2013\Win32\Static-Release\getopt.lib
+     1>Done Building Project "C:\GITSandbox\openSeaChest_LogParser\ExternalLibs\Win_getopt\VS.2013\Win_getopt.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:01.38

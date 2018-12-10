@@ -1,0 +1,13 @@
+﻿Build started 10/9/2018 2:43:04 PM.
+     1>Project "C:\GITSandbox\openSeaChest_LogParser\ExternalLibs\Win_getopt\VS.2013\Win_getopt.vcxproj" on node 4 (Rebuild target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I..\ /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Win32\Debug\\" /Fd"Win32\Debug\vc120.pdb" /Gd /TC /analyze- /errorReport:prompt ..\getopt.c
+         getopt.c
+       Lib:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\Lib.exe /OUT:"Win32\Debug\getopt.lib" /NOLOGO Win32\Debug\getopt.obj
+         Win_getopt.vcxproj -> C:\GITSandbox\openSeaChest_LogParser\ExternalLibs\Win_getopt\VS.2013\Win32\Debug\getopt.lib
+     1>Done Building Project "C:\GITSandbox\openSeaChest_LogParser\ExternalLibs\Win_getopt\VS.2013\Win_getopt.vcxproj" (Rebuild target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:00.95
