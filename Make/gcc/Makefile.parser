@@ -17,7 +17,7 @@ ARCHIVE= ar
 ARCH=x86_$(shell getconf LONG_BIT)
 
 LFLAGS = \
-	../../ExternalLibs/libjson/libjson.a \
+	../../libjson/libjson.a \
 	../../opensea-common/Make/$(TOOL_CHAIN)/$(LIB_FILE_OUTPUT_DIR)/libopensea-common.a \
 	../../opensea-parser/Make/$(TOOL_CHAIN)/$(LIB_FILE_OUTPUT_DIR)/libopensea-parser.a
 
@@ -26,7 +26,7 @@ INC_DIR= \
 	-I../../opensea-common/include \
 	-I../../opensea-parser/include \
 	-I../../opensea-parser/include/Seagate\
-	-I../../ExternalLibs/libjson 
+	-I../../libjson 
 	
 
 MACHINE := $(shell uname -m)
@@ -94,7 +94,7 @@ opensea-parser:
 	$(MAKE) -C ../../opensea-parser/Make/$(TOOL_CHAIN)
 
 libjson:
-	$(MAKE) -C ../../ExternalLibs/libjson/ CXXFLAGS=''
+	$(MAKE) -C ../../libjson/ CXXFLAGS=''
 
 $(OUTFILE): libjson seaclibs opensea-parser $(OBJS)
 	$(CXX) $(INC_DIR) $(CXXFLAGS) $(PROJECT_DEFINES) $(OBJS) -o $@ $(LFLAGS)
@@ -120,5 +120,5 @@ clean:
 clean_all: clean
 	$(MAKE) -C ../../opensea-common/Make/$(TOOL_CHAIN) clean
 	$(MAKE) -C ../../opensea-parser/Make/$(TOOL_CHAIN) clean
-	$(MAKE) -C ../../ExternalLibs/libjson/ clean CXXFLAGS=''
+	$(MAKE) -C ../../libjson/ clean CXXFLAGS=''
 
