@@ -1,0 +1,600 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|ARM">
+      <Configuration>Debug</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|ARM">
+      <Configuration>Release</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static-Debug|ARM">
+      <Configuration>Static-Debug</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static-Debug|Win32">
+      <Configuration>Static-Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static-Debug|x64">
+      <Configuration>Static-Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static-Release|ARM">
+      <Configuration>Static-Release</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static-Release|Win32">
+      <Configuration>Static-Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static-Release|x64">
+      <Configuration>Static-Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{BF10D650-ECA0-4AC3-8A7F-13B8F61C0D9D}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>openSeaChestLogParser</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization />
+    <UseOfMfc>false</UseOfMfc>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization />
+    <UseOfMfc>false</UseOfMfc>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>
+    </WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+    <UseOfMfc>false</UseOfMfc>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization />
+    <CharacterSet>MultiByte</CharacterSet>
+    <UseOfMfc>false</UseOfMfc>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static-Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>
+    </WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+    <UseOfMfc>false</UseOfMfc>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static-Release|ARM'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization />
+    <CharacterSet>MultiByte</CharacterSet>
+    <UseOfMfc>false</UseOfMfc>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization />
+    <UseOfMfc>false</UseOfMfc>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>
+    </WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+    <UseOfMfc>false</UseOfMfc>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static-Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>
+    </WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+    <UseOfMfc>false</UseOfMfc>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Static-Debug|Win32'">
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization />
+    <UseOfMfc>false</UseOfMfc>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static-Debug|ARM'" Label="Configuration">
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization />
+    <UseOfMfc>false</UseOfMfc>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Static-Debug|x64'">
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization />
+    <UseOfMfc>false</UseOfMfc>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Static-Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Static-Release|ARM'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Static-Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>
+    </LinkIncremental>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+    <TargetName>openSeaChest_LogParser_$(Platform)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+    <LinkIncremental />
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+    <TargetName>openSeaChest_LogParser_$(Platform)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>
+    </LinkIncremental>
+    <TargetName>openSeaChest_LogParser_$(Platform)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>
+    </LinkIncremental>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+    <TargetName>openSeaChest_LogParser_$(Platform)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
+    <LinkIncremental />
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+    <TargetName>openSeaChest_LogParser_$(Platform)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static-Release|Win32'">
+    <LinkIncremental>
+    </LinkIncremental>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+    <TargetName>openSeaChest_LogParser_$(Platform)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static-Release|ARM'">
+    <LinkIncremental />
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+    <TargetName>openSeaChest_LogParser_$(Platform)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>
+    </LinkIncremental>
+    <TargetName>openSeaChest_LogParser_$(Platform)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static-Release|x64'">
+    <LinkIncremental>
+    </LinkIncremental>
+    <TargetName>openSeaChest_LogParser_$(Platform)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static-Debug|Win32'">
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+    <TargetName>openSeaChest_LogParser_$(Platform)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static-Debug|ARM'">
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+    <TargetName>openSeaChest_LogParser_$(Platform)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static-Debug|x64'">
+    <TargetName>openSeaChest_LogParser_$(Platform)</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>
+      </Optimization>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;WIN_API_TARGET_VERSION=81000000L;INCLUDE_FARM_LOG;INCLUDE_DEVICE_STATISTICS_LOG;INCLUDE_EXT_COMPREHENSIVE_LOG;INCLUDE_COMMON_EXT_DST_LOG;INCLUDE_IDENTIFY_LOG;INCLUDE_IDENTIFY_DEVICE_DATA_LOG;INCLUDE_SCT_TEMP_LOG;INCLUDE_POWER_CONDITION_LOG;INCLUDE_NCQ_CMD_ERROR_LOG;INCLUDE_SCSI_LOG_PAGES</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>..\..\..\..\Win_getopt;..\..\..\..\include;..\..\..\..\opensea-common\include;..\..\..\..\libjson;..\..\..\..\opensea-parser\include;..\..\..\..\opensea-parser\include\Seagate;..\..\..\..\utils\include</AdditionalIncludeDirectories>
+      <DebugInformationFormat>OldStyle</DebugInformationFormat>
+      <IntrinsicFunctions />
+      <OmitFramePointers />
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <MinimalRebuild />
+      <BasicRuntimeChecks />
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>..\..\..\..\Win_getopt\VS.2017\$(Platform)\$(Configuration);..\..\..\..\opensea-common\Make\VS.2017\opensea-common\$(Platform)\$(Configuration);..\..\..\..\opensea-parser\Make\VS.2017\opensea-parser\$(Platform)\$(Configuration)\LIB\;..\..\..\..\libjson\VS.2017\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opensea-common.lib;opensea-parser.lib;getopt.lib;statLibJson.lib;</AdditionalDependencies>
+      <FullProgramDatabaseFile>true</FullProgramDatabaseFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>
+      </Optimization>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;WIN_API_TARGET_VERSION=81000000L;INCLUDE_FARM_LOG;INCLUDE_DEVICE_STATISTICS_LOG;INCLUDE_EXT_COMPREHENSIVE_LOG;INCLUDE_COMMON_EXT_DST_LOG;INCLUDE_IDENTIFY_LOG;INCLUDE_IDENTIFY_DEVICE_DATA_LOG;INCLUDE_SCT_TEMP_LOG;INCLUDE_POWER_CONDITION_LOG;INCLUDE_NCQ_CMD_ERROR_LOG;INCLUDE_SCSI_LOG_PAGES</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>..\..\..\..\Win_getopt;..\..\..\..\include;..\..\..\..\opensea-common\include;..\..\..\..\libjson;..\..\..\..\opensea-parser\include;..\..\..\..\opensea-parser\include\Seagate;..\..\..\..\utils\include</AdditionalIncludeDirectories>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <IntrinsicFunctions>
+      </IntrinsicFunctions>
+      <OmitFramePointers>
+      </OmitFramePointers>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <MinimalRebuild>
+      </MinimalRebuild>
+      <BasicRuntimeChecks>
+      </BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>..\..\..\..\Win_getopt\VS.2017\$(Platform)\$(Configuration);..\..\..\..\opensea-common\Make\VS.2017\opensea-common\$(Platform)\$(Configuration);..\..\..\..\opensea-parser\Make\VS.2017\opensea-parser\$(Platform)\$(Configuration)\LIB\;..\..\..\..\libjson\VS.2017\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opensea-common.lib;opensea-parser.lib;getopt.lib;statLibJson.lib;</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>
+      </Optimization>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;WIN_API_TARGET_VERSION=81000000L;INCLUDE_FARM_LOG;INCLUDE_DEVICE_STATISTICS_LOG;INCLUDE_EXT_COMPREHENSIVE_LOG;INCLUDE_COMMON_EXT_DST_LOG;INCLUDE_IDENTIFY_LOG;INCLUDE_IDENTIFY_DEVICE_DATA_LOG;INCLUDE_SCT_TEMP_LOG;INCLUDE_POWER_CONDITION_LOG;INCLUDE_NCQ_CMD_ERROR_LOG;INCLUDE_SCSI_LOG_PAGES</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>..\..\..\..\Win_getopt;..\..\..\..\include;..\..\..\..\opensea-common\include;..\..\..\..\libjson;..\..\..\..\opensea-parser\include;..\..\..\..\opensea-parser\include\Seagate;..\..\..\..\utils\include</AdditionalIncludeDirectories>
+      <DebugInformationFormat>OldStyle</DebugInformationFormat>
+      <IntrinsicFunctions />
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <MinimalRebuild />
+      <BasicRuntimeChecks />
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>..\..\..\..\Win_getopt\VS.2017\$(Platform)\$(Configuration);..\..\..\..\opensea-common\Make\VS.2017\opensea-common\$(Platform)\$(Configuration);..\..\..\..\opensea-parser\Make\VS.2017\opensea-parser\$(Platform)\$(Configuration)\LIB\;..\..\..\..\libjson\VS.2017\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opensea-common.lib;opensea-parser.lib;getopt.lib;statLibJson.lib;</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>
+      </Optimization>
+      <FunctionLevelLinking>
+      </FunctionLevelLinking>
+      <IntrinsicFunctions>
+      </IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;WIN_API_TARGET_VERSION=81000000L;INCLUDE_FARM_LOG;INCLUDE_DEVICE_STATISTICS_LOG;INCLUDE_EXT_COMPREHENSIVE_LOG;INCLUDE_COMMON_EXT_DST_LOG;INCLUDE_IDENTIFY_LOG;INCLUDE_IDENTIFY_DEVICE_DATA_LOG;INCLUDE_SCT_TEMP_LOG;INCLUDE_POWER_CONDITION_LOG;INCLUDE_NCQ_CMD_ERROR_LOG;INCLUDE_SCSI_LOG_PAGES</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>..\..\..\..\Win_getopt;..\..\..\..\include;..\..\..\..\opensea-common\include;..\..\..\..\libjson;..\..\..\..\opensea-parser\include;..\..\..\..\opensea-parser\include\Seagate;..\..\..\..\utils\include</AdditionalIncludeDirectories>
+      <DebugInformationFormat />
+      <OmitFramePointers />
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <MinimalRebuild />
+      <BasicRuntimeChecks />
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>..\..\..\..\Win_getopt\VS.2017\$(Platform)\$(Configuration);..\..\..\..\opensea-common\Make\VS.2017\opensea-common\$(Platform)\$(Configuration);..\..\..\..\opensea-parser\Make\VS.2017\opensea-parser\$(Platform)\$(Configuration)\LIB\;..\..\..\..\libjson\VS.2017\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opensea-common.lib;opensea-parser.lib;getopt.lib;statLibJson.lib;</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>
+      </Optimization>
+      <FunctionLevelLinking>
+      </FunctionLevelLinking>
+      <IntrinsicFunctions>
+      </IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;WIN_API_TARGET_VERSION=81000000L;INCLUDE_FARM_LOG;INCLUDE_DEVICE_STATISTICS_LOG;INCLUDE_EXT_COMPREHENSIVE_LOG;INCLUDE_COMMON_EXT_DST_LOG;INCLUDE_IDENTIFY_LOG;INCLUDE_IDENTIFY_DEVICE_DATA_LOG;INCLUDE_SCT_TEMP_LOG;INCLUDE_POWER_CONDITION_LOG;INCLUDE_NCQ_CMD_ERROR_LOG;INCLUDE_SCSI_LOG_PAGES</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>..\..\..\..\Win_getopt;..\..\..\..\include;..\..\..\..\opensea-common\include;..\..\..\..\libjson;..\..\..\..\opensea-parser\include;..\..\..\..\opensea-parser\include\Seagate;..\..\..\..\utils\include</AdditionalIncludeDirectories>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <OmitFramePointers>
+      </OmitFramePointers>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <MinimalRebuild>
+      </MinimalRebuild>
+      <BasicRuntimeChecks>
+      </BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>..\..\..\..\Win_getopt\VS.2017\$(Platform)\$(Configuration);..\..\..\..\opensea-common\Make\VS.2017\opensea-common\$(Platform)\$(Configuration);..\..\..\..\opensea-parser\Make\VS.2017\opensea-parser\$(Platform)\$(Configuration)\LIB\;..\..\..\..\libjson\VS.2017\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opensea-common.lib;opensea-parser.lib;getopt.lib;statLibJson.lib;</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static-Release|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>
+      </Optimization>
+      <FunctionLevelLinking>
+      </FunctionLevelLinking>
+      <IntrinsicFunctions>
+      </IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;WIN_API_TARGET_VERSION=81000000L;INCLUDE_FARM_LOG;INCLUDE_DEVICE_STATISTICS_LOG;INCLUDE_EXT_COMPREHENSIVE_LOG;INCLUDE_COMMON_EXT_DST_LOG;INCLUDE_IDENTIFY_LOG;INCLUDE_IDENTIFY_DEVICE_DATA_LOG;INCLUDE_SCT_TEMP_LOG;INCLUDE_POWER_CONDITION_LOG;INCLUDE_NCQ_CMD_ERROR_LOG;INCLUDE_SCSI_LOG_PAGES</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>..\..\..\..\Win_getopt;..\..\..\..\include;..\..\..\..\opensea-common\include;..\..\..\..\libjson;..\..\..\..\opensea-parser\include;..\..\..\..\opensea-parser\include\Seagate;..\..\..\..\utils\include</AdditionalIncludeDirectories>
+      <DebugInformationFormat />
+      <OmitFramePointers />
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <MinimalRebuild />
+      <BasicRuntimeChecks />
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>..\..\..\..\Win_getopt\VS.2017\$(Platform)\$(Configuration);..\..\..\..\opensea-common\Make\VS.2017\opensea-common\$(Platform)\$(Configuration);..\..\..\..\opensea-parser\Make\VS.2017\opensea-parser\$(Platform)\$(Configuration)\LIB\;..\..\..\..\libjson\VS.2017\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opensea-common.lib;opensea-parser.lib;getopt.lib;statLibJson.lib;</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static-Release|ARM'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>
+      </Optimization>
+      <FunctionLevelLinking>
+      </FunctionLevelLinking>
+      <IntrinsicFunctions>
+      </IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;WIN_API_TARGET_VERSION=81000000L;INCLUDE_FARM_LOG;INCLUDE_DEVICE_STATISTICS_LOG;INCLUDE_EXT_COMPREHENSIVE_LOG;INCLUDE_COMMON_EXT_DST_LOG;INCLUDE_IDENTIFY_LOG;INCLUDE_IDENTIFY_DEVICE_DATA_LOG;INCLUDE_SCT_TEMP_LOG;INCLUDE_POWER_CONDITION_LOG;INCLUDE_NCQ_CMD_ERROR_LOG;INCLUDE_SCSI_LOG_PAGES</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>..\..\..\..\Win_getopt;..\..\..\..\include;..\..\..\..\opensea-common\include;..\..\..\..\libjson;..\..\..\..\opensea-parser\include;..\..\..\..\opensea-parser\include\Seagate;..\..\..\..\utils\include</AdditionalIncludeDirectories>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <OmitFramePointers>
+      </OmitFramePointers>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <MinimalRebuild>
+      </MinimalRebuild>
+      <BasicRuntimeChecks>
+      </BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>..\..\..\..\Win_getopt\VS.2017\$(Platform)\$(Configuration);..\..\..\..\opensea-common\Make\VS.2017\opensea-common\$(Platform)\$(Configuration);..\..\..\..\opensea-parser\Make\VS.2017\opensea-parser\$(Platform)\$(Configuration)\LIB\;..\..\..\..\libjson\VS.2017\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opensea-common.lib;opensea-parser.lib;getopt.lib;statLibJson.lib;</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>
+      </Optimization>
+      <FunctionLevelLinking>
+      </FunctionLevelLinking>
+      <IntrinsicFunctions>
+      </IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;WIN_API_TARGET_VERSION=81000000L;INCLUDE_FARM_LOG;INCLUDE_DEVICE_STATISTICS_LOG;INCLUDE_EXT_COMPREHENSIVE_LOG;INCLUDE_COMMON_EXT_DST_LOG;INCLUDE_IDENTIFY_LOG;INCLUDE_IDENTIFY_DEVICE_DATA_LOG;INCLUDE_SCT_TEMP_LOG;INCLUDE_POWER_CONDITION_LOG;INCLUDE_NCQ_CMD_ERROR_LOG;INCLUDE_SCSI_LOG_PAGES</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>..\..\..\..\Win_getopt;..\..\..\..\include;..\..\..\..\opensea-common\include;..\..\..\..\libjson;..\..\..\..\opensea-parser\include;..\..\..\..\opensea-parser\include\Seagate;..\..\..\..\utils\include</AdditionalIncludeDirectories>
+      <DebugInformationFormat />
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <MinimalRebuild />
+      <BasicRuntimeChecks />
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>..\..\..\..\Win_getopt\VS.2017\$(Platform)\$(Configuration);..\..\..\..\opensea-common\Make\VS.2017\opensea-common\$(Platform)\$(Configuration);..\..\..\..\opensea-parser\Make\VS.2017\opensea-parser\$(Platform)\$(Configuration)\LIB\;..\..\..\..\libjson\VS.2017\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opensea-common.lib;opensea-parser.lib;getopt.lib;statLibJson.lib;</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static-Release|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>
+      </Optimization>
+      <FunctionLevelLinking>
+      </FunctionLevelLinking>
+      <IntrinsicFunctions>
+      </IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;WIN_API_TARGET_VERSION=81000000L;INCLUDE_FARM_LOG;INCLUDE_DEVICE_STATISTICS_LOG;INCLUDE_EXT_COMPREHENSIVE_LOG;INCLUDE_COMMON_EXT_DST_LOG;INCLUDE_IDENTIFY_LOG;INCLUDE_IDENTIFY_DEVICE_DATA_LOG;INCLUDE_SCT_TEMP_LOG;INCLUDE_POWER_CONDITION_LOG;INCLUDE_NCQ_CMD_ERROR_LOG;INCLUDE_SCSI_LOG_PAGES</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>..\..\..\..\Win_getopt;..\..\..\..\include;..\..\..\..\opensea-common\include;..\..\..\..\libjson;..\..\..\..\opensea-parser\include;..\..\..\..\opensea-parser\include\Seagate;..\..\..\..\utils\include</AdditionalIncludeDirectories>
+      <DebugInformationFormat>OldStyle</DebugInformationFormat>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <MinimalRebuild />
+      <BasicRuntimeChecks />
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>..\..\..\..\Win_getopt\VS.2017\$(Platform)\$(Configuration);..\..\..\..\opensea-common\Make\VS.2017\opensea-common\$(Platform)\$(Configuration);..\..\..\..\opensea-parser\Make\VS.2017\opensea-parser\$(Platform)\$(Configuration)\LIB\;..\..\..\..\libjson\VS.2017\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opensea-common.lib;opensea-parser.lib;getopt.lib;statLibJson.lib;</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static-Debug|Win32'">
+    <Link>
+      <AdditionalLibraryDirectories>..\..\..\..\Win_getopt\VS.2017\$(Platform)\$(Configuration);..\..\..\..\opensea-common\Make\VS.2017\opensea-common\$(Platform)\$(Configuration);..\..\..\..\opensea-parser\Make\VS.2017\opensea-parser\$(Platform)\$(Configuration)\LIB\;..\..\..\..\libjson\VS.2017\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opensea-common.lib;opensea-parser.lib;getopt.lib;statLibJson.lib;</AdditionalDependencies>
+    </Link>
+    <ClCompile>
+      <AdditionalIncludeDirectories>..\..\..\..\Win_getopt;..\..\..\..\include;..\..\..\..\opensea-common\include;..\..\..\..\libjson;..\..\..\..\opensea-parser\include;..\..\..\..\opensea-parser\include\Seagate;..\..\..\..\utils\include</AdditionalIncludeDirectories>
+    </ClCompile>
+    <ClCompile>
+      <DebugInformationFormat />
+      <Optimization />
+      <IntrinsicFunctions />
+      <OmitFramePointers />
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;WIN_API_TARGET_VERSION=81000000L;INCLUDE_FARM_LOG;INCLUDE_DEVICE_STATISTICS_LOG;INCLUDE_EXT_COMPREHENSIVE_LOG;INCLUDE_COMMON_EXT_DST_LOG;INCLUDE_IDENTIFY_LOG;INCLUDE_IDENTIFY_DEVICE_DATA_LOG;INCLUDE_SCT_TEMP_LOG;INCLUDE_POWER_CONDITION_LOG;INCLUDE_NCQ_CMD_ERROR_LOG;INCLUDE_SCSI_LOG_PAGES</PreprocessorDefinitions>
+      <MinimalRebuild />
+      <BasicRuntimeChecks />
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static-Debug|ARM'">
+    <Link>
+      <AdditionalLibraryDirectories>..\..\..\..\Win_getopt\VS.2017\$(Platform)\$(Configuration);..\..\..\..\opensea-common\Make\VS.2017\opensea-common\$(Platform)\$(Configuration);..\..\..\..\opensea-parser\Make\VS.2017\opensea-parser\$(Platform)\$(Configuration)\LIB\;..\..\..\..\libjson\VS.2017\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opensea-common.lib;opensea-parser.lib;getopt.lib;statLibJson.lib;</AdditionalDependencies>
+    </Link>
+    <ClCompile>
+      <AdditionalIncludeDirectories>..\..\..\..\Win_getopt;..\..\..\..\include;..\..\..\..\opensea-common\include;..\..\..\..\libjson;..\..\..\..\opensea-parser\include;..\..\..\..\opensea-parser\include\Seagate;..\..\..\..\utils\include</AdditionalIncludeDirectories>
+    </ClCompile>
+    <ClCompile>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <Optimization>
+      </Optimization>
+      <IntrinsicFunctions>
+      </IntrinsicFunctions>
+      <OmitFramePointers>
+      </OmitFramePointers>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;WIN_API_TARGET_VERSION=81000000L;INCLUDE_FARM_LOG;INCLUDE_DEVICE_STATISTICS_LOG;INCLUDE_EXT_COMPREHENSIVE_LOG;INCLUDE_COMMON_EXT_DST_LOG;INCLUDE_IDENTIFY_LOG;INCLUDE_IDENTIFY_DEVICE_DATA_LOG;INCLUDE_SCT_TEMP_LOG;INCLUDE_POWER_CONDITION_LOG;INCLUDE_NCQ_CMD_ERROR_LOG;INCLUDE_SCSI_LOG_PAGES</PreprocessorDefinitions>
+      <MinimalRebuild>
+      </MinimalRebuild>
+      <BasicRuntimeChecks>
+      </BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static-Debug|x64'">
+    <Link>
+      <AdditionalLibraryDirectories>..\..\..\..\Win_getopt\VS.2017\$(Platform)\$(Configuration);..\..\..\..\opensea-common\Make\VS.2017\opensea-common\$(Platform)\$(Configuration);..\..\..\..\opensea-parser\Make\VS.2017\opensea-parser\$(Platform)\$(Configuration)\LIB\;..\..\..\..\libjson\VS.2017\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opensea-common.lib;opensea-parser.lib;getopt.lib;statLibJson.lib;</AdditionalDependencies>
+    </Link>
+    <ClCompile>
+      <AdditionalIncludeDirectories>..\..\..\..\Win_getopt;..\..\..\..\include;..\..\..\..\opensea-common\include;..\..\..\..\libjson;..\..\..\..\opensea-parser\include;..\..\..\..\opensea-parser\include\Seagate;..\..\..\..\utils\include</AdditionalIncludeDirectories>
+    </ClCompile>
+    <ClCompile>
+      <DebugInformationFormat />
+      <Optimization />
+      <IntrinsicFunctions />
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;WIN_API_TARGET_VERSION=81000000L;INCLUDE_FARM_LOG;INCLUDE_DEVICE_STATISTICS_LOG;INCLUDE_EXT_COMPREHENSIVE_LOG;INCLUDE_COMMON_EXT_DST_LOG;INCLUDE_IDENTIFY_LOG;INCLUDE_IDENTIFY_DEVICE_DATA_LOG;INCLUDE_SCT_TEMP_LOG;INCLUDE_POWER_CONDITION_LOG;INCLUDE_NCQ_CMD_ERROR_LOG;INCLUDE_SCSI_LOG_PAGES</PreprocessorDefinitions>
+      <MinimalRebuild />
+      <BasicRuntimeChecks />
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\src\openSeaChest_LogParser.cpp" />
+    <ClCompile Include="..\..\..\..\utils\src\EULA.cpp" />
+    <ClCompile Include="..\..\..\..\utils\src\parser_print_util_options.cpp" />
+    <ClCompile Include="..\..\..\..\utils\src\seachest_parser_util_options.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\utils\include\EULA.h" />
+    <ClInclude Include="..\..\..\..\utils\include\parser_print_util_options.h" />
+    <ClInclude Include="..\..\..\..\utils\include\seachest_parser_util_options.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
