@@ -503,6 +503,15 @@ int32_t main(int argc, char *argv[])
 			if (OUTPUT_LOG_FILE_FLAG)
 			{
 				printf("\nCould not Open File \n");
+				json_push_back(masterJson, json_new_a("Parsing Error", "Could not Open File"));
+			}
+			break;
+		case INVALID_LENGTH:
+			exitCode = UTIL_EXIT_OPERATION_INVALID_LENGTH;
+			if (OUTPUT_LOG_FILE_FLAG)
+			{
+				printf("\nBinary File With Invalid Length \n");
+				json_push_back(masterJson, json_new_a("Parsing Error", "Invalid Length"));
 			}
 			break;
 		default:
