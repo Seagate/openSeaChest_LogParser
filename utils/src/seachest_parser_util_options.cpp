@@ -310,32 +310,6 @@ void print_OutputFile_Help(bool shortHelp)
 	}
 }
 
-//-----------------------------------------------------------------------------
-//
-//  print_Progress_Help()
-//
-//! \brief   Description:  This function prints out the short or long help for the progress option
-//
-//  Entry:
-//!   \param[in] shortHelp = bool used to select when to print short or long help
-//!   \param[in] testsTogetProgressFor = this is a string formatted as: "[test1 | test2 | ...]" that is a list of the operations that the utility supports getting progress for
-//
-//  Exit:
-//!   \return VOID
-//
-//-----------------------------------------------------------------------------
-void print_Progress_Help(bool shortHelp, char* testsTogetProgressFor)
-{
-    printf("\t--%s [%s]\n", PROGRESS_LONG_OPT_STRING, testsTogetProgressFor);
-    if (!shortHelp)
-    {
-        printf("\t\tGet the progress for a test that was started quietly without\n");
-        printf("\t\tthe polling option (default). You must specify a test you wish to\n");
-        printf("\t\tget progress from. Ex: \"--%s dst\" or \"--%s sanitize\"\n", PROGRESS_LONG_OPT_STRING, PROGRESS_LONG_OPT_STRING);
-        printf("\t\tThe progress counts up from 0%% to 100%%.\n\n");
-    }
-}
-//-----------------------------------------------------------------------------
 //
 //  print_SeaChest_Util_Exit_Codes()
 //
