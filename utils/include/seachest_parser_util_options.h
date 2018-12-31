@@ -58,7 +58,6 @@ typedef enum _eLogTypes
 	SEAGATE_LOG_TYPE_NCQ_CMD_ERROR_LOG,
 	SEAGATE_LOG_TYPE_SCSI_LOG_PAGES,
 
-	//TODO: add more log types to the enum
 }logTypes;
 
 typedef enum _ePrintTypes
@@ -101,7 +100,7 @@ typedef enum _ePrintTypes
 #define LOG_TYPE_STRING_POWER_CONDITION_LOG			"powerConditionLog"
 #define LOG_TYPE_STRING_NCQ_COMMAND_ERROR_LOG		"ncqErrorLog"
 #define LOG_TYPE_STRING_SCSI_LOG_PAGES				"scsiLogPages"
-	//TODO: add more strings to check for as different defines
+
 
 #define INPUT_LOG_TYPE_FLAG logType
 #define INPUT_LOG_TYPE_VAR logTypes INPUT_LOG_TYPE_FLAG = SEAGATE_LOG_TYPE_UNKNOWN;
@@ -226,7 +225,6 @@ void print_Echo_Command_Line_Help(bool shortHelp);
 void print_Help_Help(bool shortHelp);
 void print_OutputPath_Help(bool shortHelp);
 void print_OutputFile_Help(bool shortHelp);
-//void print_Progress_Help(bool shortHelp, char* testsTogetProgressFor);
 void print_SeaChest_Util_Exit_Codes(void);
 void print_Parser_Output_Log_Help(bool shortHelp);
 void print_Log_Type_Help(bool shortHelp);

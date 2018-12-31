@@ -473,6 +473,14 @@ int32_t main(int argc, char *argv[])
 				json_push_back(masterJson, json_new_a("Parsing Error", "Operation Failure"));
 			}
 			break;
+		case ABORTED:
+			exitCode = UTIL_EXIT_OPERATION_ABORTED;
+			if (OUTPUT_LOG_FILE_FLAG)
+			{
+				printf("\nAborted \n");
+				json_push_back(masterJson, json_new_a("Parsing Error", "Aborted"));
+			}
+			break;
 		case BAD_PARAMETER:
 			exitCode = UTIL_EXIT_OPERATION_BAD_PARAMETER;
 			if (OUTPUT_LOG_FILE_FLAG)
@@ -482,11 +490,28 @@ int32_t main(int argc, char *argv[])
 				json_push_back(masterJson, json_new_a("Parsing Error", "Bad Parameter"));
 			}
 			break;
+		case MEMORY_FAILURE:
+			exitCode = UTIL_EXIT_OPERATION_MEMORY_FAILURE;
+			if (OUTPUT_LOG_FILE_FLAG)
+			{
+				printf("\nMemory Failure \n");
+				json_push_back(masterJson, json_new_a("Parsing Error", "Memory Failure"));
+			}
+			break;
 		case FILE_OPEN_ERROR:
 			exitCode = UTIL_EXIT_CANNOT_OPEN_FILE;
 			if (OUTPUT_LOG_FILE_FLAG)
 			{
 				printf("\nCould not Open File \n");
+				json_push_back(masterJson, json_new_a("Parsing Error", "Could not Open File"));
+			}
+			break;
+		case INVALID_LENGTH:
+			exitCode = UTIL_EXIT_OPERATION_INVALID_LENGTH;
+			if (OUTPUT_LOG_FILE_FLAG)
+			{
+				printf("\nBinary File With Invalid Length \n");
+				json_push_back(masterJson, json_new_a("Parsing Error", "Invalid Length"));
 			}
 			break;
 		default:
