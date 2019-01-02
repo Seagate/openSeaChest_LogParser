@@ -49,7 +49,7 @@ Required Tools:
 From a terminal, change directory to "openSeaChest_LogParser/Make/gcc".
 
 Run the command "make release" to build the release version of the tool.
-After compilation is complete, the tool will be output into a subfolder named "openseachest_exes"
+After compilation is complete, the tool binary will be located in the same folder as Make/gcc
 
 #### Windows
 Required Tools:
