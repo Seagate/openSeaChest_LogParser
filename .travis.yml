@@ -15,9 +15,7 @@ matrix:
       before_script: 
         cd Make/gcc
       script: 
-        make release
-        make clean_all
-        make farm
+        make farm && make clean_all && make release
     - os: windows
       env:
         - MSBUILD_PATH="c:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\MSBuild\15.0\Bin"
