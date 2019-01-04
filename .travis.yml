@@ -20,7 +20,7 @@ matrix:
       env:
         - MSBUILD_PATH="c:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\MSBuild\15.0\Bin"
       before_script: 
-        cd "Make\VS.2017"
+        cd "Make\VS.2017\openSeaChest_LogParser\openSeaChest_LogParser"
       script: 
         - export PATH=$MSBUILD_PATH:$PATH 
         - MSBuild.exe //p:Configuration=Static-Release //p:Platform=x64
