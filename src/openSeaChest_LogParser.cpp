@@ -55,7 +55,7 @@ using namespace opensea_parser;
     std::string util_name = "openSeaChest_LogParser";
 #endif
 
-std::string buildVersion = "0.1.1";
+std::string buildVersion = "0.1.2";
 std::string buildDate = __DATE__;
 time_t     pCurrentTime;
 std::string timeString = "";
@@ -161,6 +161,10 @@ int32_t main(int argc, char *argv[])
             }
 
 #if defined BUILD_FARM_ONLY 
+			if (strcmp(optarg, LOG_TYPE_STRING_FARM) == 0)
+			{
+				INPUT_LOG_TYPE_FLAG = SEAGATE_LOG_TYPE_FARM;
+			}
 #else
             else if (strncmp(longopts[optionIndex].name, INPUT_LOG_TYPE_LONG_OPT_STRING, strlen(longopts[optionIndex].name)) == 0)
             {
@@ -304,7 +308,7 @@ int32_t main(int argc, char *argv[])
             SHOW_HELP_FLAG = true;
             seachest_utility_Info( util_name,  buildVersion,  OPENSEA_PARSER_VERSION);//TODO: We should change the version to a SeaParser version!
             utility_Usage(false);
-            exit(UTIL_EXIT_NO_ERROR);
+            return UTIL_EXIT_NO_ERROR;
         default:
             break;
         }
@@ -344,7 +348,7 @@ int32_t main(int argc, char *argv[])
     // SIMPLE IS BEAUTIFUL
     if (SHOW_BANNER_FLAG || LICENSE_FLAG || SHOW_HELP_FLAG)
     {
-        exit(UTIL_EXIT_NO_ERROR);
+        return UTIL_EXIT_NO_ERROR;
     }
 
     //print out errors for unknown arguments for remaining args that haven't been processed yet
@@ -528,9 +532,12 @@ int32_t main(int argc, char *argv[])
         }
         else //print it to stdout. 
         {
+			std::string myFile = INPUT_LOG_FILE_NAME;				// myFile for the auto creation of the output file
+			myFile = myFile.substr(0, myFile.rfind("."));           // remove the extention from the file
+			myFile.append(".jsn");									// Auto add the jsn for json output file
 			CMessage *printMessage;
-            printMessage = new CMessage(masterJson);
-            std::cout << printMessage->get_Msg_JSON_Data().c_str();
+			printMessage = new CMessage(masterJson, myFile, OUTPUT_LOG_PRINT_FLAG);
+            std::cout << printMessage->get_Msg_JSON_Data().c_str();	// Pring to the screen
             delete(printMessage);
         }
         json_delete(masterJson);
@@ -540,7 +547,7 @@ int32_t main(int argc, char *argv[])
         //Error, no log given to parse
         exitCode = UTIL_EXIT_ERROR_IN_COMMAND_LINE;
     }
-    exit(exitCode);
+    return exitCode;
 }
 
 //-----------------------------------------------------------------------------
