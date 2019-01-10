@@ -375,17 +375,15 @@ void print_Log_Type_Help(bool shortHelp)
 	std::cout << "\t\t{ ";
 
 #if defined BUILD_FARM_ONLY 
-	std::cout << LOG_TYPE_STRING_FARM;                                      // FarmLog
+	std::cout << LOG_TYPE_STRING_FARM;                                          // FarmLog
 #else
-	std::cout << LOG_TYPE_STRING_FARM;
+	std::cout << LOG_TYPE_STRING_FARM;                                          // FarmLog
+
 	#if defined (INCLUDE_IDENTIFY_LOG)
 		std::cout << ", " << LOG_TYPE_STRING_IDENTIFY_LOG;                       // identify
 	#endif
 	#if defined (INCLUDE_IDENTIFY_DEVICE_DATA_LOG)
-		std::cout << ", " << LOG_TYPE_STRING_IDENTIFY_DEVICE_DATA_LOG;          // "IDDataLog" 
-	#endif
-	#if defined (INCLUDE_DEVICE_STATISTICS_LOG)
-		std::cout << ", " << LOG_TYPE_STRING_DEVICE_STATISTICS_LOG;             //"deviceStatisticsLog"
+		std::cout << ", " << LOG_TYPE_STRING_IDENTIFY_DEVICE_DATA_LOG;          // IDDataLog
 	#endif
 	#if defined (INCLUDE_EXT_COMPREHENSIVE_LOG)
 		std::cout << ", " << LOG_TYPE_STRING_EXT_COMPREHENSIVE_LOG;             //ExtCompErrorLog
@@ -397,11 +395,14 @@ void print_Log_Type_Help(bool shortHelp)
 	#if defined (INCLUDE_SCT_TEMP_LOG)    
 		std::cout << LOG_TYPE_STRING_SCT_TEMP_LOG;                              //sctTempLog
 	#endif 
+	#if defined (INCLUDE_DEVICE_STATISTICS_LOG)
+			std::cout << ", " << LOG_TYPE_STRING_DEVICE_STATISTICS_LOG;         //"deviceStatisticsLog"
+	#endif
 	#if defined (INCLUDE_NCQ_CMD_ERROR_LOG)
 		std::cout << ", " << LOG_TYPE_STRING_NCQ_COMMAND_ERROR_LOG;             // ncqErrorLog
 	#endif
 	#if defined (INCLUDE_POWER_CONDITION_LOG)
-		std::cout << ", " << LOG_TYPE_STRING_POWER_CONDITION_LOG;                // PowerConditionLog
+		std::cout << ", " << LOG_TYPE_STRING_POWER_CONDITION_LOG;               // PowerConditionLog
 	#endif
 	#if defined (INCLUDE_COMMON_EXT_DST_LOG)
 		std::cout << ", " << LOG_TYPE_STRING_EXT_DST_LOG;                       // selfTestLog

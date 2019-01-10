@@ -55,7 +55,7 @@ using namespace opensea_parser;
     std::string util_name = "openSeaChest_LogParser";
 #endif
 
-std::string buildVersion = "0.1.2";
+std::string buildVersion = "0.1.3";
 std::string buildDate = __DATE__;
 time_t     pCurrentTime;
 std::string timeString = "";
@@ -91,6 +91,7 @@ int32_t main(int argc, char *argv[])
     eUtilExitCodes      exitCode = UTIL_EXIT_NO_ERROR;
     LICENSE_VAR
     ECHO_COMMAND_LINE_VAR
+	SHOW_STATUS_BIT_VAR
     SHOW_BANNER_VAR
     SHOW_HELP_VAR
     //Tool specific
@@ -112,7 +113,8 @@ int32_t main(int argc, char *argv[])
         VERSION_LONG_OPT,
         VERBOSE_LONG_OPT,
         LICENSE_LONG_OPT,
-        ECHO_COMMAND_LIN_LONG_OPT,
+        ECHO_COMMAND_LINE_LONG_OPT,
+		SHOW_STATUS_BITS_OPT,
         //tool specific options go here
         INPUT_LOG_LONG_OPT,
         INPUT_LOG_TYPE_LONG_OPT,
@@ -272,6 +274,12 @@ int32_t main(int argc, char *argv[])
                 printf("Ignoring option --%s\n",longopts[optionIndex].name);
             }
             break;
+		case 1:
+			if (strncmp(longopts[optionIndex].name, SHOW_STATUS_BITS_OPT_STRING, strlen(longopts[optionIndex].name)) == 0)
+			{
+				SHOW_STATUS_BIT_FLAG = true;
+			}
+			break;
         case ':'://missing required argument
             exitCode = UTIL_EXIT_ERROR_IN_COMMAND_LINE;
             switch (optopt)
@@ -367,10 +375,20 @@ int32_t main(int argc, char *argv[])
         {
         case SEAGATE_LOG_TYPE_FARM:   
             {
-                CFARMLog *CFarm;
-                CFarm = new CFARMLog( INPUT_LOG_FILE_NAME);
-                retStatus = CFarm->ParseFarmLog(masterJson);
-                delete(CFarm);
+				if (SHOW_STATUS_BIT_FLAG == false)
+				{
+					CFARMLog *CFarm;
+					CFarm = new CFARMLog(INPUT_LOG_FILE_NAME);
+					retStatus = CFarm->ParseFarmLog(masterJson);
+					delete(CFarm);
+				}
+				else
+				{
+					CFARMLog *CFarm;
+					CFarm = new CFARMLog(INPUT_LOG_FILE_NAME, true);
+					retStatus = CFarm->ParseFarmLog(masterJson);
+					delete(CFarm);
+				}
             }
             break;
         case   SEAGATE_LOG_TYPE_DEVICE_STATISTICS_LOG:
@@ -446,12 +464,12 @@ int32_t main(int argc, char *argv[])
 			}
 			break;
         default:
-            // set to unknow to pass through the case statment below no type set was given or didn't match
+            // set to unknown to pass through the case statement below no type set was given or didn't match
             exitCode = UTIL_EXIT_ERROR_IN_COMMAND_LINE;
             retStatus = UNKNOWN;
             break;
         }
-		// todo really check the status vs error code
+		// TODO really check the status vs error code
 		switch (retStatus)
 		{
 		case SUCCESS:
@@ -533,11 +551,11 @@ int32_t main(int argc, char *argv[])
         else //print it to stdout. 
         {
 			std::string myFile = INPUT_LOG_FILE_NAME;				// myFile for the auto creation of the output file
-			myFile = myFile.substr(0, myFile.rfind("."));           // remove the extention from the file
+			myFile = myFile.substr(0, myFile.rfind("."));           // remove the extension from the file
 			myFile.append(".jsn");									// Auto add the jsn for json output file
 			CMessage *printMessage;
 			printMessage = new CMessage(masterJson, myFile, OUTPUT_LOG_PRINT_FLAG);
-            std::cout << printMessage->get_Msg_JSON_Data().c_str();	// Pring to the screen
+            std::cout << printMessage->get_Msg_JSON_Data().c_str();	// Print to the screen
             delete(printMessage);
         }
         json_delete(masterJson);
