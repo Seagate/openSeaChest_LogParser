@@ -335,7 +335,17 @@ int32_t main(int argc, char *argv[])
         }
         printf("\n");
     }
-
+#if defined BUILD_FARM_ONLY 
+#else
+	if (INPUT_LOG_TYPE_FLAG == SEAGATE_LOG_TYPE_UNKNOWN)
+	{
+		std::cout << "\t ******   Missing Input Log Type ****** " << std::endl << std::endl;
+		print_Log_Type_Help(false);
+		utility_Usage(false);
+		exitCode = UTIL_EXIT_ERROR_IN_COMMAND_LINE;
+		return exitCode;
+	}
+#endif
     if (VERBOSITY_QUIET < g_verbosity)
     {
         seachest_utility_Info( util_name,  buildVersion,  OPENSEA_PARSER_VERSION);//TODO: We should change the version to a SeaParser version!
@@ -469,7 +479,7 @@ int32_t main(int argc, char *argv[])
             retStatus = UNKNOWN;
             break;
         }
-		// TODO really check the status vs error code
+		// todo really check the status vs error code
 		switch (retStatus)
 		{
 		case SUCCESS:
@@ -587,6 +597,7 @@ void utility_Usage(bool shortUsage)
     printf("Usage\n");
     printf("=====\n");
     printf("\t %s {arguments} {options}\n\n", util_name.c_str());
+	print_FARM_Command_Line_Option_to_Show_Status_Bytes();
 
     printf("Examples\n");
     printf("========\n");
