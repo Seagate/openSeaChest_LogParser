@@ -13,14 +13,13 @@
 #
 UTIL_SRC_DIR=../../utils/src
 UTIL_DIR=../../src
-CXX = g++
-STRIP = strip
+CXX ?= g++
+STRIP ?= strip
 TOOL_CHAIN=gcc
 LIB_FILE_OUTPUT_DIR=lib
 CXXFLAGS = -Wall -std=c++98
-CFLAGS = -Wall 
-CXXLAGS_I686 = -Wall -m32
-ARCHIVE= ar
+CFLAGS ?= -Wall 
+ARCHIVE ?= ar
 ARCH=x86_$(shell getconf LONG_BIT)
 
 LFLAGS = \
