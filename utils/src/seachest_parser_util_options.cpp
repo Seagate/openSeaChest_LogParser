@@ -401,8 +401,11 @@ void print_Log_Type_Help(bool shortHelp)
 	#if defined (INCLUDE_NCQ_CMD_ERROR_LOG)
 		std::cout << ", " << LOG_TYPE_STRING_NCQ_COMMAND_ERROR_LOG;             // ncqErrorLog
 	#endif
+		std::cout << std::endl;
+
+		std::cout << "\t\t ";
 	#if defined (INCLUDE_POWER_CONDITION_LOG)
-		std::cout << ", " << LOG_TYPE_STRING_POWER_CONDITION_LOG;               // PowerConditionLog
+		std::cout << LOG_TYPE_STRING_POWER_CONDITION_LOG;                       // PowerConditionLog
 	#endif
 	#if defined (INCLUDE_COMMON_EXT_DST_LOG)
 		std::cout << ", " << LOG_TYPE_STRING_EXT_DST_LOG;                       // selfTestLog
@@ -480,6 +483,26 @@ void print_Log_Print_Help(bool shortHelp)
 	}
 	std::cout << std::endl;
 }
+//-----------------------------------------------------------------------------
+//
+//  print_FARM_Command_Line_Option_to_Show_Status_Bytes()
+//
+//! \brief   Description:  This function prints out the show status bytes command
+//
+//
+//  Exit:
+//!   \return VOID
+//
+//-----------------------------------------------------------------------------
+void print_FARM_Command_Line_Option_to_Show_Status_Bytes()
+{
+	std::cout << "\t--" << SHOW_STATUS_BITS_OPT_STRING  << std::endl;
+	std::cout << "\t\t" << "Command Line Option for the FARM Log ONLY " << std::endl;
+	std::cout << "\t\t" << "Use this option to set the parser to gather the status bytes for each field." << std::endl;
+	std::cout << "\t\t" << "For each field the Supported byte will show TRUE or FALSE " << std::endl;
+	std::cout << "\t\t" << "For each field the Valid byte will show TRUE or FALSE " << std::endl;
+	std::cout << "\t\t" << "Device Information will not show status bytes." << std::endl;
 
-
+	std::cout << std::endl;
+}
 
