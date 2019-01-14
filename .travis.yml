@@ -8,6 +8,12 @@ branches:
 
 matrix:
   include:
+    - os: osx
+      compiler: clang
+      before_script: 
+        cd Make/gcc
+      script: 
+        make farm && make clean_all && make release
     - os: linux
       sudo: false
       compiler:
