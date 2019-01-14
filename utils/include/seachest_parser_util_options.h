@@ -234,6 +234,7 @@ void print_SeaChest_Util_Exit_Codes(void);
 void print_Parser_Output_Log_Help(bool shortHelp);
 void print_Log_Type_Help(bool shortHelp);
 void print_Log_Print_Help(bool shortHelp);
+void print_FARM_Command_Line_Option_to_Show_Status_Bytes();
 
 
 #define OUTPUTPATH_PARSE outputPathPtr = optarg; 
