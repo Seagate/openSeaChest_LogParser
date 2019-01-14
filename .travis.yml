@@ -10,7 +10,9 @@ matrix:
   include:
     - os: linux
       sudo: false
-      compiler: gcc
+      compiler:
+        - gcc
+        - clang
       dist: xenial
       before_script: 
         cd Make/gcc
