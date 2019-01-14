@@ -16,9 +16,15 @@ matrix:
         make farm && make clean_all && make release
     - os: linux
       sudo: false
-      compiler:
-        - gcc
-        - clang
+      compiler: clang
+      dist: xenial
+      before_script: 
+        cd Make/gcc
+      script: 
+        make farm && make clean_all && make release
+    - os: linux
+      sudo: false
+      compiler: gcc
       dist: xenial
       before_script: 
         cd Make/gcc
