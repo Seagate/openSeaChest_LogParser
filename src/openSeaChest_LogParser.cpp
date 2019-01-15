@@ -385,20 +385,10 @@ int32_t main(int argc, char *argv[])
         {
         case SEAGATE_LOG_TYPE_FARM:   
             {
-				if (SHOW_STATUS_BIT_FLAG == false)
-				{
-					CFARMLog *CFarm;
-					CFarm = new CFARMLog(INPUT_LOG_FILE_NAME);
-					retStatus = CFarm->ParseFarmLog(masterJson);
-					delete(CFarm);
-				}
-				else
-				{
-					CFARMLog *CFarm;
-					CFarm = new CFARMLog(INPUT_LOG_FILE_NAME, true);
-					retStatus = CFarm->ParseFarmLog(masterJson);
-					delete(CFarm);
-				}
+				CFARMLog *CFarm;
+				CFarm = new CFARMLog(INPUT_LOG_FILE_NAME, SHOW_STATUS_BIT_FLAG);
+				retStatus = CFarm->ParseFarmLog(masterJson);
+				delete(CFarm);
             }
             break;
         case   SEAGATE_LOG_TYPE_DEVICE_STATISTICS_LOG:
@@ -597,7 +587,7 @@ void utility_Usage(bool shortUsage)
     printf("Usage\n");
     printf("=====\n");
     printf("\t %s {arguments} {options}\n\n", util_name.c_str());
-	print_FARM_Command_Line_Option_to_Show_Status_Bytes();
+
 
     printf("Examples\n");
     printf("========\n");
@@ -607,6 +597,7 @@ void utility_Usage(bool shortUsage)
 #else
     printf("\t%s --inputLog <filename> --logType %s --printType json --outputLog <filename>\n", util_name.c_str(), LOG_TYPE_STRING_FARM);
 #endif
+	printf("\n");
     //return codes
     printf("Return Codes\n");
     printf("============\n");
@@ -621,6 +612,7 @@ void utility_Usage(bool shortUsage)
 #else
     print_Log_Type_Help(shortUsage);
 #endif
+	print_FARM_Command_Line_Option_to_Show_Status_Bytes();
     print_Parser_Output_Log_Help(shortUsage);
     print_Log_Print_Help(shortUsage);
     
