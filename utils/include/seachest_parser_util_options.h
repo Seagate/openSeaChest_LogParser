@@ -222,6 +222,7 @@ void seachest_utility_Info(const std::string & utilityName, const std::string & 
 void utility_Full_Version_Info(const std::string & utilityName, const std::string & buildVersion, const std::string & openseaVersion);
 void print_Final_newline(void);
 void print_SeaChest_Util_Exit_Codes(void);
+void print_Seachest_logType_options();
 void print_Scsi_Log_Pages();
 void print_Verbose_Help(bool shortHelp);
 void print_Version_Help(bool shortHelp, const char *utilName);
@@ -230,6 +231,7 @@ void print_Echo_Command_Line_Help(bool shortHelp);
 void print_Help_Help(bool shortHelp);
 void print_OutputPath_Help(bool shortHelp);
 void print_OutputFile_Help(bool shortHelp);
+void print_Input_Log_Help(bool shortHelp);
 void print_SeaChest_Util_Exit_Codes(void);
 void print_Parser_Output_Log_Help(bool shortHelp);
 void print_Log_Type_Help(bool shortHelp);
