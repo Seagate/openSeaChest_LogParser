@@ -55,7 +55,7 @@ using namespace opensea_parser;
     std::string util_name = "openSeaChest_LogParser";
 #endif
 
-std::string buildVersion = "0.1.3";
+std::string buildVersion = "0.1.4";
 std::string buildDate = __DATE__;
 time_t     pCurrentTime;
 std::string timeString = "";
@@ -64,7 +64,7 @@ std::string timeString = "";
 //  functions to declare  //
 ////////////////////////////
 static void utility_Usage(bool shortUsage); 
-
+static void UtilityHeader(JSONNODE *masterData);
 //-----------------------------------------------------------------------------
 //
 //  main()
@@ -381,6 +381,7 @@ int32_t main(int argc, char *argv[])
     if (INPUT_LOG_FILE_FLAG)
     {
         JSONNODE *masterJson = json_new(JSON_NODE);
+		UtilityHeader(masterJson);
         switch (INPUT_LOG_TYPE_FLAG) 
         {
         case SEAGATE_LOG_TYPE_FARM:   
@@ -625,4 +626,30 @@ void utility_Usage(bool shortUsage)
     print_Verbose_Help(shortUsage);
     print_Version_Help(shortUsage, (char *)util_name.c_str());
 }
-
+//-----------------------------------------------------------------------------
+//
+//! \fn UtilityHeader()
+//
+//! \brief
+//!   Description:  gets the current time and date and build information and adds it to the \n
+//!    json node to print out utility information
+//
+//  Entry:
+//! \param masterData - pointer to the json data that will be printed or passed on
+//
+//  Exit:
+//!   \return SUCCESS
+//
+//---------------------------------------------------------------------------
+static void UtilityHeader(JSONNODE *masterData)
+{
+	// get current Time and Date 
+	pCurrentTime = time(NULL);	
+	strftime((char *)timeString.c_str(), 64, "%m-%d-%Y__%H:%M:%S", localtime(&pCurrentTime));
+	JSONNODE *toolHeader = json_new(JSON_NODE);
+	json_set_name(toolHeader, util_name.c_str());
+	json_push_back(toolHeader, json_new_a("Build Version", (char *)buildVersion.c_str()));
+	json_push_back(toolHeader, json_new_a("Build Date", buildDate.c_str()));
+	json_push_back(toolHeader, json_new_a("Run as Date", (char *)timeString.c_str()));
+	json_push_back(masterData, toolHeader);
+}
