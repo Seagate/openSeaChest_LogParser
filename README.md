@@ -5,6 +5,8 @@
 
 #### Welcome to the openSeaChest_LogParser open source project!
 
+[![Build Status](https://travis-ci.org/Seagate/openSeaChest_LogParser.svg?branch=develop)](https://travis-ci.org/Seagate/openSeaChest_LogParser)
+
 BINARIES and SOURCE CODE files of the openSeaChest_LogParser open source project have
 been made available to you under the Mozilla Public License 2.0 (MPL).  The
 openSeaChest project repository is maintained at
