@@ -55,7 +55,7 @@ using namespace opensea_parser;
     std::string util_name = "openSeaChest_LogParser";
 #endif
 
-std::string buildVersion = "0.1.4";
+std::string buildVersion = "0.2.0";
 std::string buildDate = __DATE__;
 time_t     pCurrentTime;
 std::string timeString = "";
@@ -388,7 +388,11 @@ int32_t main(int argc, char *argv[])
             {
 				CFARMLog *CFarm;
 				CFarm = new CFARMLog(INPUT_LOG_FILE_NAME, SHOW_STATUS_BIT_FLAG);
-				retStatus = CFarm->ParseFarmLog(masterJson);
+				retStatus = CFarm->get_FARM_Status();								// check to make sure we read in the file form the construtor.
+				if (retStatus == IN_PROGRESS)										// if IN_PROGRESS we can continue to parse, else retStatus holds the error information
+				{
+					retStatus = CFarm->parse_Device_Farm_Log(masterJson);
+				}
 				delete(CFarm);
             }
             break;
@@ -396,7 +400,7 @@ int32_t main(int argc, char *argv[])
             {
                 CAtaDeviceStatisticsLogs *cDevicStat;
                 cDevicStat = new CAtaDeviceStatisticsLogs(INPUT_LOG_FILE_NAME, masterJson);
-                retStatus = cDevicStat->get_Device_Stat_Status();
+                retStatus = cDevicStat->get_Device_Stat_Status();					// All checks and parseing are done in the construtor
                 delete(cDevicStat);
             }
             break;
@@ -404,7 +408,7 @@ int32_t main(int argc, char *argv[])
             {
                 CExtComp *cEC;
                 cEC = new CExtComp(INPUT_LOG_FILE_NAME, masterJson);
-                retStatus = cEC->get_EC_Status();
+                retStatus = cEC->get_EC_Status();									// All checks and parseing are done in the construtor
                 delete(cEC);
             }
             break;
@@ -419,47 +423,67 @@ int32_t main(int argc, char *argv[])
         case   SEAGATE_LOG_TYPE_IDENTIFY_LOG:
             {
                 CAta_Identify_log * cIdent;
-                cIdent = new CAta_Identify_log(INPUT_LOG_FILE_NAME);
-                retStatus = cIdent->print_Identify_Information(masterJson);
+                cIdent = new CAta_Identify_log(INPUT_LOG_FILE_NAME);			// constructor will make sure we read in the file and start the parseing of the binary
+				retStatus = cIdent->get_Identify_Information_Status();			// if IN_PROGRESS we can continue to print out the data
+				if (retStatus == IN_PROGRESS)
+				{
+					retStatus = cIdent->print_Identify_Information(masterJson);
+				}
                 delete (cIdent);
             }
 			break;
         case SEAGATE_LOG_TYPE_IDENTIFY_DEVICE_DATA:
             {
                 CAta_Identify_Log_30 *cIdData = NULL;
-                cIdData = new CAta_Identify_Log_30( INPUT_LOG_FILE_NAME);
-                retStatus = cIdData->parse_Identify_Log_30(masterJson);
+                cIdData = new CAta_Identify_Log_30( INPUT_LOG_FILE_NAME);		// constructor will make sure we read in the file and start the parseing of the binary
+				retStatus = cIdData->get_identify_Status();						// if IN_PROGRESS we can continue to print out the data
+				if (retStatus == IN_PROGRESS)
+				{
+					retStatus = cIdData->parse_Identify_Log_30(masterJson);
+				}
                 delete (cIdData);
             }
             break;
         case    SEAGATE_LOG_TYPE_SCT_TEMP_LOG:
             {
                 CSAtaDevicStatisticsTempLogs *cSCTTemp;
-                cSCTTemp = new CSAtaDevicStatisticsTempLogs(INPUT_LOG_FILE_NAME, masterJson);
-                retStatus = cSCTTemp->parse_SCT_Temp_Log();
+                cSCTTemp = new CSAtaDevicStatisticsTempLogs(INPUT_LOG_FILE_NAME, masterJson);	// constructor will make sure we read in the file and start the parseing of the binary
+				retStatus = cSCTTemp->get_Status();										// if IN_PROGRESS we can continue to print out the data
+				if (retStatus == IN_PROGRESS)
+				{
+					retStatus = cSCTTemp->parse_SCT_Temp_Log();
+				}
                 delete (cSCTTemp);
             }
             break;
         case SEAGATE_LOG_TYPE_POWER_CONDITION_LOG:
             {
                 CAtaPowerConditionsLog * cPowerCon;
-                cPowerCon = new CAtaPowerConditionsLog(INPUT_LOG_FILE_NAME);
-                retStatus = cPowerCon->printPowerConditionLog(masterJson);
+                cPowerCon = new CAtaPowerConditionsLog(INPUT_LOG_FILE_NAME);			// constructor will make sure we read in the file and start the parseing of the binary
+				retStatus = cPowerCon->get_Power_Status();								// if IN_PROGRESS we can continue to print out the data
+				if (retStatus == IN_PROGRESS)
+				{
+					retStatus = cPowerCon->printPowerConditionLog(masterJson);
+				}
 				delete (cPowerCon);
             }
 			break;
         case SEAGATE_LOG_TYPE_NCQ_CMD_ERROR_LOG:
             {
                 CAta_NCQ_Command_Error_Log * cNCQ;
-                cNCQ = new CAta_NCQ_Command_Error_Log(INPUT_LOG_FILE_NAME);
-                retStatus = cNCQ->get_NCQ_Command_Error_Log(masterJson);
+                cNCQ = new CAta_NCQ_Command_Error_Log(INPUT_LOG_FILE_NAME);				// constructor will make sure we read in the file and start the parseing of the binary
+				retStatus = cNCQ->get_NCQ_Command_Error_Log_Status();					// if IN_PROGRESS we can continue to print out the data
+				if (retStatus == IN_PROGRESS)
+				{
+					retStatus = cNCQ->get_NCQ_Command_Error_Log(masterJson);
+				}
 				delete (cNCQ);
             }
 			break;
 		case SEAGATE_LOG_TYPE_SCSI_LOG_PAGES:
 			{
 				CScsiLog * cLogPages;
-				cLogPages = new CScsiLog(INPUT_LOG_FILE_NAME, masterJson);
+				cLogPages = new CScsiLog(INPUT_LOG_FILE_NAME, masterJson);				// All checks and parseing are done in the construtor
 				retStatus = cLogPages->get_Log_Status();
 				delete (cLogPages);
 			}
