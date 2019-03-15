@@ -179,7 +179,7 @@
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;WIN_API_TARGET_VERSION=81000000L;BUILD_FARM_ONLY;INCLUDE_FARM_LOG</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>..\..\..\..\Win_getopt;..\..\..\..\include;..\..\..\..\opensea-common\include;..\..\..\..\libjson;..\..\..\..\opensea-parser\include;..\..\..\..\opensea-parser\include\Seagate;..\..\..\..\utils\include</AdditionalIncludeDirectories>
-      <DebugInformationFormat />
+      <DebugInformationFormat>OldStyle</DebugInformationFormat>
       <IntrinsicFunctions />
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>

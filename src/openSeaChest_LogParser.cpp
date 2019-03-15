@@ -55,7 +55,7 @@ using namespace opensea_parser;
     std::string util_name = "openSeaChest_LogParser";
 #endif
 
-std::string buildVersion = "0.1.1";
+std::string buildVersion = "1.0.0";
 std::string buildDate = __DATE__;
 time_t     pCurrentTime;
 std::string timeString = "";
@@ -64,7 +64,7 @@ std::string timeString = "";
 //  functions to declare  //
 ////////////////////////////
 static void utility_Usage(bool shortUsage); 
-
+static void UtilityHeader(JSONNODE *masterData);
 //-----------------------------------------------------------------------------
 //
 //  main()
@@ -91,6 +91,7 @@ int32_t main(int argc, char *argv[])
     eUtilExitCodes      exitCode = UTIL_EXIT_NO_ERROR;
     LICENSE_VAR
     ECHO_COMMAND_LINE_VAR
+	SHOW_STATUS_BIT_VAR
     SHOW_BANNER_VAR
     SHOW_HELP_VAR
     //Tool specific
@@ -112,7 +113,8 @@ int32_t main(int argc, char *argv[])
         VERSION_LONG_OPT,
         VERBOSE_LONG_OPT,
         LICENSE_LONG_OPT,
-        ECHO_COMMAND_LIN_LONG_OPT,
+        ECHO_COMMAND_LINE_LONG_OPT,
+		SHOW_STATUS_BITS_OPT,
         //tool specific options go here
         INPUT_LOG_LONG_OPT,
         INPUT_LOG_TYPE_LONG_OPT,
@@ -161,6 +163,10 @@ int32_t main(int argc, char *argv[])
             }
 
 #if defined BUILD_FARM_ONLY 
+			if (strcmp(optarg, LOG_TYPE_STRING_FARM) == 0)
+			{
+				INPUT_LOG_TYPE_FLAG = SEAGATE_LOG_TYPE_FARM;
+			}
 #else
             else if (strncmp(longopts[optionIndex].name, INPUT_LOG_TYPE_LONG_OPT_STRING, strlen(longopts[optionIndex].name)) == 0)
             {
@@ -268,6 +274,12 @@ int32_t main(int argc, char *argv[])
                 printf("Ignoring option --%s\n",longopts[optionIndex].name);
             }
             break;
+		case 1:
+			if (strncmp(longopts[optionIndex].name, SHOW_STATUS_BITS_OPT_STRING, strlen(longopts[optionIndex].name)) == 0)
+			{
+				SHOW_STATUS_BIT_FLAG = true;
+			}
+			break;
         case ':'://missing required argument
             exitCode = UTIL_EXIT_ERROR_IN_COMMAND_LINE;
             switch (optopt)
@@ -304,7 +316,7 @@ int32_t main(int argc, char *argv[])
             SHOW_HELP_FLAG = true;
             seachest_utility_Info( util_name,  buildVersion,  OPENSEA_PARSER_VERSION);//TODO: We should change the version to a SeaParser version!
             utility_Usage(false);
-            exit(UTIL_EXIT_NO_ERROR);
+            return UTIL_EXIT_NO_ERROR;
         default:
             break;
         }
@@ -323,7 +335,17 @@ int32_t main(int argc, char *argv[])
         }
         printf("\n");
     }
-
+#if defined BUILD_FARM_ONLY 
+#else
+	if (INPUT_LOG_TYPE_FLAG == SEAGATE_LOG_TYPE_UNKNOWN)
+	{
+		std::cout << "\t ******   Missing Input Log Type ****** " << std::endl << std::endl;
+		print_Log_Type_Help(false);
+		utility_Usage(false);
+		exitCode = UTIL_EXIT_ERROR_IN_COMMAND_LINE;
+		return exitCode;
+	}
+#endif
     if (VERBOSITY_QUIET < g_verbosity)
     {
         seachest_utility_Info( util_name,  buildVersion,  OPENSEA_PARSER_VERSION);//TODO: We should change the version to a SeaParser version!
@@ -344,7 +366,7 @@ int32_t main(int argc, char *argv[])
     // SIMPLE IS BEAUTIFUL
     if (SHOW_BANNER_FLAG || LICENSE_FLAG || SHOW_HELP_FLAG)
     {
-        exit(UTIL_EXIT_NO_ERROR);
+        return UTIL_EXIT_NO_ERROR;
     }
 
     //print out errors for unknown arguments for remaining args that haven't been processed yet
@@ -359,21 +381,26 @@ int32_t main(int argc, char *argv[])
     if (INPUT_LOG_FILE_FLAG)
     {
         JSONNODE *masterJson = json_new(JSON_NODE);
+		UtilityHeader(masterJson);
         switch (INPUT_LOG_TYPE_FLAG) 
         {
         case SEAGATE_LOG_TYPE_FARM:   
             {
-                CFARMLog *CFarm;
-                CFarm = new CFARMLog( INPUT_LOG_FILE_NAME);
-                retStatus = CFarm->ParseFarmLog(masterJson);
-                delete(CFarm);
+				CFARMLog *CFarm;
+				CFarm = new CFARMLog(INPUT_LOG_FILE_NAME, SHOW_STATUS_BIT_FLAG);
+				retStatus = CFarm->get_FARM_Status();								// check to make sure we read in the file form the construtor.
+				if (retStatus == IN_PROGRESS)										// if IN_PROGRESS we can continue to parse, else retStatus holds the error information
+				{
+					retStatus = CFarm->parse_Device_Farm_Log(masterJson);
+				}
+				delete(CFarm);
             }
             break;
         case   SEAGATE_LOG_TYPE_DEVICE_STATISTICS_LOG:
             {
                 CAtaDeviceStatisticsLogs *cDevicStat;
                 cDevicStat = new CAtaDeviceStatisticsLogs(INPUT_LOG_FILE_NAME, masterJson);
-                retStatus = cDevicStat->get_Device_Stat_Status();
+                retStatus = cDevicStat->get_Device_Stat_Status();					// All checks and parseing are done in the construtor
                 delete(cDevicStat);
             }
             break;
@@ -381,7 +408,7 @@ int32_t main(int argc, char *argv[])
             {
                 CExtComp *cEC;
                 cEC = new CExtComp(INPUT_LOG_FILE_NAME, masterJson);
-                retStatus = cEC->get_EC_Status();
+                retStatus = cEC->get_EC_Status();									// All checks and parseing are done in the construtor
                 delete(cEC);
             }
             break;
@@ -396,53 +423,73 @@ int32_t main(int argc, char *argv[])
         case   SEAGATE_LOG_TYPE_IDENTIFY_LOG:
             {
                 CAta_Identify_log * cIdent;
-                cIdent = new CAta_Identify_log(INPUT_LOG_FILE_NAME);
-                retStatus = cIdent->print_Identify_Information(masterJson);
+                cIdent = new CAta_Identify_log(INPUT_LOG_FILE_NAME);			// constructor will make sure we read in the file and start the parseing of the binary
+				retStatus = cIdent->get_Identify_Information_Status();			// if IN_PROGRESS we can continue to print out the data
+				if (retStatus == IN_PROGRESS)
+				{
+					retStatus = cIdent->print_Identify_Information(masterJson);
+				}
                 delete (cIdent);
             }
 			break;
         case SEAGATE_LOG_TYPE_IDENTIFY_DEVICE_DATA:
             {
                 CAta_Identify_Log_30 *cIdData = NULL;
-                cIdData = new CAta_Identify_Log_30( INPUT_LOG_FILE_NAME);
-                retStatus = cIdData->parse_Identify_Log_30(masterJson);
+                cIdData = new CAta_Identify_Log_30( INPUT_LOG_FILE_NAME);		// constructor will make sure we read in the file and start the parseing of the binary
+				retStatus = cIdData->get_identify_Status();						// if IN_PROGRESS we can continue to print out the data
+				if (retStatus == IN_PROGRESS)
+				{
+					retStatus = cIdData->parse_Identify_Log_30(masterJson);
+				}
                 delete (cIdData);
             }
             break;
         case    SEAGATE_LOG_TYPE_SCT_TEMP_LOG:
             {
                 CSAtaDevicStatisticsTempLogs *cSCTTemp;
-                cSCTTemp = new CSAtaDevicStatisticsTempLogs(INPUT_LOG_FILE_NAME, masterJson);
-                retStatus = cSCTTemp->parse_SCT_Temp_Log();
+                cSCTTemp = new CSAtaDevicStatisticsTempLogs(INPUT_LOG_FILE_NAME, masterJson);	// constructor will make sure we read in the file and start the parseing of the binary
+				retStatus = cSCTTemp->get_Status();										// if IN_PROGRESS we can continue to print out the data
+				if (retStatus == IN_PROGRESS)
+				{
+					retStatus = cSCTTemp->parse_SCT_Temp_Log();
+				}
                 delete (cSCTTemp);
             }
             break;
         case SEAGATE_LOG_TYPE_POWER_CONDITION_LOG:
             {
                 CAtaPowerConditionsLog * cPowerCon;
-                cPowerCon = new CAtaPowerConditionsLog(INPUT_LOG_FILE_NAME);
-                retStatus = cPowerCon->printPowerConditionLog(masterJson);
+                cPowerCon = new CAtaPowerConditionsLog(INPUT_LOG_FILE_NAME);			// constructor will make sure we read in the file and start the parseing of the binary
+				retStatus = cPowerCon->get_Power_Status();								// if IN_PROGRESS we can continue to print out the data
+				if (retStatus == IN_PROGRESS)
+				{
+					retStatus = cPowerCon->printPowerConditionLog(masterJson);
+				}
 				delete (cPowerCon);
             }
 			break;
         case SEAGATE_LOG_TYPE_NCQ_CMD_ERROR_LOG:
             {
                 CAta_NCQ_Command_Error_Log * cNCQ;
-                cNCQ = new CAta_NCQ_Command_Error_Log(INPUT_LOG_FILE_NAME);
-                retStatus = cNCQ->get_NCQ_Command_Error_Log(masterJson);
+                cNCQ = new CAta_NCQ_Command_Error_Log(INPUT_LOG_FILE_NAME);				// constructor will make sure we read in the file and start the parseing of the binary
+				retStatus = cNCQ->get_NCQ_Command_Error_Log_Status();					// if IN_PROGRESS we can continue to print out the data
+				if (retStatus == IN_PROGRESS)
+				{
+					retStatus = cNCQ->get_NCQ_Command_Error_Log(masterJson);
+				}
 				delete (cNCQ);
             }
 			break;
 		case SEAGATE_LOG_TYPE_SCSI_LOG_PAGES:
 			{
 				CScsiLog * cLogPages;
-				cLogPages = new CScsiLog(INPUT_LOG_FILE_NAME, masterJson);
+				cLogPages = new CScsiLog(INPUT_LOG_FILE_NAME, masterJson);				// All checks and parseing are done in the construtor
 				retStatus = cLogPages->get_Log_Status();
 				delete (cLogPages);
 			}
 			break;
         default:
-            // set to unknow to pass through the case statment below no type set was given or didn't match
+            // set to unknown to pass through the case statement below no type set was given or didn't match
             exitCode = UTIL_EXIT_ERROR_IN_COMMAND_LINE;
             retStatus = UNKNOWN;
             break;
@@ -528,9 +575,12 @@ int32_t main(int argc, char *argv[])
         }
         else //print it to stdout. 
         {
+			std::string myFile = INPUT_LOG_FILE_NAME;				// myFile for the auto creation of the output file
+			myFile = myFile.substr(0, myFile.rfind("."));           // remove the extension from the file
+			myFile.append(".jsn");									// Auto add the jsn for json output file
 			CMessage *printMessage;
-            printMessage = new CMessage(masterJson);
-            std::cout << printMessage->get_Msg_JSON_Data().c_str();
+			printMessage = new CMessage(masterJson, myFile, OUTPUT_LOG_PRINT_FLAG);
+            std::cout << printMessage->get_Msg_JSON_Data().c_str();	// Print to the screen
             delete(printMessage);
         }
         json_delete(masterJson);
@@ -540,7 +590,7 @@ int32_t main(int argc, char *argv[])
         //Error, no log given to parse
         exitCode = UTIL_EXIT_ERROR_IN_COMMAND_LINE;
     }
-    exit(exitCode);
+    return exitCode;
 }
 
 //-----------------------------------------------------------------------------
@@ -563,6 +613,7 @@ void utility_Usage(bool shortUsage)
     printf("=====\n");
     printf("\t %s {arguments} {options}\n\n", util_name.c_str());
 
+
     printf("Examples\n");
     printf("========\n");
     //example usage
@@ -571,6 +622,7 @@ void utility_Usage(bool shortUsage)
 #else
     printf("\t%s --inputLog <filename> --logType %s --printType json --outputLog <filename>\n", util_name.c_str(), LOG_TYPE_STRING_FARM);
 #endif
+	printf("\n");
     //return codes
     printf("Return Codes\n");
     printf("============\n");
@@ -585,6 +637,7 @@ void utility_Usage(bool shortUsage)
 #else
     print_Log_Type_Help(shortUsage);
 #endif
+	print_FARM_Command_Line_Option_to_Show_Status_Bytes();
     print_Parser_Output_Log_Help(shortUsage);
     print_Log_Print_Help(shortUsage);
     
@@ -597,4 +650,30 @@ void utility_Usage(bool shortUsage)
     print_Verbose_Help(shortUsage);
     print_Version_Help(shortUsage, (char *)util_name.c_str());
 }
-
+//-----------------------------------------------------------------------------
+//
+//! \fn UtilityHeader()
+//
+//! \brief
+//!   Description:  gets the current time and date and build information and adds it to the \n
+//!    json node to print out utility information
+//
+//  Entry:
+//! \param masterData - pointer to the json data that will be printed or passed on
+//
+//  Exit:
+//!   \return SUCCESS
+//
+//---------------------------------------------------------------------------
+static void UtilityHeader(JSONNODE *masterData)
+{
+	// get current Time and Date 
+	pCurrentTime = time(NULL);	
+	strftime((char *)timeString.c_str(), 64, "%m-%d-%Y__%H:%M:%S", localtime(&pCurrentTime));
+	JSONNODE *toolHeader = json_new(JSON_NODE);
+	json_set_name(toolHeader, util_name.c_str());
+	json_push_back(toolHeader, json_new_a("Build Version", (char *)buildVersion.c_str()));
+	json_push_back(toolHeader, json_new_a("Build Date", buildDate.c_str()));
+	json_push_back(toolHeader, json_new_a("Run as Date", (char *)timeString.c_str()));
+	json_push_back(masterData, toolHeader);
+}

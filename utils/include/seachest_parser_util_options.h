@@ -158,7 +158,7 @@ typedef enum _ePrintTypes
 #define ECHO_COMMAND_LINE_FLAG echoCommandLine
 #define ECHO_COMMAND_LINE_VAR getOptBool ECHO_COMMAND_LINE_FLAG = goFalse;
 #define ECHO_COMMAND_LINE_LONG_OPT_STRING "echoCommandLine"
-#define ECHO_COMMAND_LIN_LONG_OPT { ECHO_COMMAND_LINE_LONG_OPT_STRING, no_argument, &ECHO_COMMAND_LINE_FLAG, goTrue }
+#define ECHO_COMMAND_LINE_LONG_OPT { ECHO_COMMAND_LINE_LONG_OPT_STRING, no_argument, &ECHO_COMMAND_LINE_FLAG, goTrue }
 
 #define PROGRESS_CHAR progressTest
 #define PROGRESS_VAR char *PROGRESS_CHAR = NULL;
@@ -184,6 +184,11 @@ uint16_t MINUTES_TIME_FLAG = 0;
 uint32_t SECONDS_TIME_FLAG = 0;
 #define SECONDS_TIME_LONG_OPT_STRING "seconds"
 #define SECONDS_TIME_LONG_OPT { SECONDS_TIME_LONG_OPT_STRING, required_argument, NULL, 0 }
+
+#define SHOW_STATUS_BIT_FLAG showStatusBits
+#define SHOW_STATUS_BIT_VAR bool SHOW_STATUS_BIT_FLAG = false;
+#define SHOW_STATUS_BITS_OPT_STRING "showStatusBits"
+#define SHOW_STATUS_BITS_OPT { SHOW_STATUS_BITS_OPT_STRING , no_argument, NULL, goTrue }
 
 #define LONG_OPT_TERMINATOR { NULL, 0, NULL, 0 }
 
@@ -217,6 +222,7 @@ void seachest_utility_Info(const std::string & utilityName, const std::string & 
 void utility_Full_Version_Info(const std::string & utilityName, const std::string & buildVersion, const std::string & openseaVersion);
 void print_Final_newline(void);
 void print_SeaChest_Util_Exit_Codes(void);
+void print_Seachest_logType_options();
 void print_Scsi_Log_Pages();
 void print_Verbose_Help(bool shortHelp);
 void print_Version_Help(bool shortHelp, const char *utilName);
@@ -225,10 +231,12 @@ void print_Echo_Command_Line_Help(bool shortHelp);
 void print_Help_Help(bool shortHelp);
 void print_OutputPath_Help(bool shortHelp);
 void print_OutputFile_Help(bool shortHelp);
+void print_Input_Log_Help(bool shortHelp);
 void print_SeaChest_Util_Exit_Codes(void);
 void print_Parser_Output_Log_Help(bool shortHelp);
 void print_Log_Type_Help(bool shortHelp);
 void print_Log_Print_Help(bool shortHelp);
+void print_FARM_Command_Line_Option_to_Show_Status_Bytes();
 
 
 #define OUTPUTPATH_PARSE outputPathPtr = optarg; 

@@ -1,4 +1,4 @@
-# CI for openseaChest_LogParser
+# CI for openseaChest_LogParser through Travis CI 
 language: cpp
 
 branches:
@@ -8,6 +8,20 @@ branches:
 
 matrix:
   include:
+    - os: osx
+      compiler: clang
+      before_script: 
+        cd Make/gcc
+      script: 
+        make farm && make clean_all && make release
+    - os: linux
+      sudo: false
+      compiler: clang
+      dist: xenial
+      before_script: 
+        cd Make/gcc
+      script: 
+        make farm && make clean_all && make release
     - os: linux
       sudo: false
       compiler: gcc

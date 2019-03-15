@@ -1,19 +1,25 @@
-# Hand Written Makefile (Edit with caution) -Muhammad
-# 
-# Last Modified: 9/05/18
 #
-# Seagate Technology 2018
+# Do NOT modify or remove this copyright and license
+#
+# Copyright (c) 2017 - 2019 Seagate Technology LLC and/or its Affiliates, All Rights Reserved
+#
+# This software is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+# ******************************************************************************************
+# 
+# Hand Written Makefile (Edit with caution) -Muhammad
 #
 UTIL_SRC_DIR=../../utils/src
 UTIL_DIR=../../src
-CXX = g++
-STRIP = strip
+CXX ?= g++
+STRIP ?= strip
 TOOL_CHAIN=gcc
 LIB_FILE_OUTPUT_DIR=lib
 CXXFLAGS = -Wall -std=c++98
-CFLAGS = -Wall 
-CXXLAGS_I686 = -Wall -m32
-ARCHIVE= ar
+CFLAGS ?= -Wall 
+ARCHIVE ?= ar
 ARCH=x86_$(shell getconf LONG_BIT)
 
 LFLAGS = \
@@ -27,7 +33,6 @@ INC_DIR= \
 	-I../../opensea-parser/include \
 	-I../../opensea-parser/include/Seagate\
 	-I../../libjson 
-	
 
 MACHINE := $(shell uname -m)
 ifeq ($(MACHINE), x86_64)
