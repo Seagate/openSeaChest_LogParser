@@ -3,7 +3,7 @@
 //
 // Do NOT modify or remove this copyright and confidentiality notice.
 //
-// Copyright 2012 - 2016 Seagate Technology LLC.
+// Copyright 2012 - 2019 Seagate Technology LLC.
 //
 // The code contained herein is CONFIDENTIAL to Seagate Technology LLC
 // and may be covered under one or more Non-Disclosure Agreements.
@@ -42,7 +42,7 @@ void seachest_utility_Info(const std::string & utilityName, const std::string & 
 	g_timeString.resize(FORMAT_SIZE);
     printf("===============================================================================\n");
     printf(" %s - Seagate drive utilities\n", utilityName.c_str());
-    printf(" Copyright (c) 2017-2018 Seagate Technology LLC and/or its Affiliates, All Rights Reserved\n");
+    printf(" Copyright (c) 2018-2019 Seagate Technology LLC and/or its Affiliates, All Rights Reserved\n");
     printf(" %s Version: %s-%s ", utilityName.c_str(), buildVersion.c_str(), openseaVersion.c_str());
     print_Architecture(architecture);
     printf("\n");

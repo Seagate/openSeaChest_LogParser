@@ -1,7 +1,7 @@
 //
 // Do NOT modify or remove this copyright and license
 //
-// Copyright (c) 2012 - 2018 Seagate Technology LLC and/or its Affiliates, All Rights Reserved
+// Copyright (c) 2012 - 2019 Seagate Technology LLC and/or its Affiliates, All Rights Reserved
 //
 // This software is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -128,8 +128,8 @@ typedef enum _ePrintTypes
 #define HELP_LONG_OPT_STRING "help"
 #define HELP_LONG_OPT { HELP_LONG_OPT_STRING, no_argument, NULL, HELP_SHORT_OPT }
 
-#define SHOW_BANNER_FLAG showBanner
-#define SHOW_BANNER_VAR bool SHOW_BANNER_FLAG = false;
+#define SHOW_VERSION_FLAG showVersion
+#define SHOW_VERSION_VAR bool SHOW_VERSION_FLAG = false;
 #define VERSION_SHORT_OPT 'V'
 #define VERSION_LONG_OPT_STRING "version"
 #define VERSION_LONG_OPT { VERSION_LONG_OPT_STRING, no_argument, NULL, VERSION_SHORT_OPT }

@@ -3,7 +3,7 @@
 //
 // Do NOT modify or remove this copyright and license
 //
-// Copyright (c) 2018 Seagate Technology LLC and/or its Affiliates, All Rights Reserved
+// Copyright (c) 2019 Seagate Technology LLC and/or its Affiliates, All Rights Reserved
 //
 // This software is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -55,7 +55,7 @@ using namespace opensea_parser;
     std::string util_name = "openSeaChest_LogParser";
 #endif
 
-std::string buildVersion = "1.0.0";
+std::string buildVersion = "1.0.1";
 std::string buildDate = __DATE__;
 time_t     pCurrentTime;
 std::string timeString = "";
@@ -92,7 +92,7 @@ int32_t main(int argc, char *argv[])
     LICENSE_VAR
     ECHO_COMMAND_LINE_VAR
 	SHOW_STATUS_BIT_VAR
-    SHOW_BANNER_VAR
+    SHOW_VERSION_VAR
     SHOW_HELP_VAR
     //Tool specific
     INPUT_LOG_FILE_VAR
@@ -303,7 +303,7 @@ int32_t main(int argc, char *argv[])
             }
             break;
         case VERSION_SHORT_OPT:
-            SHOW_BANNER_FLAG = true;
+            SHOW_VERSION_FLAG = true;
             break;
         case VERBOSE_SHORT_OPT: //verbose
             if (optarg != NULL)
@@ -335,23 +335,13 @@ int32_t main(int argc, char *argv[])
         }
         printf("\n");
     }
-#if defined BUILD_FARM_ONLY 
-#else
-	if (INPUT_LOG_TYPE_FLAG == SEAGATE_LOG_TYPE_UNKNOWN)
-	{
-		std::cout << "\t ******   Missing Input Log Type ****** " << std::endl << std::endl;
-		print_Log_Type_Help(false);
-		utility_Usage(false);
-		exitCode = UTIL_EXIT_ERROR_IN_COMMAND_LINE;
-		return exitCode;
-	}
-#endif
+
     if (VERBOSITY_QUIET < g_verbosity)
     {
         seachest_utility_Info( util_name,  buildVersion,  OPENSEA_PARSER_VERSION);//TODO: We should change the version to a SeaParser version!
     }
 
-    if (SHOW_BANNER_FLAG)
+    if (SHOW_VERSION_FLAG)
     {
         utility_Full_Version_Info(util_name, buildVersion, OPENSEA_PARSER_VERSION); //TODO: We should change the version to a SeaParser version!
     }
@@ -364,11 +354,21 @@ int32_t main(int argc, char *argv[])
     // Add to this if list anything that is suppose to be independent.
     // e.g. you can't say enumerate & then pull logs in the same command line.
     // SIMPLE IS BEAUTIFUL
-    if (SHOW_BANNER_FLAG || LICENSE_FLAG || SHOW_HELP_FLAG)
+    if (SHOW_VERSION_FLAG || LICENSE_FLAG || SHOW_HELP_FLAG)
     {
         return UTIL_EXIT_NO_ERROR;
     }
-
+#if defined BUILD_FARM_ONLY 
+#else
+	if (INPUT_LOG_TYPE_FLAG == SEAGATE_LOG_TYPE_UNKNOWN )
+	{
+		std::cout << "\t ******   Missing Input Log Type ****** " << std::endl << std::endl;
+		print_Log_Type_Help(false);
+		utility_Usage(false);
+		exitCode = UTIL_EXIT_ERROR_IN_COMMAND_LINE;
+		return exitCode;
+	}
+#endif
     //print out errors for unknown arguments for remaining args that haven't been processed yet
     for (argIndex = static_cast<uint8_t>(optind); argIndex < argc; argIndex++)
     {
