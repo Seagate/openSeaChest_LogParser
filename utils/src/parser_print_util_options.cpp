@@ -240,7 +240,7 @@ bool CPrintCSV::parse_Json(JSONNODE *nData)
             strncpy((char*)title.c_str(), node_name, si);
             std::string intData = "   ";
             intData.resize(vsi);
-            snprintf((char*)intData.c_str(), CHARSIZE, "%" PRId32 " ", (uint32_t)json_as_int(*i));
+            snprintf((char*)intData.c_str(), vsi, "%" PRId32 " ", (uint32_t)json_as_int(*i));
 			createData(title, intData);
             json_free(node_name);
             json_free(node_value);
