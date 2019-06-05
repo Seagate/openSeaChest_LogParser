@@ -7,6 +7,4 @@
 [submodule "opensea-parser"]
 	path = opensea-parser
 	url = ../opensea-parser.git
-[submodule "win_getopt"]
-	path = win_getopt
-	url = https://github.com/Seagate/win_getopt.git
+
