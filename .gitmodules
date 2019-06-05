@@ -8,3 +8,6 @@
 	path = opensea-parser
 	url = ../opensea-parser.git
 
+[submodule "wingetopt"]
+	path = wingetopt
+	url = ../wingetopt.git
