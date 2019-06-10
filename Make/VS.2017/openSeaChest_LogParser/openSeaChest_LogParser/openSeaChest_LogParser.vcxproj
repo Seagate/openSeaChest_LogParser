@@ -261,7 +261,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;WIN_API_TARGET_VERSION=81000000L;INCLUDE_FARM_LOG;INCLUDE_DEVICE_STATISTICS_LOG;INCLUDE_EXT_COMPREHENSIVE_LOG;INCLUDE_COMMON_EXT_DST_LOG;INCLUDE_IDENTIFY_LOG;INCLUDE_IDENTIFY_DEVICE_DATA_LOG;INCLUDE_SCT_TEMP_LOG;INCLUDE_POWER_CONDITION_LOG;INCLUDE_NCQ_CMD_ERROR_LOG;INCLUDE_SCSI_LOG_PAGES</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\..\..\..\Win_getopt;..\..\..\..\include;..\..\..\..\opensea-common\include;..\..\..\..\libjson;..\..\..\..\opensea-parser\include;..\..\..\..\opensea-parser\include\Seagate;..\..\..\..\utils\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\wingetopt\src;..\..\..\..\include;..\..\..\..\opensea-common\include;..\..\..\..\libjson;..\..\..\..\opensea-parser\include;..\..\..\..\opensea-parser\include\Seagate;..\..\..\..\utils\include</AdditionalIncludeDirectories>
       <DebugInformationFormat>OldStyle</DebugInformationFormat>
       <IntrinsicFunctions />
       <OmitFramePointers />
@@ -273,7 +273,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\..\..\..\Win_getopt\VS.2017\$(Platform)\$(Configuration);..\..\..\..\opensea-common\Make\VS.2017\opensea-common\$(Platform)\$(Configuration);..\..\..\..\opensea-parser\Make\VS.2017\opensea-parser\$(Platform)\$(Configuration)\LIB\;..\..\..\..\libjson\VS.2017\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\..\..\wingetopt\VS.2017\$(Platform)\$(Configuration);..\..\..\..\opensea-common\Make\VS.2017\opensea-common\$(Platform)\$(Configuration);..\..\..\..\opensea-parser\Make\VS.2017\opensea-parser\$(Platform)\$(Configuration)\LIB\;..\..\..\..\libjson\VS.2017\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
       <AdditionalDependencies>opensea-common.lib;opensea-parser.lib;getopt.lib;statLibJson.lib;</AdditionalDependencies>
       <FullProgramDatabaseFile>true</FullProgramDatabaseFile>
     </Link>
@@ -287,7 +287,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;WIN_API_TARGET_VERSION=81000000L;INCLUDE_FARM_LOG;INCLUDE_DEVICE_STATISTICS_LOG;INCLUDE_EXT_COMPREHENSIVE_LOG;INCLUDE_COMMON_EXT_DST_LOG;INCLUDE_IDENTIFY_LOG;INCLUDE_IDENTIFY_DEVICE_DATA_LOG;INCLUDE_SCT_TEMP_LOG;INCLUDE_POWER_CONDITION_LOG;INCLUDE_NCQ_CMD_ERROR_LOG;INCLUDE_SCSI_LOG_PAGES</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\..\..\..\Win_getopt;..\..\..\..\include;..\..\..\..\opensea-common\include;..\..\..\..\libjson;..\..\..\..\opensea-parser\include;..\..\..\..\opensea-parser\include\Seagate;..\..\..\..\utils\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\wingetopt\src;..\..\..\..\include;..\..\..\..\opensea-common\include;..\..\..\..\libjson;..\..\..\..\opensea-parser\include;..\..\..\..\opensea-parser\include\Seagate;..\..\..\..\utils\include</AdditionalIncludeDirectories>
       <DebugInformationFormat>
       </DebugInformationFormat>
       <IntrinsicFunctions>
@@ -304,7 +304,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\..\..\..\Win_getopt\VS.2017\$(Platform)\$(Configuration);..\..\..\..\opensea-common\Make\VS.2017\opensea-common\$(Platform)\$(Configuration);..\..\..\..\opensea-parser\Make\VS.2017\opensea-parser\$(Platform)\$(Configuration)\LIB\;..\..\..\..\libjson\VS.2017\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\..\..\wingetopt\VS.2017\$(Platform)\$(Configuration);..\..\..\..\opensea-common\Make\VS.2017\opensea-common\$(Platform)\$(Configuration);..\..\..\..\opensea-parser\Make\VS.2017\opensea-parser\$(Platform)\$(Configuration)\LIB\;..\..\..\..\libjson\VS.2017\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
       <AdditionalDependencies>opensea-common.lib;opensea-parser.lib;getopt.lib;statLibJson.lib;</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -317,7 +317,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;WIN_API_TARGET_VERSION=81000000L;INCLUDE_FARM_LOG;INCLUDE_DEVICE_STATISTICS_LOG;INCLUDE_EXT_COMPREHENSIVE_LOG;INCLUDE_COMMON_EXT_DST_LOG;INCLUDE_IDENTIFY_LOG;INCLUDE_IDENTIFY_DEVICE_DATA_LOG;INCLUDE_SCT_TEMP_LOG;INCLUDE_POWER_CONDITION_LOG;INCLUDE_NCQ_CMD_ERROR_LOG;INCLUDE_SCSI_LOG_PAGES</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\..\..\..\Win_getopt;..\..\..\..\include;..\..\..\..\opensea-common\include;..\..\..\..\libjson;..\..\..\..\opensea-parser\include;..\..\..\..\opensea-parser\include\Seagate;..\..\..\..\utils\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\wingetopt\src;..\..\..\..\include;..\..\..\..\opensea-common\include;..\..\..\..\libjson;..\..\..\..\opensea-parser\include;..\..\..\..\opensea-parser\include\Seagate;..\..\..\..\utils\include</AdditionalIncludeDirectories>
       <DebugInformationFormat>OldStyle</DebugInformationFormat>
       <IntrinsicFunctions />
       <WholeProgramOptimization>false</WholeProgramOptimization>
@@ -328,7 +328,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\..\..\..\Win_getopt\VS.2017\$(Platform)\$(Configuration);..\..\..\..\opensea-common\Make\VS.2017\opensea-common\$(Platform)\$(Configuration);..\..\..\..\opensea-parser\Make\VS.2017\opensea-parser\$(Platform)\$(Configuration)\LIB\;..\..\..\..\libjson\VS.2017\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\..\..\wingetopt\VS.2017\$(Platform)\$(Configuration);..\..\..\..\opensea-common\Make\VS.2017\opensea-common\$(Platform)\$(Configuration);..\..\..\..\opensea-parser\Make\VS.2017\opensea-parser\$(Platform)\$(Configuration)\LIB\;..\..\..\..\libjson\VS.2017\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
       <AdditionalDependencies>opensea-common.lib;opensea-parser.lib;getopt.lib;statLibJson.lib;</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -345,7 +345,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;WIN_API_TARGET_VERSION=81000000L;INCLUDE_FARM_LOG;INCLUDE_DEVICE_STATISTICS_LOG;INCLUDE_EXT_COMPREHENSIVE_LOG;INCLUDE_COMMON_EXT_DST_LOG;INCLUDE_IDENTIFY_LOG;INCLUDE_IDENTIFY_DEVICE_DATA_LOG;INCLUDE_SCT_TEMP_LOG;INCLUDE_POWER_CONDITION_LOG;INCLUDE_NCQ_CMD_ERROR_LOG;INCLUDE_SCSI_LOG_PAGES</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\..\..\..\Win_getopt;..\..\..\..\include;..\..\..\..\opensea-common\include;..\..\..\..\libjson;..\..\..\..\opensea-parser\include;..\..\..\..\opensea-parser\include\Seagate;..\..\..\..\utils\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\wingetopt\src;..\..\..\..\include;..\..\..\..\opensea-common\include;..\..\..\..\libjson;..\..\..\..\opensea-parser\include;..\..\..\..\opensea-parser\include\Seagate;..\..\..\..\utils\include</AdditionalIncludeDirectories>
       <DebugInformationFormat />
       <OmitFramePointers />
       <WholeProgramOptimization>false</WholeProgramOptimization>
@@ -358,7 +358,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\..\..\..\Win_getopt\VS.2017\$(Platform)\$(Configuration);..\..\..\..\opensea-common\Make\VS.2017\opensea-common\$(Platform)\$(Configuration);..\..\..\..\opensea-parser\Make\VS.2017\opensea-parser\$(Platform)\$(Configuration)\LIB\;..\..\..\..\libjson\VS.2017\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\..\..\wingetopt\VS.2017\$(Platform)\$(Configuration);..\..\..\..\opensea-common\Make\VS.2017\opensea-common\$(Platform)\$(Configuration);..\..\..\..\opensea-parser\Make\VS.2017\opensea-parser\$(Platform)\$(Configuration)\LIB\;..\..\..\..\libjson\VS.2017\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
       <AdditionalDependencies>opensea-common.lib;opensea-parser.lib;getopt.lib;statLibJson.lib;</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -375,7 +375,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;WIN_API_TARGET_VERSION=81000000L;INCLUDE_FARM_LOG;INCLUDE_DEVICE_STATISTICS_LOG;INCLUDE_EXT_COMPREHENSIVE_LOG;INCLUDE_COMMON_EXT_DST_LOG;INCLUDE_IDENTIFY_LOG;INCLUDE_IDENTIFY_DEVICE_DATA_LOG;INCLUDE_SCT_TEMP_LOG;INCLUDE_POWER_CONDITION_LOG;INCLUDE_NCQ_CMD_ERROR_LOG;INCLUDE_SCSI_LOG_PAGES</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\..\..\..\Win_getopt;..\..\..\..\include;..\..\..\..\opensea-common\include;..\..\..\..\libjson;..\..\..\..\opensea-parser\include;..\..\..\..\opensea-parser\include\Seagate;..\..\..\..\utils\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\wingetopt\src;..\..\..\..\include;..\..\..\..\opensea-common\include;..\..\..\..\libjson;..\..\..\..\opensea-parser\include;..\..\..\..\opensea-parser\include\Seagate;..\..\..\..\utils\include</AdditionalIncludeDirectories>
       <DebugInformationFormat>
       </DebugInformationFormat>
       <OmitFramePointers>
@@ -392,7 +392,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\..\..\..\Win_getopt\VS.2017\$(Platform)\$(Configuration);..\..\..\..\opensea-common\Make\VS.2017\opensea-common\$(Platform)\$(Configuration);..\..\..\..\opensea-parser\Make\VS.2017\opensea-parser\$(Platform)\$(Configuration)\LIB\;..\..\..\..\libjson\VS.2017\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\..\..\wingetopt\VS.2017\$(Platform)\$(Configuration);..\..\..\..\opensea-common\Make\VS.2017\opensea-common\$(Platform)\$(Configuration);..\..\..\..\opensea-parser\Make\VS.2017\opensea-parser\$(Platform)\$(Configuration)\LIB\;..\..\..\..\libjson\VS.2017\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
       <AdditionalDependencies>opensea-common.lib;opensea-parser.lib;getopt.lib;statLibJson.lib;</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -409,7 +409,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;WIN_API_TARGET_VERSION=81000000L;INCLUDE_FARM_LOG;INCLUDE_DEVICE_STATISTICS_LOG;INCLUDE_EXT_COMPREHENSIVE_LOG;INCLUDE_COMMON_EXT_DST_LOG;INCLUDE_IDENTIFY_LOG;INCLUDE_IDENTIFY_DEVICE_DATA_LOG;INCLUDE_SCT_TEMP_LOG;INCLUDE_POWER_CONDITION_LOG;INCLUDE_NCQ_CMD_ERROR_LOG;INCLUDE_SCSI_LOG_PAGES</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\..\..\..\Win_getopt;..\..\..\..\include;..\..\..\..\opensea-common\include;..\..\..\..\libjson;..\..\..\..\opensea-parser\include;..\..\..\..\opensea-parser\include\Seagate;..\..\..\..\utils\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\wingetopt\src;..\..\..\..\include;..\..\..\..\opensea-common\include;..\..\..\..\libjson;..\..\..\..\opensea-parser\include;..\..\..\..\opensea-parser\include\Seagate;..\..\..\..\utils\include</AdditionalIncludeDirectories>
       <DebugInformationFormat />
       <OmitFramePointers />
       <WholeProgramOptimization>false</WholeProgramOptimization>
@@ -422,7 +422,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\..\..\..\Win_getopt\VS.2017\$(Platform)\$(Configuration);..\..\..\..\opensea-common\Make\VS.2017\opensea-common\$(Platform)\$(Configuration);..\..\..\..\opensea-parser\Make\VS.2017\opensea-parser\$(Platform)\$(Configuration)\LIB\;..\..\..\..\libjson\VS.2017\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\..\..\wingetopt\VS.2017\$(Platform)\$(Configuration);..\..\..\..\opensea-common\Make\VS.2017\opensea-common\$(Platform)\$(Configuration);..\..\..\..\opensea-parser\Make\VS.2017\opensea-parser\$(Platform)\$(Configuration)\LIB\;..\..\..\..\libjson\VS.2017\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
       <AdditionalDependencies>opensea-common.lib;opensea-parser.lib;getopt.lib;statLibJson.lib;</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -439,7 +439,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;WIN_API_TARGET_VERSION=81000000L;INCLUDE_FARM_LOG;INCLUDE_DEVICE_STATISTICS_LOG;INCLUDE_EXT_COMPREHENSIVE_LOG;INCLUDE_COMMON_EXT_DST_LOG;INCLUDE_IDENTIFY_LOG;INCLUDE_IDENTIFY_DEVICE_DATA_LOG;INCLUDE_SCT_TEMP_LOG;INCLUDE_POWER_CONDITION_LOG;INCLUDE_NCQ_CMD_ERROR_LOG;INCLUDE_SCSI_LOG_PAGES</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\..\..\..\Win_getopt;..\..\..\..\include;..\..\..\..\opensea-common\include;..\..\..\..\libjson;..\..\..\..\opensea-parser\include;..\..\..\..\opensea-parser\include\Seagate;..\..\..\..\utils\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\wingetopt\src;..\..\..\..\include;..\..\..\..\opensea-common\include;..\..\..\..\libjson;..\..\..\..\opensea-parser\include;..\..\..\..\opensea-parser\include\Seagate;..\..\..\..\utils\include</AdditionalIncludeDirectories>
       <DebugInformationFormat>
       </DebugInformationFormat>
       <OmitFramePointers>
@@ -456,7 +456,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\..\..\..\Win_getopt\VS.2017\$(Platform)\$(Configuration);..\..\..\..\opensea-common\Make\VS.2017\opensea-common\$(Platform)\$(Configuration);..\..\..\..\opensea-parser\Make\VS.2017\opensea-parser\$(Platform)\$(Configuration)\LIB\;..\..\..\..\libjson\VS.2017\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\..\..\wingetopt\VS.2017\$(Platform)\$(Configuration);..\..\..\..\opensea-common\Make\VS.2017\opensea-common\$(Platform)\$(Configuration);..\..\..\..\opensea-parser\Make\VS.2017\opensea-parser\$(Platform)\$(Configuration)\LIB\;..\..\..\..\libjson\VS.2017\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
       <AdditionalDependencies>opensea-common.lib;opensea-parser.lib;getopt.lib;statLibJson.lib;</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -473,7 +473,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;WIN_API_TARGET_VERSION=81000000L;INCLUDE_FARM_LOG;INCLUDE_DEVICE_STATISTICS_LOG;INCLUDE_EXT_COMPREHENSIVE_LOG;INCLUDE_COMMON_EXT_DST_LOG;INCLUDE_IDENTIFY_LOG;INCLUDE_IDENTIFY_DEVICE_DATA_LOG;INCLUDE_SCT_TEMP_LOG;INCLUDE_POWER_CONDITION_LOG;INCLUDE_NCQ_CMD_ERROR_LOG;INCLUDE_SCSI_LOG_PAGES</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\..\..\..\Win_getopt;..\..\..\..\include;..\..\..\..\opensea-common\include;..\..\..\..\libjson;..\..\..\..\opensea-parser\include;..\..\..\..\opensea-parser\include\Seagate;..\..\..\..\utils\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\wingetopt\src;..\..\..\..\include;..\..\..\..\opensea-common\include;..\..\..\..\libjson;..\..\..\..\opensea-parser\include;..\..\..\..\opensea-parser\include\Seagate;..\..\..\..\utils\include</AdditionalIncludeDirectories>
       <DebugInformationFormat />
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <MinimalRebuild />
@@ -485,7 +485,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\..\..\..\Win_getopt\VS.2017\$(Platform)\$(Configuration);..\..\..\..\opensea-common\Make\VS.2017\opensea-common\$(Platform)\$(Configuration);..\..\..\..\opensea-parser\Make\VS.2017\opensea-parser\$(Platform)\$(Configuration)\LIB\;..\..\..\..\libjson\VS.2017\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\..\..\wingetopt\VS.2017\$(Platform)\$(Configuration);..\..\..\..\opensea-common\Make\VS.2017\opensea-common\$(Platform)\$(Configuration);..\..\..\..\opensea-parser\Make\VS.2017\opensea-parser\$(Platform)\$(Configuration)\LIB\;..\..\..\..\libjson\VS.2017\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
       <AdditionalDependencies>opensea-common.lib;opensea-parser.lib;getopt.lib;statLibJson.lib;</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -502,7 +502,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;WIN_API_TARGET_VERSION=81000000L;INCLUDE_FARM_LOG;INCLUDE_DEVICE_STATISTICS_LOG;INCLUDE_EXT_COMPREHENSIVE_LOG;INCLUDE_COMMON_EXT_DST_LOG;INCLUDE_IDENTIFY_LOG;INCLUDE_IDENTIFY_DEVICE_DATA_LOG;INCLUDE_SCT_TEMP_LOG;INCLUDE_POWER_CONDITION_LOG;INCLUDE_NCQ_CMD_ERROR_LOG;INCLUDE_SCSI_LOG_PAGES</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\..\..\..\Win_getopt;..\..\..\..\include;..\..\..\..\opensea-common\include;..\..\..\..\libjson;..\..\..\..\opensea-parser\include;..\..\..\..\opensea-parser\include\Seagate;..\..\..\..\utils\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\wingetopt\src;..\..\..\..\include;..\..\..\..\opensea-common\include;..\..\..\..\libjson;..\..\..\..\opensea-parser\include;..\..\..\..\opensea-parser\include\Seagate;..\..\..\..\utils\include</AdditionalIncludeDirectories>
       <DebugInformationFormat>OldStyle</DebugInformationFormat>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <MinimalRebuild />
@@ -514,17 +514,17 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\..\..\..\Win_getopt\VS.2017\$(Platform)\$(Configuration);..\..\..\..\opensea-common\Make\VS.2017\opensea-common\$(Platform)\$(Configuration);..\..\..\..\opensea-parser\Make\VS.2017\opensea-parser\$(Platform)\$(Configuration)\LIB\;..\..\..\..\libjson\VS.2017\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\..\..\wingetopt\VS.2017\$(Platform)\$(Configuration);..\..\..\..\opensea-common\Make\VS.2017\opensea-common\$(Platform)\$(Configuration);..\..\..\..\opensea-parser\Make\VS.2017\opensea-parser\$(Platform)\$(Configuration)\LIB\;..\..\..\..\libjson\VS.2017\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
       <AdditionalDependencies>opensea-common.lib;opensea-parser.lib;getopt.lib;statLibJson.lib;</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static-Debug|Win32'">
     <Link>
-      <AdditionalLibraryDirectories>..\..\..\..\Win_getopt\VS.2017\$(Platform)\$(Configuration);..\..\..\..\opensea-common\Make\VS.2017\opensea-common\$(Platform)\$(Configuration);..\..\..\..\opensea-parser\Make\VS.2017\opensea-parser\$(Platform)\$(Configuration)\LIB\;..\..\..\..\libjson\VS.2017\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\..\..\wingetopt\VS.2017\$(Platform)\$(Configuration);..\..\..\..\opensea-common\Make\VS.2017\opensea-common\$(Platform)\$(Configuration);..\..\..\..\opensea-parser\Make\VS.2017\opensea-parser\$(Platform)\$(Configuration)\LIB\;..\..\..\..\libjson\VS.2017\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
       <AdditionalDependencies>opensea-common.lib;opensea-parser.lib;getopt.lib;statLibJson.lib;</AdditionalDependencies>
     </Link>
     <ClCompile>
-      <AdditionalIncludeDirectories>..\..\..\..\Win_getopt;..\..\..\..\include;..\..\..\..\opensea-common\include;..\..\..\..\libjson;..\..\..\..\opensea-parser\include;..\..\..\..\opensea-parser\include\Seagate;..\..\..\..\utils\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\wingetopt\src;..\..\..\..\include;..\..\..\..\opensea-common\include;..\..\..\..\libjson;..\..\..\..\opensea-parser\include;..\..\..\..\opensea-parser\include\Seagate;..\..\..\..\utils\include</AdditionalIncludeDirectories>
     </ClCompile>
     <ClCompile>
       <DebugInformationFormat />
@@ -540,11 +540,11 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static-Debug|ARM'">
     <Link>
-      <AdditionalLibraryDirectories>..\..\..\..\Win_getopt\VS.2017\$(Platform)\$(Configuration);..\..\..\..\opensea-common\Make\VS.2017\opensea-common\$(Platform)\$(Configuration);..\..\..\..\opensea-parser\Make\VS.2017\opensea-parser\$(Platform)\$(Configuration)\LIB\;..\..\..\..\libjson\VS.2017\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\..\..\wingetopt\VS.2017\$(Platform)\$(Configuration);..\..\..\..\opensea-common\Make\VS.2017\opensea-common\$(Platform)\$(Configuration);..\..\..\..\opensea-parser\Make\VS.2017\opensea-parser\$(Platform)\$(Configuration)\LIB\;..\..\..\..\libjson\VS.2017\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
       <AdditionalDependencies>opensea-common.lib;opensea-parser.lib;getopt.lib;statLibJson.lib;</AdditionalDependencies>
     </Link>
     <ClCompile>
-      <AdditionalIncludeDirectories>..\..\..\..\Win_getopt;..\..\..\..\include;..\..\..\..\opensea-common\include;..\..\..\..\libjson;..\..\..\..\opensea-parser\include;..\..\..\..\opensea-parser\include\Seagate;..\..\..\..\utils\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\wingetopt\src;..\..\..\..\include;..\..\..\..\opensea-common\include;..\..\..\..\libjson;..\..\..\..\opensea-parser\include;..\..\..\..\opensea-parser\include\Seagate;..\..\..\..\utils\include</AdditionalIncludeDirectories>
     </ClCompile>
     <ClCompile>
       <DebugInformationFormat>
@@ -566,11 +566,11 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static-Debug|x64'">
     <Link>
-      <AdditionalLibraryDirectories>..\..\..\..\Win_getopt\VS.2017\$(Platform)\$(Configuration);..\..\..\..\opensea-common\Make\VS.2017\opensea-common\$(Platform)\$(Configuration);..\..\..\..\opensea-parser\Make\VS.2017\opensea-parser\$(Platform)\$(Configuration)\LIB\;..\..\..\..\libjson\VS.2017\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\..\..\wingetopt\VS.2017\$(Platform)\$(Configuration);..\..\..\..\opensea-common\Make\VS.2017\opensea-common\$(Platform)\$(Configuration);..\..\..\..\opensea-parser\Make\VS.2017\opensea-parser\$(Platform)\$(Configuration)\LIB\;..\..\..\..\libjson\VS.2017\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
       <AdditionalDependencies>opensea-common.lib;opensea-parser.lib;getopt.lib;statLibJson.lib;</AdditionalDependencies>
     </Link>
     <ClCompile>
-      <AdditionalIncludeDirectories>..\..\..\..\Win_getopt;..\..\..\..\include;..\..\..\..\opensea-common\include;..\..\..\..\libjson;..\..\..\..\opensea-parser\include;..\..\..\..\opensea-parser\include\Seagate;..\..\..\..\utils\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\wingetopt\src;..\..\..\..\include;..\..\..\..\opensea-common\include;..\..\..\..\libjson;..\..\..\..\opensea-parser\include;..\..\..\..\opensea-parser\include\Seagate;..\..\..\..\utils\include</AdditionalIncludeDirectories>
     </ClCompile>
     <ClCompile>
       <DebugInformationFormat />
