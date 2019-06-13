@@ -18,6 +18,7 @@
 #include <sstream>
 #include <algorithm>
 #include <string>
+
 using namespace opensea_parser;
 // trim from beginning of string (left)
 inline std::string& ltrim(std::string& s, const char* t = " \t\r\f\v")
@@ -240,7 +241,8 @@ bool CPrintCSV::parse_Json(JSONNODE *nData)
             strncpy((char*)title.c_str(), node_name, si);
             std::string intData = "   ";
             intData.resize(vsi);
-            snprintf((char*)intData.c_str(), vsi, "%" PRId32 " ", (uint32_t)json_as_int(*i));
+            //snprintf((char*)intData.c_str(), CHARSIZE, "%" PRId32 " ", (uint32_t)json_as_int(*i));
+			snprintf((char*)intData.c_str(), vsi -1, "%" PRId32 " ", (uint32_t)json_as_int(*i));
 			createData(title, intData);
             json_free(node_name);
             json_free(node_value);
@@ -382,10 +384,123 @@ CPrintTXT::~CPrintTXT()
 }
 //-----------------------------------------------------------------------------
 //
+//! \fn CPrintTXT::parse_Json()
+//
+//! \brief
+//!   Description: parse the json informaton to get it into the structue for printing. ( recursion )
+//
+//  Entry:
+//! \param nData - the json node that we are parsing out at this point in time 
+//  Exit:
+//!   \return bool
+//
+//---------------------------------------------------------------------------
+bool CPrintTXT::parse_Json_to_Text(JSONNODE *nData)
+{
+#define CHARSIZE 4
+    std::string title = "";
+    std::string data = "";
+    sFrameData frame;
+    JSONNODE_ITERATOR i = json_begin(nData);
+
+    while (i != json_end(nData))
+    {
+        title = "";
+        data = "";
+        // recursively call ourselves to dig deeper into the tree
+        if (json_type(*i) == JSON_ARRAY || json_type(*i) == JSON_NODE)
+        {
+            json_char *main_name = json_name(*i);
+            JSONNODE_ITERATOR q = json_begin(*i);
+            // need to parse out the 64 bit data
+            if (json_type(*q) == JSON_BOOL)
+            {
+                q++;
+                if (json_type(*q) == JSON_STRING)
+                {
+                    json_char *node_name = json_name(*q);
+                    // make sure it's the 64 bit value string   now we can get the data
+                    if (strcmp(node_name, "64 bit Value String") == 0)
+                    {
+                        // Take the main node string 
+                        size_t si = strlen(main_name);
+                        title.resize(si);
+                        strncpy((char*)title.c_str(), main_name, si);
+                        // get the node value and add it to the structure
+                        json_char *node_value = json_as_string(*q);
+                        size_t valSize = strlen(node_value);
+                        data.resize(valSize);
+                        strncpy((char*)data.c_str(), node_value, valSize);
+                        frame.data = data;
+                        frame.title = title;
+                        m_vData.push_back(frame);
+                        json_free(node_value);
+                    }
+                    json_free(node_name);
+                }
+                else
+                {
+                    parse_Json_to_Text(*i);
+                }
+
+            }
+            else
+            {
+                // for now the data will be null. may have to change later
+                    frame.data = "";
+                    frame.title = main_name;
+                    m_vData.push_back(frame);
+                parse_Json_to_Text(*i);
+            }
+            json_free(main_name);
+        }
+        if (json_type(*i) == JSON_STRING || json_type(*i) == JSON_BOOL)
+        {
+            json_char *node_name = json_name(*i);
+            json_char *node_value = json_as_string(*i);
+            size_t si = strlen(node_name);
+            title.resize(si);
+            strncpy((char*)title.c_str(), node_name, si);
+
+            size_t valSize = strlen(node_value);
+            data.resize(valSize);
+            strncpy((char*)data.c_str(), node_value, valSize);
+
+            frame.data = data;
+            frame.title = title;
+            m_vData.push_back(frame);
+            json_free(node_name);
+            json_free(node_value);
+
+        }
+        if ((json_type(*i) == JSON_NUMBER))
+        {
+            json_char *node_name = json_name(*i);
+            json_char *node_value = json_as_string(*i);
+            size_t si = strlen(node_name);
+            size_t vsi = strlen(node_value) + 1;
+            title.resize(si);
+            strncpy((char*)title.c_str(), node_name, si);
+            std::string intData = "   ";
+            intData.resize(vsi);
+            // this format seems to be perfect and the size is working
+            snprintf((char*)intData.c_str(), vsi - 1 , "%" PRId32 " ", (uint32_t)json_as_int(*i));
+            frame.data = intData;
+            frame.title = title;
+            m_vData.push_back(frame);
+            json_free(node_name);
+            json_free(node_value);
+        }
+        i++;
+    }
+    return true;
+}
+//-----------------------------------------------------------------------------
+//
 //! \fn CPrintTXT::get_Msg_Text_Format()
 //
 //! \brief
-//!   Description: Get the JSON string  
+//!   Description: Take the vector of data and create a string for a text file
 //
 //  Entry:
 //
@@ -396,44 +511,15 @@ CPrintTXT::~CPrintTXT()
 std::string CPrintTXT::get_Msg_Text_Format(const std::string message)
 {
     std::string r = "";
-    std::istringstream f(message);
-    std::string line;
-    std::string nextLine;
-    while (std::getline(f, line))
+    for (std::vector<sFrameData>::iterator it = m_vData.begin(); it != m_vData.end(); ++it)
     {
-        if (line.rfind('{') != std::string::npos)
-        {
-            std::getline(f, nextLine);
-            if (nextLine.find("64 bit Value String in Hex") != std::string::npos)
-            {
-                while (replaceCharacter(line, '{', ' ', 0, false));
-                std::getline(f, nextLine);
-                size_t found = nextLine.rfind(':') + 1;
-                line.append(nextLine.begin() + found, nextLine.end());
-                std::getline(f, nextLine);                              // read the next three lines 
-                std::getline(f, nextLine);
-                std::getline(f, nextLine);
-            }
-            else
-            {
-                while (replaceCharacter(line, '{', '\n', 0, false));
-                while (replaceCharacter(line, '}', '\n', std::string::npos, true));
-            }
-        }
-        else
-        {
-            while (replaceCharacter(line, '}', ' ', std::string::npos, true));
-            while (replaceCharacter(line, ',', ' ', 0, false));
-        }
-
-        if (line.rfind('\n') == std::string::npos)
-            line = line + "\n";
-        while (replaceCharacter(line, '"', ' ', 0, false));
-
-        ltrim(line);
-
-        r = r + line;
+        r.append(it->title);
+        r.append(" : ");
+        r.append(it->data);
+        r.append("\n");
     }
+    // completed now we will clear the vector 
+    m_vData.clear();
     return r;
 }
 //-----------------------------------------------------------------------------
@@ -453,6 +539,7 @@ std::string CPrintTXT::get_Msg_Text_Format(const std::string message)
 CMessage::CMessage(JSONNODE *masterData)
 	:CPrintJSON(masterData), CPrintTXT(), CPrintCSV()
     , msgData(masterData)
+    , printStatus(NOT_SUPPORTED)
     , printType()
     , m_fileName()
 {
@@ -478,6 +565,7 @@ CMessage::CMessage(JSONNODE *masterData)
 CMessage::CMessage(JSONNODE *masterData, std::string fileName, int toolPrintType)
     :CPrintJSON(masterData), CPrintTXT(), CPrintCSV()
     , msgData(masterData)
+    , printStatus(NOT_SUPPORTED)
     , printType(toolPrintType)
     , m_fileName(fileName)
 {
@@ -522,7 +610,7 @@ int CMessage::WriteBuffer()
         message = get_Msg_JSON_Data();                      // get the string message for printable json data
         break;
     case OPENSEA_LOG_PRINT_TEXT:
-		message = get_Msg_JSON_Data();                      // get the string message for printable json data
+        parse_Json_to_Text(msgData);                        // parse the json data into a vector 
         message = get_Msg_Text_Format(message);             // get the string message for printable test format data
         break;
     case OPENSEA_LOG_PRINT_CSV:
