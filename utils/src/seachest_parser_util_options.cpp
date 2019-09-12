@@ -464,7 +464,7 @@ void print_Parser_Output_Log_Help(bool shortHelp)
 	{
 		std::cout << "\t\t" << "To set a name of the output file being generated. This option will overwrite" << std::endl;
 		std::cout << "\t\tfile if it exists." << std::endl;
-		std::cout << "\t\tIf no --" << OUTPUTFILE_LONG_OPT_STRING << " given then data will be printed to the screen." << std::endl;
+		std::cout << "\t\tIf no --" << OUTPUT_LOG_LONG_OPT_STRING << " given then data will be printed to the screen." << std::endl;
 		std::cout << std::endl;
 	}
 	else
