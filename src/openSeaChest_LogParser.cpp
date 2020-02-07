@@ -3,7 +3,7 @@
 //
 // Do NOT modify or remove this copyright and license
 //
-// Copyright (c) 2019 Seagate Technology LLC and/or its Affiliates, All Rights Reserved
+// Copyright (c) 2020 Seagate Technology LLC and/or its Affiliates, All Rights Reserved
 //
 // This software is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -55,7 +55,7 @@ using namespace opensea_parser;
     std::string util_name = "openSeaChest_LogParser";
 #endif
 
-std::string buildVersion = "1.0.1";
+std::string buildVersion = "1.0.3";
 std::string buildDate = __DATE__;
 time_t     pCurrentTime;
 std::string timeString = "";
@@ -672,7 +672,8 @@ static void UtilityHeader(JSONNODE *masterData)
 	strftime((char *)timeString.c_str(), 64, "%m-%d-%Y__%H:%M:%S", localtime(&pCurrentTime));
 	JSONNODE *toolHeader = json_new(JSON_NODE);
 	json_set_name(toolHeader, util_name.c_str());
-	json_push_back(toolHeader, json_new_a("Build Version", (char *)buildVersion.c_str()));
+	json_push_back(toolHeader, json_new_a("Utility Build Version", (char *)buildVersion.c_str()));
+    json_push_back(toolHeader, json_new_a("Library Build Version", (char *)OPENSEA_PARSER_VERSION.c_str()));
 	json_push_back(toolHeader, json_new_a("Build Date", buildDate.c_str()));
 	json_push_back(toolHeader, json_new_a("Run as Date", (char *)timeString.c_str()));
 	json_push_back(masterData, toolHeader);

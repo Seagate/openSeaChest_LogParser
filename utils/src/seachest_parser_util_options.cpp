@@ -3,7 +3,7 @@
 //
 // Do NOT modify or remove this copyright and confidentiality notice.
 //
-// Copyright 2012 - 2019 Seagate Technology LLC.
+// Copyright 2012 - 2020 Seagate Technology LLC.
 //
 // The code contained herein is CONFIDENTIAL to Seagate Technology LLC
 // and may be covered under one or more Non-Disclosure Agreements.
