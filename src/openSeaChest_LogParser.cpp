@@ -673,7 +673,7 @@ static void UtilityHeader(JSONNODE *masterData)
 	JSONNODE *toolHeader = json_new(JSON_NODE);
 	json_set_name(toolHeader, util_name.c_str());
 	json_push_back(toolHeader, json_new_a("Utility Build Version", (char *)buildVersion.c_str()));
-    json_push_back(toolHeader, json_new_a("Library Build Version", (char *)OPENSEA_PARSER_VERSION.c_str()));
+    json_push_back(toolHeader, json_new_a("Library Build Version", OPENSEA_PARSER_VERSION));
 	json_push_back(toolHeader, json_new_a("Build Date", buildDate.c_str()));
 	json_push_back(toolHeader, json_new_a("Run as Date", (char *)timeString.c_str()));
 	json_push_back(masterData, toolHeader);
