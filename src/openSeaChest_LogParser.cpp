@@ -55,7 +55,7 @@ using namespace opensea_parser;
     std::string util_name = "openSeaChest_LogParser";
 #endif
 
-std::string buildVersion = "1.0.3";
+std::string buildVersion = "1.0.4";
 std::string buildDate = __DATE__;
 time_t     pCurrentTime;
 std::string timeString = "";
@@ -121,7 +121,7 @@ int32_t main(int argc, char *argv[])
         OUTPUT_LOG_LONG_OPT,
         OUTPUT_LOG_PRINT_LONG_OPT,
         OUTPUTPATH_LONG_OPT,
-        OUTPUTFILE_LONG_OPT,
+        OUTPUTLOG_LONG_OPT,
         LONG_OPT_TERMINATOR
     };
 
