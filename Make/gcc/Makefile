@@ -1,7 +1,7 @@
 #
 # Do NOT modify or remove this copyright and license
 #
-# Copyright (c) 2017 - 2019 Seagate Technology LLC and/or its Affiliates, All Rights Reserved
+# Copyright (c) 2014 - 2020 Seagate Technology LLC and/or its Affiliates, All Rights Reserved
 #
 # This software is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,6 +11,15 @@
 # 
 # Hand Written Makefile (Edit with caution) -Muhammad
 #
+NAME=openSeaChest_LogParser
+#Change the Major version when major interface changes are made.
+MAJOR=0
+#Change the Minor version when new features are added. 
+MINOR=1
+#Change the patch version when only bug fixes are made.
+PATCH=4
+
+
 UTIL_SRC_DIR=../../utils/src
 UTIL_DIR=../../src
 CXX ?= g++
@@ -101,7 +110,7 @@ opensea-parser:
 libjson:
 	$(MAKE) -C ../../libjson/ CXXFLAGS=''
 
-$(OUTFILE): libjson seaclibs opensea-parser $(OBJS)
+$(OUTFILE): clean libjson seaclibs opensea-parser $(OBJS) done
 	$(CXX) $(INC_DIR) $(CXXFLAGS) $(PROJECT_DEFINES) $(OBJS) -o $@ $(LFLAGS)
 
 %.o: %.cpp
@@ -116,14 +125,27 @@ strip:
 
 farm: clean release 
 	mv $(OUTFILE) $(FARM_OUTFILE)
-clean:
+clean: banner
 	rm -f *.o *.a openSeaChest_LogParser*
 	rm -f $(UTIL_SRC_DIR)/*.o
 	rm -f $(UTIL_SRC_DIR)/utils/*.o
 	rm -f $(UTIL_DIR)/*.o
+	@echo "============================================================"
+	@echo "       CLEANED"
+	@echo "============================================================"
 
 clean_all: clean
 	$(MAKE) -C ../../opensea-common/Make/$(TOOL_CHAIN) clean
 	$(MAKE) -C ../../opensea-parser/Make/$(TOOL_CHAIN) clean
 	$(MAKE) -C ../../libjson/ clean CXXFLAGS=''
+
+banner:
+	@echo "============================================================"
+	@echo "openSeaChest_LogParser Makefile version: "$(MAJOR).$(MINOR).$(PATCH)  "OS: "$(OS)
+	@echo "============================================================"
+
+done:
+	@echo "============================================================"
+	@echo "Build of openSeaChest-LogParser has completed "
+	@echo "============================================================"
 
