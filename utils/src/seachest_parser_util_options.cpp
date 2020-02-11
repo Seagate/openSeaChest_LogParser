@@ -3,7 +3,7 @@
 //
 // Do NOT modify or remove this copyright and confidentiality notice.
 //
-// Copyright 2012 - 2020 Seagate Technology LLC.
+// Copyright (c) 2015 - 2018 Seagate Technology LLC and/or its Affiliates, All Rights Reserved
 //
 // The code contained herein is CONFIDENTIAL to Seagate Technology LLC
 // and may be covered under one or more Non-Disclosure Agreements.
@@ -42,7 +42,7 @@ void seachest_utility_Info(const std::string & utilityName, const std::string & 
 	g_timeString.resize(FORMAT_SIZE);
     printf("===============================================================================\n");
     printf(" %s - Seagate drive utilities\n", utilityName.c_str());
-    printf(" Copyright (c) 2018-2019 Seagate Technology LLC and/or its Affiliates, All Rights Reserved\n");
+    printf(" Copyright (c) 2018-2020 Seagate Technology LLC and/or its Affiliates\n");
     printf(" %s Version: %s-%s ", utilityName.c_str(), buildVersion.c_str(), openseaVersion.c_str());
     print_Architecture(architecture);
     printf("\n");
@@ -301,12 +301,12 @@ void print_OutputPath_Help(bool shortHelp)
 //-----------------------------------------------------------------------------
 void print_OutputFile_Help(bool shortHelp)
 {
-	printf("\t--%s [file] \n", OUTPUTFILE_LONG_OPT_STRING);
+	printf("\t--%s [file] \n", OUTPUTLOG_LONG_OPT_STRING);
 	if (!shortHelp)
 	{
 		printf("\t\tTo set a name of the output file being generated.\n");
 		printf("\t\tThis option will overwrite the file if it exists.\n");
-		printf("\t\tIf no %s given then data will be printed to the screen.\n\n", OUTPUTFILE_LONG_OPT_STRING);
+		printf("\t\tIf no %s given then data will be printed to the screen.\n\n", OUTPUTLOG_LONG_OPT_STRING);
 	}
 }
 
@@ -329,6 +329,10 @@ void print_Input_Log_Help(bool shortHelp)
 	{
 		std::cout << "\t\t" << "Use this option to pass a log into the tool for parsing." << std::endl << std::endl;
 	}
+    else
+    {
+        std::cout << std::endl;
+    }
 }
 //-----------------------------------------------------------------------------
 //
@@ -464,7 +468,7 @@ void print_Parser_Output_Log_Help(bool shortHelp)
 	{
 		std::cout << "\t\t" << "To set a name of the output file being generated. This option will overwrite" << std::endl;
 		std::cout << "\t\tfile if it exists." << std::endl;
-		std::cout << "\t\tIf no --" << OUTPUTFILE_LONG_OPT_STRING << " given then data will be printed to the screen." << std::endl;
+		std::cout << "\t\tIf no --" << OUTPUTLOG_LONG_OPT_STRING << " given then data will be printed to the screen." << std::endl;
 		std::cout << std::endl;
 	}
 	else
