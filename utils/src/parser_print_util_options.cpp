@@ -399,7 +399,7 @@ bool CPrintCSV::parse_Json(JSONNODE *nData, uint16_t numberOfTabs)
                 m_csvData.title = m_csvData.title + ",";
                         // data is just a comma
                 
-                m_csvData.data = m_csvData.data + ",";
+                m_csvData.data = m_csvData.data + "NONE,";
                
             }
             json_free(main_name);
@@ -433,7 +433,11 @@ bool CPrintCSV::parse_Json(JSONNODE *nData, uint16_t numberOfTabs)
             strncpy((char*)title.c_str(), node_name, si);
             std::string intData = "   ";
             intData.resize(vsi);
-			snprintf((char*)intData.c_str(), vsi , "%" PRIu32 " ", (uint32_t)json_as_int(*i));
+            char *tempData = (char*)calloc((BASIC * 4), sizeof(char));
+            memset(tempData, 0, BASIC);
+            // this format seems to be perfect and the size is working
+            snprintf(tempData, vsi, "%s", node_value);
+            intData = tempData;
 			createData(title, intData, numberOfTabs);
             json_free(node_name);
             json_free(node_value);
@@ -738,7 +742,6 @@ bool CPrintTXT::parse_Json_to_Text(JSONNODE *nData, uint16_t numberOfTabs)
             }
             title =  main_name;
             Create_Tabs(title, data, numberOfTabs);
-            //m_vData.push_back(frame);
             json_free(main_name);
             title = "";
             parse_Json_to_Text(*i, (numberOfTabs + 1));
@@ -770,11 +773,15 @@ bool CPrintTXT::parse_Json_to_Text(JSONNODE *nData, uint16_t numberOfTabs)
             strncpy((char*)title.c_str(), node_name, si);
             std::string intData = "   ";
             intData.resize(vsi);
+            char *tempData = (char*)calloc((BASIC * 4), sizeof(char));
+            memset(tempData, 0, BASIC);
             // this format seems to be perfect and the size is working
-            snprintf((char*)intData.c_str(), vsi , "%" PRIu32 " ", (uint32_t)json_as_int(*i));         
+            snprintf(tempData, vsi, "%s", node_value);
+            intData = tempData;
             Create_Tabs(title, intData, numberOfTabs);
             json_free(node_name);
             json_free(node_value);
+            safe_Free(tempData);
         }
         i++;
     }

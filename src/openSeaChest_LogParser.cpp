@@ -55,7 +55,7 @@ using namespace opensea_parser;
     std::string util_name = "openSeaChest_LogParser";
 #endif
 
-std::string buildVersion = "1.0.4";
+std::string buildVersion = "1.2.0";
 std::string buildDate = __DATE__;
 time_t     pCurrentTime;
 std::string timeString = "";
@@ -553,6 +553,14 @@ int32_t main(int argc, char *argv[])
 				json_push_back(masterJson, json_new_a("Parsing Error", "Could not Open File"));
 			}
 			break;
+        case VALIDATION_FAILURE:
+            exitCode = UTIL_EXIT_VALIDATION_FAILURE;
+            if (OUTPUT_LOG_FILE_FLAG)
+            {
+                printf("\nBinary File has Failed Validation \n");
+                json_push_back(masterJson, json_new_a("Parsing Error", "Validation Failure"));
+            }
+            break;
 		case INVALID_LENGTH:
 			exitCode = UTIL_EXIT_OPERATION_INVALID_LENGTH;
 			if (OUTPUT_LOG_FILE_FLAG)
