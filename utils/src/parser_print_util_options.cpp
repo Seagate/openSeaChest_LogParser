@@ -1309,8 +1309,10 @@ CPrintProm::metric CPrintProm::zoneToLabel(metric currentMetric) {
     for (std::size_t i = 1; i < keyFields.size(); i++) {
         if (keyFields.at(i) == "Zone") {
             if (currentMetric.labelMap.find(ZONE_NUMBER_LABEL) != currentMetric.labelMap.end()) {
-                keyFields.erase(keyFields.begin() + i - 1);
-                break;
+                if (keyFields.at(i - 1) == "Test") {
+                    keyFields.erase(keyFields.begin() + i - 1);
+                    break;
+                }
             }
         }
     }
