@@ -921,12 +921,6 @@ void CPrintProm::parseJSONToProm(JSONNODE* nData, std::string serialNumber, json
             json_char *currentValue = json_as_string(*it_json);
             // Insert the drive's serial number as a label
             currentMetric.labelMap.insert(std::pair<std::string, std::string>("device", serialNumber));
-            // If the key follows the form of "64-bit value . . ." then add the node name to be clearer
-            if (currentMetric.key.find("64 bit Value ") != std::string::npos) {
-                if (json_nodeName != NULL) {
-                    currentMetric.key = trim(std::string(json_nodeName), " ") + " " + currentMetric.key;
-                }
-            }
             // If the key is describing a head with a given number, convert that to a label
             if (currentMetric.key.find("Head ") != std::string::npos) {
                 if (currentMetric.key.find_first_of("0123456789") != std::string::npos) {
