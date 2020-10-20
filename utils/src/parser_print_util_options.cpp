@@ -3,7 +3,7 @@
 //
 // Do NOT modify or remove this copyright and license
 //
-// Copyright (c) 2015 - 2018 Seagate Technology LLC and/or its Affiliates, All Rights Reserved
+// Copyright (c) 2015 - 2020 Seagate Technology LLC and/or its Affiliates, All Rights Reserved
 //
 // This software is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -163,6 +163,18 @@ bool CPrintCSV::parse_Json(JSONNODE *nData, uint16_t numberOfTabs)
 #define CHARSIZE 4
     std::string title = "";
     std::string data = "";
+    if (m_csv)
+    {
+        title.resize(BASIC);
+        data.resize(BASIC * 4);
+    }
+    else
+    {
+        title.resize(BASIC * 10000);
+        data.resize(BASIC * 10000);
+        m_csvData.title.resize(BASIC * 1000);
+        m_csvData.data.resize(BASIC * 1000);
+    }
     JSONNODE_ITERATOR i = json_begin(nData);
 
     while (i != json_end(nData))
@@ -225,27 +237,60 @@ bool CPrintCSV::parse_Json(JSONNODE *nData, uint16_t numberOfTabs)
 
 
                 // go through all the nodes and get the data but don't change the title
-                while (q != json_end(*i))
+                size_t ddSize = 0;
+                
+                if (m_csv)
                 {
-                    //char *newData = (char*)calloc((BASIC * 4), sizeof(char));
-                    json_char* newData = json_as_string(*q);
-                    si = strlen(newData);
-                    data.resize(si);
-                    strncpy((char*)data.c_str(), newData, si);
-                    json_free(newData);
-                    q++;
+                    while (q != json_end(*i))
+                    {
+                        json_char* newData = json_as_string(*q);
+                        si = strlen(newData);
+                        ddSize += si + 1;
+                        data.resize(ddSize);
+                        strncat((char*)data.c_str(), newData, si);
+                        strncat((char*)data.c_str(), ",", 1);
+                        json_free(newData);
+                        q++;
+                    }
+                    m_csvData.title.resize(sizeof(title));
+                    m_csvData.title = title;
+                    m_csvData.data.resize(data.size());
+                    strncpy((char*)m_csvData.data.c_str(), (char*)data.c_str(), data.size());
+
+                    if (m_csvData.data.size() > 1)  // check to make sure title and data have data ??
+                    {
+                        m_line.append(m_csvData.title);     // move the title to the line
+                        m_line.append(m_csvData.data);      // move the data to the line
+                        m_line.append("\n");
+                        m_csvData.title = "";               // clear title
+                        m_csvData.data = "";                // clear data
+                    }
                 }
-                m_csvData.title.resize(sizeof(title));
-                m_csvData.title = title;
-                m_csvData.data.resize(data.size());
-                strncpy((char*)m_csvData.data.c_str(), (char*)data.c_str(), data.size());
-                if (m_csvData.data.size() > 1)  // check to make sure title and data have data ??
+                else
                 {
-                    m_line.append(m_csvData.title);     // move the title to the line
-                    m_line.append(m_csvData.data);      // move the data to the line
-                    m_line.append("\n");
-                    m_csvData.title = "";               // clear title
-                    m_csvData.data = "";                // clear data
+                    while (q != json_end(*i))
+                    {
+                        json_char* newData = json_as_string(*q);
+                        si = strlen(newData);
+                        ddSize = si ;
+                        data.resize(ddSize);
+                        strncat((char*)data.c_str(), newData, si);
+                        json_free(newData);
+                        q++;
+                        try 
+                        {
+                            strncat((char*)data.c_str(), ",", 1);
+                            strncat((char*)m_csvData.title.c_str(), (char*)title.c_str(), title.size());
+                            strncat((char*)m_csvData.data.c_str(), (char*)data.c_str(), data.size());
+                        }
+                        catch (...)
+                        {
+                            std::cout << "Data to Large for file format." << title << " exiting Early" << std::endl;
+                            break;
+                        }
+                        data = "";
+                    }
+                    
                 }
                 // clean up on the json_char*
                 json_free(node_name);
@@ -306,6 +351,11 @@ bool CPrintCSV::parse_Json(JSONNODE *nData, uint16_t numberOfTabs)
                     m_csvData.title = title;
                     m_csvData.data.resize(strlen(intData));
                     strncpy((char*)m_csvData.data.c_str(), intData, strlen(intData));
+                }
+                else
+                {
+                    strncat((char*)m_csvData.title.c_str(), (char*)title.c_str(), title.size());
+                    strncat((char*)m_csvData.data.c_str(), (char*)data.c_str(), data.size());
                 }
                 safe_Free(intData);      // free the memory for intData
             }
@@ -395,12 +445,10 @@ bool CPrintCSV::parse_Json(JSONNODE *nData, uint16_t numberOfTabs)
 			}
             else        // flatcsv needs to copy the data   to the m_csvData strings
             {
-                m_csvData.title = m_csvData.title + main_name;
-                m_csvData.title = m_csvData.title + ",";
-                        // data is just a comma
-                
-                m_csvData.data = m_csvData.data + "NONE,";
-               
+                strncat((char *)m_csvData.title.c_str(), main_name, strlen(main_name));
+                strncat((char *)m_csvData.title.c_str(), ",", strlen(","));
+
+                strncat((char *)m_csvData.data.c_str(), "NONE,", strlen("NONE,"));
             }
             json_free(main_name);
             parse_Json(*i, numberOfTabs + 1);
@@ -441,6 +489,7 @@ bool CPrintCSV::parse_Json(JSONNODE *nData, uint16_t numberOfTabs)
 			createData(title, intData, numberOfTabs);
             json_free(node_name);
             json_free(node_value);
+            safe_Free(tempData);
         }
         i++;
     }
@@ -512,9 +561,9 @@ bool CPrintCSV::createData( std::string &title, std::string &data, uint16_t numb
 	else
 	{
 		title = title + ",";
-		m_csvData.title = m_csvData.title + title;
+        strncat((char *)m_csvData.title.c_str(), (char *)title.c_str(), title.size());
 		data = data + ",";
-		m_csvData.data = m_csvData.data + data;
+        strncat((char *)m_csvData.data.c_str(),(char *) data.c_str(), data.size());
 	}
 	return true;
 }

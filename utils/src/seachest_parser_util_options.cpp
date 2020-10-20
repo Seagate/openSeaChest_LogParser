@@ -3,7 +3,7 @@
 //
 // Do NOT modify or remove this copyright and confidentiality notice.
 //
-// Copyright (c) 2015 - 2018 Seagate Technology LLC and/or its Affiliates, All Rights Reserved
+// Copyright (c) 2015 - 2020 Seagate Technology LLC and/or its Affiliates, All Rights Reserved
 //
 // The code contained herein is CONFIDENTIAL to Seagate Technology LLC
 // and may be covered under one or more Non-Disclosure Agreements.
@@ -145,6 +145,9 @@ void print_SeaChest_Util_Exit_Codes(void)
     printf("\t%d = Cannot Open File\n", UTIL_EXIT_CANNOT_OPEN_FILE);
     printf("\t%d = File Already Exists\n", UTIL_EXIT_FILE_ALREADY_EXISTS);
 	printf("\t%d = Not Valid for this parser\n", UTIL_EXIT_FILE_NOT_VALID);
+    printf("\t%d = Validation Failed\n", UTIL_EXIT_VALIDATION_FAILURE);
+    printf("\t%d = Error in Header and Footer validation\n", UTIL_EXIT_STRIP_HDR_FOOTER_FAILURE);
+    printf("\t%d = Parsing Failure\n", UTIL_EXIT_PARSE_FAILURE);    
     printf("\tAnything else = unknown error\n\n");
 
 }
