@@ -3,7 +3,7 @@
 //
 // Do NOT modify or remove this copyright and license
 //
-// Copyright (c) 2015 - 2019 Seagate Technology LLC and/or its Affiliates, All Rights Reserved
+// Copyright (c) 2015 - 2020 Seagate Technology LLC and/or its Affiliates, All Rights Reserved
 //
 // This software is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -25,6 +25,9 @@
 #include "Opensea_Parser_Helper.h"
 
 namespace opensea_parser {
+#ifndef PARSER_PRINT_UTIL_OPTIONS
+#define PARSER_PRINT_UTIL_OPTIONS
+
 
     class CPrintJSON
     {
@@ -52,21 +55,34 @@ namespace opensea_parser {
 		std::string					m_line;														//!< line string for csv formating
 		bool						m_csv;														//!< if true then we need to format for csv print				
        
-        bool parse_Json(JSONNODE *nData);
+        bool parse_Json(JSONNODE *nData, uint16_t numberOfTabs);
 
     public:
         CPrintCSV();
         virtual ~CPrintCSV();
         std::string get_Msg_CSV(JSONNODE *masterData);											//!< returns string data for a normal CSV, comma delimited
         std::string get_Msg_Flat_csv(JSONNODE *masterData);                                     //!< returns string data for creating a csv all on two lines, comma delimited
-		bool createData(std::string &title, std::string &data);
+		bool createData(std::string &title, std::string &data, uint16_t numberOfTabs);          //!< creates the Data for the csv and flat csv, tab vs comma
     };
 
     class CPrintTXT
     {
+    private:
+#pragma pack(push, 1)
+        typedef struct _sFrameData
+        {
+            std::string title;                                                                  //!< title information from the node
+            std::string data;                                                                   //!< Data information from the node
+        }sFrameData;
+#pragma pack(pop)
+        std::vector<sFrameData>               m_vData;                                      //!< frame Parameter data
+        std::string					m_line;														//!< line string for csv formating
+        
     public:
         CPrintTXT();
         virtual ~CPrintTXT();
+        bool parse_Json_to_Text(JSONNODE *nData, uint16_t numberOfTabs);
+        bool Create_Tabs(std::string &title, std::string &data, uint16_t numberOfTabs);          //!< creates the Data for the text tabs
         std::string get_Msg_Text_Format(const std::string message);                              //!< returns the json data as a text string
     };
 
@@ -89,5 +105,5 @@ namespace opensea_parser {
 
 
     };
-
+#endif // !PARSER_PRINT_UTIL_OPTIONS
 };

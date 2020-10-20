@@ -1,7 +1,7 @@
 # **openSeaChest_LogParser**
 ## Cross platform utility useful for reading binary data logs from SATA, SAS, NVMe, and USB storage devices.
 
-##### Copyright (c) 2014-2019 Seagate Technology LLC and/or its Affiliates, All Rights Reserved
+##### Copyright (c) 2014-2020 Seagate Technology LLC and/or its Affiliates, All Rights Reserved
 
 #### Welcome to the openSeaChest_LogParser open source project!
 
@@ -167,6 +167,9 @@ analytical review.  Identification and inquiry data stored on the drive is also
 provided.  A view of SMART and device statistics is available when supported by
 the drive.
 
+**openSeaChest_LogParser** - Tool for parsing the T-13 logs generic. With support for
+FARM Log and other Seagate Vendor Specific Logs.
+
 **openSeaChest_Logs** -
 
 **openSeaChest_NVMe** -
@@ -217,7 +220,7 @@ The newest online version of the openSeaChest Utilities documentation, open
 source usage and acknowledgement licenses, and our Linux USB Boot Maker FAQ can
 be found at: https://github.com/Seagate/openSeaChest.
 
-Copyright (c) 2014-2018 Seagate Technology LLC and/or its Affiliates, All Rights Reserved
+Copyright (c) 2014-2020 Seagate Technology LLC and/or its Affiliates, All Rights Reserved
 
 -----------------------------------------
 

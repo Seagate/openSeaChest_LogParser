@@ -1,7 +1,7 @@
 //
 // Do NOT modify or remove this copyright and license
 //
-// Copyright (c) 2012 - 2019 Seagate Technology LLC and/or its Affiliates, All Rights Reserved
+// Copyright (c) 2012 - 2020 Seagate Technology LLC and/or its Affiliates, All Rights Reserved
 //
 // This software is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -42,6 +42,9 @@ typedef enum _eUtilExitCodes
     UTIL_EXIT_CANNOT_OPEN_FILE,
     UTIL_EXIT_FILE_ALREADY_EXISTS,
     UTIL_EXIT_FILE_NOT_VALID,
+    UTIL_EXIT_VALIDATION_FAILURE = 20, 
+    UTIL_EXIT_STRIP_HDR_FOOTER_FAILURE = 21, 
+    UTIL_EXIT_PARSE_FAILURE = 22,
 }eUtilExitCodes;
 
 typedef enum _eLogTypes
@@ -144,11 +147,11 @@ typedef enum _ePrintTypes
 #define PATH_LONG_OPT_STRING "outputPath"
 #define OUTPUTPATH_LONG_OPT { PATH_LONG_OPT_STRING, required_argument, NULL, 0}
 
-#define OUTPUTFILE_FLAG outputFilePtr
-#define OUTPUTFILE_VAR char *OUTPUTFILE_FLAG = NULL;
+#define OUTPUTLOG_FLAG outputFilePtr
+#define OUTPUTLOG_VAR char *OUTPUTLOG_FLAG = NULL;
 
-#define OUTPUTFILE_LONG_OPT_STRING "outputFile"
-#define OUTPUTFILE_LONG_OPT { OUTPUTFILE_LONG_OPT_STRING, required_argument, NULL, 0}
+#define OUTPUTLOG_LONG_OPT_STRING "outputLog"
+#define OUTPUTLOG_LONG_OPT { OUTPUTLOG_LONG_OPT_STRING, required_argument, NULL, 0}
 
 #define LICENSE_FLAG showLicense
 #define LICENSE_VAR getOptBool LICENSE_FLAG = goFalse;

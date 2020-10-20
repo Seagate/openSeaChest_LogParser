@@ -3,7 +3,7 @@
 //
 // Do NOT modify or remove this copyright and license
 //
-// Copyright (c) 2019 Seagate Technology LLC and/or its Affiliates, All Rights Reserved
+// Copyright (c) 2020 Seagate Technology LLC and/or its Affiliates, All Rights Reserved
 //
 // This software is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -55,7 +55,7 @@ using namespace opensea_parser;
     std::string util_name = "openSeaChest_LogParser";
 #endif
 
-std::string buildVersion = "1.0.1";
+std::string buildVersion = "1.2.1";
 std::string buildDate = __DATE__;
 time_t     pCurrentTime;
 std::string timeString = "";
@@ -121,7 +121,7 @@ int32_t main(int argc, char *argv[])
         OUTPUT_LOG_LONG_OPT,
         OUTPUT_LOG_PRINT_LONG_OPT,
         OUTPUTPATH_LONG_OPT,
-        OUTPUTFILE_LONG_OPT,
+        OUTPUTLOG_LONG_OPT,
         LONG_OPT_TERMINATOR
     };
 
@@ -553,6 +553,14 @@ int32_t main(int argc, char *argv[])
 				json_push_back(masterJson, json_new_a("Parsing Error", "Could not Open File"));
 			}
 			break;
+        case VALIDATION_FAILURE:
+            exitCode = UTIL_EXIT_VALIDATION_FAILURE;
+            if (OUTPUT_LOG_FILE_FLAG)
+            {
+                printf("\nBinary File has Failed Validation \n");
+                json_push_back(masterJson, json_new_a("Parsing Error", "Validation Failure"));
+            }
+            break;
 		case INVALID_LENGTH:
 			exitCode = UTIL_EXIT_OPERATION_INVALID_LENGTH;
 			if (OUTPUT_LOG_FILE_FLAG)
@@ -672,7 +680,8 @@ static void UtilityHeader(JSONNODE *masterData)
 	strftime((char *)timeString.c_str(), 64, "%m-%d-%Y__%H:%M:%S", localtime(&pCurrentTime));
 	JSONNODE *toolHeader = json_new(JSON_NODE);
 	json_set_name(toolHeader, util_name.c_str());
-	json_push_back(toolHeader, json_new_a("Build Version", (char *)buildVersion.c_str()));
+	json_push_back(toolHeader, json_new_a("Utility Build Version", (char *)buildVersion.c_str()));
+    json_push_back(toolHeader, json_new_a("Library Build Version", OPENSEA_PARSER_VERSION));
 	json_push_back(toolHeader, json_new_a("Build Date", buildDate.c_str()));
 	json_push_back(toolHeader, json_new_a("Run as Date", (char *)timeString.c_str()));
 	json_push_back(masterData, toolHeader);
