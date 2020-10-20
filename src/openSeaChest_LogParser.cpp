@@ -55,7 +55,7 @@ using namespace opensea_parser;
     std::string util_name = "openSeaChest_LogParser";
 #endif
 
-std::string buildVersion = "1.2.0";
+std::string buildVersion = "1.2.1";
 std::string buildDate = __DATE__;
 time_t     pCurrentTime;
 std::string timeString = "";
