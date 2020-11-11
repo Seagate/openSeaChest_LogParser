@@ -1,5 +1,5 @@
 //
-// Print_Ooptions.cpp
+// parser_print_util_options.cpp
 //
 // Do NOT modify or remove this copyright and license
 //
@@ -11,13 +11,14 @@
 //
 // ******************************************************************************************
 
-// \file Print_Options.cpp
+// \file parser_print_util_options.cpp
 // \brief This file defines the specific funtions and macros for parser Utilities. 
 
 #include "parser_print_util_options.h"
 #include <sstream>
 #include <algorithm>
 #include <string>
+#include <iterator>
 
 using namespace opensea_parser;
 // trim from beginning of string (left)
@@ -877,8 +878,515 @@ std::string CPrintTXT::get_Msg_Text_Format(const std::string message)
 //!   \return 
 //
 //---------------------------------------------------------------------------
+
+/*
+ *  Parses JSON and converts it to key-value pairs with labels, storing that in a struct
+ *
+ *  @param  Pointer to raw JSON data (*JSONNODE)
+ *  @param  The drive's serial number (string)
+ *  @param  The name of the JSON node superceding (one level above) the current one
+ */
+void CPrintProm::parseJSONToProm(JSONNODE* nData, std::string serialNumber, json_char *json_nodeName) {
+    // Declare a metric
+    metric currentMetric;
+    JSONNODE_ITERATOR it_json = json_begin(nData);
+    // Iterate through master JSON data
+    while (it_json != json_end(nData)) {
+        // Clear the metric struct
+        metric currentMetric;
+        // If the current JSON object is an array, check the types of the objects in the array
+        if (json_type(*it_json) == JSON_ARRAY) {
+            json_char *jsonArrayName = json_name(*it_json);
+            JSONNODE_ITERATOR it_jsonArray = json_begin(*it_json);
+            if (json_type(*it_jsonArray) == JSON_NUMBER || json_type(*it_jsonArray) == JSON_STRING || json_type(*it_jsonArray) == JSON_BOOL) {
+                // Go through all the items in this array and create new metrics
+                int arrayIndex = 0;
+                while (it_jsonArray != json_end(*it_json)) {
+                    // Set the key
+                    currentMetric.key = trim(std::string(jsonArrayName), " ");
+                    json_char *currentValue = json_as_string(*it_jsonArray);
+                    // Insert the index of the array as a label
+                    std::ostringstream stream;
+                    stream << arrayIndex;
+                    std::string arrayIndex_str = stream.str();
+                    currentMetric.labelMap.insert(std::pair<std::string, std::string>("index", arrayIndex_str));
+                    // Insert the drive's serial number as a label
+                    currentMetric.labelMap.insert(std::pair<std::string, std::string>("device", serialNumber));
+                    // If the JSON type is a string, check if it can be parsed as a number; otherwise, pass the value in though the label
+                    if (json_type(*it_json) == JSON_STRING) {
+                        // If the value is a number, set the value accordingly
+                        currentMetric.value = trim(std::string(currentValue), " ");
+                        // If the value is not a number (by our definition), then pass the value in through a label and set the value to NaN
+                        if (!isNumber(currentMetric.value)) {
+                            currentMetric.labelMap.insert(std::pair<std::string, std::string>("value", currentMetric.value));
+                            currentMetric.value = "NaN";
+                        }
+                    // If the JSON type is a number, set the value
+                    } else if (json_type(*it_json) == JSON_NUMBER) {
+                        currentMetric.value = std::string(currentValue);
+                    // If the JSON type is a boolean, set the value to 0 for false or 1 for true
+                    } else if (json_type(*it_json) == JSON_BOOL) {
+                        if (std::string(currentValue) == "true") {
+                            currentMetric.value = "1";
+                        } else {
+                            currentMetric.value = "0";
+                        }
+                    }
+                    // Push the metric to the total metric vector
+                    m_metricList.push_back(currentMetric);
+                    // Clear the pointer holding the value
+                    json_free(currentValue);
+                    // Clear the metric struct
+                    metric currentMetric;
+                    arrayIndex++;
+                    it_jsonArray++;
+                }
+                // Clear the pointer storing the JSON array's name
+                json_free(jsonArrayName);
+            // If the values in the array are nodes, run this method recursively on the JSON array
+            } else if (json_type(*it_jsonArray) == JSON_NODE) {
+                JSONNODE_ITERATOR it_jsonArrayNode = json_begin(*it_jsonArray);
+                json_char *jsonArrayNodeName = json_name(*it_jsonArrayNode);
+                // Do nothing if the node is NULL
+                if (it_jsonArrayNode == NULL) {
+                    json_free(jsonArrayNodeName);
+                    json_free(jsonArrayName);
+                    break;
+                }
+                // Run this method recursively
+                parseJSONToProm(*it_jsonArray, serialNumber, jsonArrayNodeName);
+                // Clear pointers
+                json_free(jsonArrayNodeName);
+                json_free(jsonArrayName);
+            // Otherwise, simply free the data as it cannot be made into a Prometheus metric
+            } else {
+                json_free(jsonArrayName);
+            }
+        // If the current JSON object is a string, number, or boolean, set the key, value, and labels of the current metric
+        } else if (json_type(*it_json) == JSON_STRING || json_type(*it_json) == JSON_BOOL || json_type(*it_json) == JSON_NUMBER) {
+            json_char *jsonName = json_name(*it_json);
+            // Set the key
+            currentMetric.key = trim(std::string(jsonName), " ");
+            json_char *currentValue = json_as_string(*it_json);
+            // Insert the drive's serial number as a label
+            currentMetric.labelMap.insert(std::pair<std::string, std::string>("device", serialNumber));
+            // If the key is describing a head with a given number, convert that to a label
+            if (currentMetric.key.find("Head ") != std::string::npos) {
+                if (currentMetric.key.find_first_of("0123456789") != std::string::npos) {
+                    currentMetric = headToLabel(currentMetric);
+                }
+            }
+            // If the key is describing a test zone with a given number, convert that to a label
+            if (json_nodeName != NULL) {
+                if (std::string(json_nodeName).find("Test Zone ") != std::string::npos || currentMetric.key.find("Zone ") != std::string::npos) {
+                    if (currentMetric.key.find_first_of("0123456789") != std::string::npos) {
+                        currentMetric = zoneToLabel(currentMetric);
+                        // Define the label names
+                        const std::string ZONE_NUMBER_LABEL = "zone";
+                        // If the zone number is in the node name, not key, add it as a label
+                        if (currentMetric.labelMap.find(ZONE_NUMBER_LABEL) == currentMetric.labelMap.end()) {
+                            // Put string of the current metric's node's name into a stream
+                            std::string nodeName = std::string(json_nodeName);
+                            std::stringstream currentKeyStream(nodeName);
+                            // Copy the contents into a vector splitting the node name into words (whitespace separated)
+                            std::vector<std::string> nodeNameFields((std::istream_iterator<std::string>(currentKeyStream)), std::istream_iterator<std::string>());
+                            // If the node name contains "Zone " followed by its zone number, add that number as a label
+                            for (std::string::size_type i = 0; i < nodeNameFields.size() - 1; i++) {
+                                if (nodeNameFields.at(i) == "Zone") {
+                                    if (isNumber(nodeNameFields.at(i + 1))) {
+                                        currentMetric.labelMap.insert(std::pair<std::string, std::string>(ZONE_NUMBER_LABEL, nodeNameFields.at(i + 1)));
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            // If the JSON type is a string, check if it can be parsed as a number; otherwise, pass the value in though the label
+            if (json_type(*it_json) == JSON_STRING) {
+                // If the value is a number, set the value accordingly
+                currentMetric.value = trim(std::string(currentValue), " ");
+                // If the value is not a number (by our definition), then pass the value in through a label and set the value to NaN
+                if (!isNumber(currentMetric.value)) {
+                    currentMetric.labelMap.insert(std::pair<std::string, std::string>("value", currentMetric.value));
+                    currentMetric.value = "NaN";
+                }
+            // If the JSON type is a number, set the value
+            } else if (json_type(*it_json) == JSON_NUMBER) {
+                currentMetric.value = std::string(currentValue);
+            // If the JSON type is a boolean, set the value to 0 for false or 1 for true
+            } else if (json_type(*it_json) == JSON_BOOL) {
+                if (std::string(currentValue) == "true") {
+                    currentMetric.value = "1";
+                } else {
+                    currentMetric.value = "0";
+                }
+            }
+            // Push the metric to the total metric vector
+            m_metricList.push_back(currentMetric);
+            // Clear the pointer holding the value
+            json_free(currentValue);
+            // Clear the pointer storing the JSON array's name
+            json_free(jsonName);
+            // Clear the metric struct
+            metric currentMetric;
+        // If the current JSON object is a node, recursively run this function
+        } else if (json_type(*it_json) == JSON_NODE) {
+            json_char *jsonNodeName = json_name(*it_json);
+            JSONNODE_ITERATOR it_jsonNode = json_begin(*it_json);
+            // Do nothing if the node is NULL
+            if (it_jsonNode == NULL) {
+                json_free(jsonNodeName);
+                break;
+            }
+            // Run this method recursively
+            parseJSONToProm(*it_json, serialNumber, jsonNodeName);
+            // Clear pointers
+            json_free(jsonNodeName);
+        }
+        it_json++;
+    }
+}
+
+/*
+ *  Takes values from struct and formats data into a PromQL string
+ *
+ *  @return Data in PromQL format (string)
+ */
+std::string CPrintProm::printProm() {
+    std::string promOutput = "";
+    // Iterate through the list of metrics and add it to the output string, formatted
+    for (std::vector<metric>::iterator it_metric = m_metricList.begin(); it_metric != m_metricList.end(); it_metric++) {
+        // Add the key as the metric name after is has been converted to Prometheus' format
+        promOutput.append(toPrometheusKey(it_metric->key));
+        // Iterate through label map and add labels to the output string, formatted
+        for (std::map<std::string, std::string>::iterator it_label = it_metric->labelMap.begin(); it_label != it_metric->labelMap.end(); it_label++) {
+            // For the first label in this metric, add an opening curly brace
+            if (it_label == it_metric->labelMap.begin()) {
+                promOutput.append("{");
+            }
+            // Add the label: key="value"
+            promOutput.append(it_label->first);
+            promOutput.append("=\"");
+            promOutput.append(it_label->second);
+            promOutput.append("\"");
+            // For the last label in this metric, add a closing curly brace; otherwise, add a comma and a space
+            it_label++;
+            if (it_label == it_metric->labelMap.end()) {
+                it_label--;
+                promOutput.append("}");
+            } else {
+                it_label--;
+                promOutput.append(",");
+            }
+        }
+        // Add a space, the metric value, then a new line
+        promOutput.append(" ");
+        promOutput.append(it_metric->value);
+        promOutput.append("\n");
+    }
+    // Clear the list afterward
+    m_metricList.clear();
+    return promOutput;
+}
+
+/*
+ *  Converts a string to a metric name in Prometheus' desired format
+ *
+ *  @param  A key to convert (string)
+ *  @return The modified key in Prometheus' format (string)
+ */
+std::string CPrintProm::toPrometheusKey(std::string key) {
+    // Specifies the prefix to add to each metric and which character separates words
+    const std::string PREFIX = "seachest";
+    const std::string REPLACE = "_";
+    // Removes spaces and other undesired characters with this regular expression
+    int replaceIndex = 0;
+    int replaceLength = 0;
+    // Replaces non-alphanumeric characters with one REPLACE string (consecutive characters get replaced by one REPLACE string)
+    for (std::string::size_type i = 0; i < key.size(); i++) {
+        if (!isdigit(key.at(i)) && !isalpha(key.at(i))) {
+            if (replaceLength == 0) {
+                replaceIndex = i;
+            }
+            replaceLength++;
+            if (i == key.size() - 1) {
+                key.replace(replaceIndex, replaceLength, REPLACE);
+                break;
+            }
+        } else {
+            if (replaceLength > 0) {
+                key.replace(replaceIndex, replaceLength, REPLACE);
+                replaceLength = 0;
+            }
+        }
+    }
+    return PREFIX + REPLACE + trim(key, REPLACE);
+}
+
+/*
+ *  Removes all leading instances of a given string
+ *
+ *  @param  The string that is being trimmed (string)
+ *  @param  The given string to replace (const string)
+ *  @return A string with all its leading instances of REPLACE removed
+ */
+std::string CPrintProm::trimLeft(std::string s, const std::string REPLACE) {
+    size_t start = s.find_first_not_of(REPLACE);
+    return (start == std::string::npos) ? "" : s.substr(start);
+}
+
+/*
+ *  Removes all trailing instances of a given string
+  *
+ *  @param  The string that is being trimmed (string)
+ *  @param  The given string to replace (const string)
+ *  @return A string with all its trailing instances of REPLACE removed
+ */
+std::string CPrintProm::trimRight(std::string s, const std::string REPLACE) {
+    size_t end = s.find_last_not_of(REPLACE);
+    return (end == std::string::npos) ? "" : s.substr(0, end + 1);
+}
+
+/*
+ *  Removes all leading and trailing instances of a given string
+ *
+ *  @param  The string that is being trimmed (string)
+ *  @param  The given string to replace (const string)
+ *  @return A string with all its leading and trailing instances of REPLACE removed
+ */
+std::string CPrintProm::trim(std::string s, const std::string REPLACE) {
+    return trimRight(trimLeft(s, REPLACE), REPLACE);
+}
+
+/*
+ *  Getter for private serialNumber variable
+ *
+ *  @return The current drive's serial number (string)
+ */
+std::string CPrintProm::getSerialNumber() {
+    return serialNumber;
+}
+
+/*
+ *  Gets drive serial number from JSON data
+ *
+ *  @param  Pointer to raw JSON data (*JSONNODE)
+ */
+void CPrintProm::setSerialNumber(JSONNODE *nData) {
+    JSONNODE_ITERATOR it_json = json_begin(nData);
+    // Iterate through the JSON, and if the "Serial Number" field is found, set the serial number accordingly
+    while (it_json != json_end(nData)) {
+        if (json_type(*it_json) == JSON_STRING) {
+            json_char *jsonName = json_name(*it_json);
+            if (std::string(jsonName) == "Serial Number") {
+                json_char *currentValue = json_as_string(*it_json);
+                serialNumber = std::string(currentValue);
+                break;
+            }
+            // Recursively run this method if the type is a node
+        } else if (json_type(*it_json) == JSON_NODE) {
+            JSONNODE_ITERATOR it_jsonNode = json_begin(*it_json);
+            // Do nothing if the node is NULL
+            if (it_jsonNode == NULL) {
+                break;
+            }
+            // Run this method recursively
+            setSerialNumber(*it_json);
+        }
+        it_json++;
+    }
+}
+
+/*
+ *  Determines if a given string can be parsed as a number
+ *
+ *  @param  The string to parse (string)
+ *  @return True if the string is a number; false if the string is not a number
+ */
+bool CPrintProm::isNumber(std::string s) {
+    // Matches an optional sign (+ or -) followed by a floating point number (one decimal followed by integers) or an integer
+    bool decimalPresent = false;
+    for (std::string::size_type i = 0; i < s.size(); i++) {
+        if (!isdigit(s.at(i))) {
+            if (s.at(i) == '.') {
+                if (i >= s.size() - 1) {
+                    return false;
+                } else if (decimalPresent) {
+                    return false;
+                }
+                decimalPresent = true;
+            } else if (s.at(i) == '+' || s.at(i) == '-') {
+                if (i != 0) {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+/*
+ *  Modifies the metric so that its name is concise while the drive head's number is moved to a label
+ *
+ *  @param  A metric struct with head in the key (metric)
+ *  @return A metric struct with head as a label (metric)
+ */
+CPrintProm::metric CPrintProm::headToLabel(metric currentMetric) {
+    // Put string of the current metric's key into a stream
+    std::stringstream currentKeyStream(currentMetric.key);
+    // Copy the contents into a vector splitting the key into words (whitespace separated)
+    std::vector<std::string> keyFields((std::istream_iterator<std::string>(currentKeyStream)), std::istream_iterator<std::string>());
+    // Define which words to remove
+    std::vector<std::string> REMOVE_BEFORE_VECTOR; 
+    REMOVE_BEFORE_VECTOR.push_back("by");
+    REMOVE_BEFORE_VECTOR.push_back("for");
+    REMOVE_BEFORE_VECTOR.push_back("from");
+    std::vector<std::string> REMOVE_AFTER_VECTOR;
+    REMOVE_AFTER_VECTOR.push_back("number");
+    // Define the label names
+    const std::string HEAD_NUMBER_LABEL = "head";
+    const std::string HEAD_LOCATION_LABEL = "head_location";
+    // Remove any specified words that are followed by "Head"
+    for (std::size_t i = 0; i < keyFields.size(); i++) {
+        if (std::find(REMOVE_BEFORE_VECTOR.begin(), REMOVE_BEFORE_VECTOR.end(), keyFields.at(i)) != REMOVE_BEFORE_VECTOR.end()) {
+            if (i + 1 >= keyFields.size()) {
+                keyFields.erase(keyFields.begin() + i);
+                break;
+            } else if (keyFields.at(i + 1) == "Head") {
+                keyFields.erase(keyFields.begin() + i);
+                break;
+            }
+        }
+    }
+    // Remove any specified words that follow "Head"
+    for (std::size_t i = 1; i < keyFields.size(); i++) {
+        if (std::find(REMOVE_AFTER_VECTOR.begin(), REMOVE_AFTER_VECTOR.end(), keyFields.at(i)) != REMOVE_AFTER_VECTOR.end()) {
+            if (keyFields.at(i - 1) == "Head") {
+                keyFields.erase(keyFields.begin() + i);
+                break;
+            }
+        }
+    }
+    // Remove the head number and add it as a label
+    for (std::size_t i = 0; i < keyFields.size() - 1; i++) {
+        if (keyFields.at(i) == "Head") {
+            if (isNumber(keyFields.at(i + 1))) {
+                currentMetric.labelMap.insert(std::pair<std::string, std::string>(HEAD_NUMBER_LABEL, keyFields.at(i + 1)));
+                keyFields.erase(keyFields.begin() + i + 1);
+                break;
+            }
+        }
+    }
+    // Remove the "Head" text if it had a head number associated with it
+    for (std::size_t i = 0; i < keyFields.size(); i++) {
+        if (keyFields.at(i) == "Head") {
+            if (currentMetric.labelMap.find(HEAD_NUMBER_LABEL) != currentMetric.labelMap.end()) {
+                keyFields.erase(keyFields.begin() + i);
+                break;
+            }
+        }
+    }
+    // Add the "inner," "middle," and "outer" labels
+    for (std::size_t i = 0; i < keyFields.size(); i++) {
+        if (keyFields.at(i) == "inner" || keyFields.at(i) == "Inner") {
+            currentMetric.labelMap.insert(std::pair<std::string, std::string>(HEAD_LOCATION_LABEL, "inner"));
+            keyFields.erase(keyFields.begin() + i);
+            break;
+        } else if (keyFields.at(i) == "middle" || keyFields.at(i) == "Middle") {
+            currentMetric.labelMap.insert(std::pair<std::string, std::string>(HEAD_LOCATION_LABEL, "middle"));
+            keyFields.erase(keyFields.begin() + i);
+            break;
+        } else if (keyFields.at(i) == "outer" || keyFields.at(i) == "Outer") {
+            currentMetric.labelMap.insert(std::pair<std::string, std::string>(HEAD_LOCATION_LABEL, "outer"));
+            keyFields.erase(keyFields.begin() + i);
+            break;
+        }
+    }
+    // Put the contents of the vector back in a string storing the metric's key
+    currentMetric.key = "";
+    for (std::size_t i = 0; i < keyFields.size(); i++) {
+        currentMetric.key.append(keyFields.at(i));
+        if (i <= keyFields.size() - 2) {
+            currentMetric.key.append(" ");
+        }
+    }
+    return currentMetric;
+}
+
+/*
+ *  Modifies the metric so that its name is concise while the drive head's number is moved to a label
+ *
+ *  @param  A metric struct with test zone in the key (metric)
+ *  @return A metric struct with test zone as a label (metric)
+ */
+CPrintProm::metric CPrintProm::zoneToLabel(metric currentMetric) {
+    // Put string of the current metric's key into a stream
+    std::stringstream currentKeyStream(currentMetric.key);
+    // Copy the contents into a vector splitting the key into words (whitespace separated)
+    std::vector<std::string> keyFields((std::istream_iterator<std::string>(currentKeyStream)), std::istream_iterator<std::string>());
+    // Define which words to remove
+    std::vector<std::string> REMOVE_BEFORE_VECTOR;
+    REMOVE_BEFORE_VECTOR.push_back("of");
+    // Define the label names
+    const std::string ZONE_NUMBER_LABEL = "zone";
+    // Remove any specified words that are followed by "Zone"
+    for (std::size_t i = 0; i < keyFields.size(); i++) {
+        if (std::find(REMOVE_BEFORE_VECTOR.begin(), REMOVE_BEFORE_VECTOR.end(), keyFields.at(i)) != REMOVE_BEFORE_VECTOR.end()) {
+            if (i + 1 >= keyFields.size()) {
+                keyFields.erase(keyFields.begin() + i);
+                break;
+            } else if (keyFields.at(i + 1) == "Zone") {
+                keyFields.erase(keyFields.begin() + i);
+                break;
+            }
+        }
+    }
+    // Remove the zone number and add it as a label
+    for (std::size_t i = 0; i < keyFields.size() - 1; i++) {
+        if (keyFields.at(i) == "Zone") {
+            if (isNumber(keyFields.at(i + 1))) {
+                currentMetric.labelMap.insert(std::pair<std::string, std::string>(ZONE_NUMBER_LABEL, keyFields.at(i + 1)));
+                keyFields.erase(keyFields.begin() + i + 1);
+                break;
+            }
+        }
+    }
+    // Remove the "Test" text if it had a head number associated with it and is followed by "Zone"
+    for (std::size_t i = 1; i < keyFields.size(); i++) {
+        if (keyFields.at(i) == "Zone") {
+            if (currentMetric.labelMap.find(ZONE_NUMBER_LABEL) != currentMetric.labelMap.end()) {
+                if (keyFields.at(i - 1) == "Test") {
+                    keyFields.erase(keyFields.begin() + i - 1);
+                    break;
+                }
+            }
+        }
+    }
+    // Remove the "Zone" text if it had a head number associated with it
+    for (std::size_t i = 0; i < keyFields.size(); i++) {
+        if (keyFields.at(i) == "Zone") {
+            if (currentMetric.labelMap.find(ZONE_NUMBER_LABEL) != currentMetric.labelMap.end()) {
+                keyFields.erase(keyFields.begin() + i);
+                break;
+            }
+        }
+    }
+    // Put the contents of the vector back in a string storing the metric's key
+    currentMetric.key = "";
+    for (std::size_t i = 0; i < keyFields.size(); i++) {
+        currentMetric.key.append(keyFields.at(i));
+        if (i <= keyFields.size() - 2) {
+            currentMetric.key.append(" ");
+        }
+    }
+    return currentMetric;
+}
+
 CMessage::CMessage(JSONNODE *masterData)
-	:CPrintJSON(masterData), CPrintTXT(), CPrintCSV()
+	:CPrintJSON(masterData), CPrintTXT(), CPrintCSV(), CPrintProm()
     , msgData(masterData)
     , printStatus(NOT_SUPPORTED)
     , printType()
@@ -904,7 +1412,7 @@ CMessage::CMessage(JSONNODE *masterData)
 //---------------------------------------------------------------------------
 
 CMessage::CMessage(JSONNODE *masterData, std::string fileName, int toolPrintType)
-    :CPrintJSON(masterData), CPrintTXT(), CPrintCSV()
+    :CPrintJSON(masterData), CPrintTXT(), CPrintCSV(), CPrintProm()
     , msgData(masterData)
     , printStatus(NOT_SUPPORTED)
     , printType(toolPrintType)
@@ -959,6 +1467,15 @@ int CMessage::WriteBuffer()
         break;
     case OPENSEA_LOG_PRINT_FLAT_CSV:
         message = get_Msg_Flat_csv(msgData);                // get the json data to create a flat csv 
+        break;
+    case OPENSEA_LOG_PRINT_PROM:
+        // If the "prom" printType is specified, parse the JSON and convert it to PromQL
+        // First get the drive serial number
+        setSerialNumber(msgData);
+        // Then parse the JSON, storing it in a struct matching Promtheus' format
+        parseJSONToProm(msgData, getSerialNumber(), NULL);
+        // Then scan through the structure and print the output to a .prom file
+        message = printProm();
         break;
     default:
         message = get_Msg_JSON_Data();                      // get the string message for printable json data

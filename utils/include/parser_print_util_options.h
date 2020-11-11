@@ -23,6 +23,7 @@
 #include <vector>
 #include "libjson.h"
 #include "Opensea_Parser_Helper.h"
+#include <map>
 
 namespace opensea_parser {
 #ifndef PARSER_PRINT_UTIL_OPTIONS
@@ -86,7 +87,31 @@ namespace opensea_parser {
         std::string get_Msg_Text_Format(const std::string message);                              //!< returns the json data as a text string
     };
 
-    class CMessage : public CPrintJSON, public  CPrintTXT, public CPrintCSV
+    class CPrintProm {
+    private:
+        // PromQL metric in format: metric_key{label_key="label_value", ...} metric_value
+        typedef struct metric {
+            std::string key;                                                                            // Stores key in Prometheus format
+            std::map<std::string, std::string> labelMap;                                                // Map of labels
+            std::string value;                                                                          // Stores value for metric
+        } metric;
+        std::vector<metric> m_metricList;                                                               // List of metrics
+        std::string serialNumber;                                                                       // Serial number of current drive
+        std::string toPrometheusKey(std::string key);                                                   // Converts a key to Prometheus' desired format
+        std::string trimLeft(std::string s, const std::string REPLACE);                                 // Removes all leading instances of the given string REPLACE
+        std::string trimRight(std::string s, const std::string REPLACE);                                // Removes all trailing instances of the given string REPLACE
+        std::string trim(std::string s, const std::string REPLACE);                                     // Removes all leading and trailing instances of the given string REPLACE
+        bool isNumber(std::string s);                                                                   // Determines if the given string can be parsed as a number
+        metric headToLabel(metric currentMetric);                                                       // Modifies a metric so that the head number is a label rather than part of the key
+        metric zoneToLabel(metric currentMetric);                                                       // Modifies a metric so that the test zone number is a label rather than part of the key
+    public:
+        void setSerialNumber(JSONNODE *nData);                                                          // Sets serial number
+        std::string getSerialNumber();                                                                  // Gets serial number
+        void parseJSONToProm(JSONNODE *nData, std::string serialNumber, json_char *json_nodeName);      // Takes JSON, sets key-value pairs in struct
+        std::string printProm();                                                                        // Takes key-value pairs in struct, prints to string
+    };
+
+    class CMessage : public CPrintJSON, public  CPrintTXT, public CPrintCSV, public CPrintProm
     {
     private:
         JSONNODE *msgData;
@@ -95,7 +120,6 @@ namespace opensea_parser {
         int printType;
         std::string m_fileName;
         std::string message;
-
     public:
 		CMessage(JSONNODE *masterData);
         CMessage(JSONNODE *masterData, std::string fileName, int toolPrintType);

@@ -264,6 +264,10 @@ int32_t main(int argc, char *argv[])
                 {
                     OUTPUT_LOG_PRINT_FLAG = SEAGATE_LOG_PRINT_FLAT_CSV;
                 }
+                else if (strcmp(optarg, LOG_PRINT_STRING_PROM) == 0)
+                {
+                    OUTPUT_LOG_PRINT_FLAG = SEAGATE_LOG_PRINT_PROM;
+                }
                 else
                 {
                     OUTPUT_LOG_PRINT_FLAG = SEAGATE_LOG_PRINT_JSON;
