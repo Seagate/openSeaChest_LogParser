@@ -495,7 +495,7 @@ void print_Parser_Output_Log_Help(bool shortHelp)
 void print_Log_Print_Help(bool shortHelp)
 {
 	std::cout << "\t--" << OUTPUT_LOG_PRINT_LONG_OPT_STRING << " [choose from list below]" << std::endl;
-	std::cout << "\t\t{" << LOG_PRINT_STRING_JSON << ", " << LOG_PRINT_STRING_TEXT << ", " << LOG_PRINT_STRING_CSV << ", " << LOG_PRINT_STRING_FLATCSV << "}" << std::endl;
+	std::cout << "\t\t{" << LOG_PRINT_STRING_JSON << ", " << LOG_PRINT_STRING_TEXT << ", " << LOG_PRINT_STRING_CSV << ", " << LOG_PRINT_STRING_FLATCSV << ", " << LOG_PRINT_STRING_PROM << "}" << std::endl;
 	if (!shortHelp)
 	{
 		std::cout << "\t\t" << "Use this option to set the output format. \n" << std::endl;
@@ -503,6 +503,20 @@ void print_Log_Print_Help(bool shortHelp)
 		std::cout << "\t\t" << LOG_PRINT_STRING_TEXT << " - prints the data in a printable and human readable format" << std::endl;
 		std::cout << "\t\t" << LOG_PRINT_STRING_CSV << "  - The data flows downwards" << std::endl;
 		std::cout << "\t\t" << LOG_PRINT_STRING_FLATCSV << " - The data is set to flow in two rows only" << std::endl;
+		std::cout << "\t\t" << LOG_PRINT_STRING_PROM << " - Prints the data in a format readable by Prometheus.\n\n"
+			<< "\t\t\t" << "If no output log is specified (with --outputLog), data is printed\n"
+			<< "\t\t\t" << "out to standard output and a file is automatically created.\n"
+			<< "\t\t\t" << "The output file will have the same name as the input file\n"
+			<< "\t\t\t" << "with the extension \".prom\" which can be opened in any text editor.\n\n" 
+			<< "\t\t\t" << "If an output log is specified (with --outputLog), data is printed\n"
+			<< "\t\t\t" << "directly to the specified file.\n" << std::endl;
+		std::cout << "\t\t\t" << "[USAGE EXAMPLES]" << std::endl;
+		std::cout << "\t\t\t" << "openSeaChest_LogParser --inputLog <fileName>.bin --logType farmLog --printType prom" << std::endl;
+		std::cout << "\t\t\t\t" << "Takes in a FARM log, <fileName>.bin, prints the data in Prometheus' format\n"
+			<< "\t\t\t\t" << "to standard output, and saves the output in the current directory as <fileName>.prom.\n" << std::endl;
+		std::cout << "\t\t\t" << "openSeaChest_LogParser --inputLog <inputFile>.bin --logType farmLog --printType prom --outputLog <outputFile>.prom" << std::endl;
+		std::cout << "\t\t\t\t" << "Takes in a FARM log, <inputFile>.bin, and saves the output in the current directory\n"
+			<< "\t\t\t\t" << "<outputFile>.prom without printing to standard output.\n" << std::endl;
 	}
 	std::cout << std::endl;
 }

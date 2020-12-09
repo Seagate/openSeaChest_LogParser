@@ -55,7 +55,7 @@ using namespace opensea_parser;
     std::string util_name = "openSeaChest_LogParser";
 #endif
 
-std::string buildVersion = "1.2.1";
+std::string buildVersion = "1.3.1";
 std::string buildDate = __DATE__;
 time_t     pCurrentTime;
 std::string timeString = "";
@@ -263,6 +263,10 @@ int32_t main(int argc, char *argv[])
                 else if (strcmp(optarg, LOG_PRINT_STRING_FLATCSV) == 0)
                 {
                     OUTPUT_LOG_PRINT_FLAG = SEAGATE_LOG_PRINT_FLAT_CSV;
+                }
+                else if (strcmp(optarg, LOG_PRINT_STRING_PROM) == 0)
+                {
+                    OUTPUT_LOG_PRINT_FLAG = SEAGATE_LOG_PRINT_PROM;
                 }
                 else
                 {
@@ -585,10 +589,46 @@ int32_t main(int argc, char *argv[])
         {
 			std::string myFile = INPUT_LOG_FILE_NAME;				// myFile for the auto creation of the output file
 			myFile = myFile.substr(0, myFile.rfind("."));           // remove the extension from the file
-			myFile.append(".jsn");									// Auto add the jsn for json output file
-			CMessage *printMessage;
-			printMessage = new CMessage(masterJson, myFile, OUTPUT_LOG_PRINT_FLAG);
-            std::cout << printMessage->get_Msg_JSON_Data().c_str();	// Print to the screen
+            CMessage *printMessage;
+            if (OUTPUT_LOG_PRINT_FLAG == SEAGATE_LOG_PRINT_JSON)         // Append output extension, .json by default
+            {
+                myFile.append(".json");
+                printMessage = new CMessage(masterJson, myFile, OUTPUT_LOG_PRINT_FLAG); // Get JSON output
+                std::cout << printMessage->get_Msg_JSON_Data().c_str();	// Print to the screen
+            }
+            else if (OUTPUT_LOG_PRINT_FLAG == SEAGATE_LOG_PRINT_TEXT)
+            {
+                myFile.append(".txt");
+                printMessage = new CMessage(masterJson, myFile, OUTPUT_LOG_PRINT_FLAG); // Get text output
+                printMessage->parse_Json_to_Text(masterJson, 0);
+                std::cout << printMessage->get_Msg_Text_Format("").c_str();	// Print to the screen
+            }
+            else if (OUTPUT_LOG_PRINT_FLAG == SEAGATE_LOG_PRINT_CSV)
+            {
+                myFile.append(".csv");
+                printMessage = new CMessage(masterJson, myFile, OUTPUT_LOG_PRINT_FLAG); // Get CSV output
+                std::cout << printMessage->get_Msg_CSV(masterJson).c_str();	// Print to the screen
+            }
+            else if (OUTPUT_LOG_PRINT_FLAG == SEAGATE_LOG_PRINT_FLAT_CSV)
+            {
+                myFile.append(".csv");
+                printMessage = new CMessage(masterJson, myFile, OUTPUT_LOG_PRINT_FLAG); // Get flat CSV output
+                std::cout << printMessage->get_Msg_Flat_csv(masterJson).c_str();	// Print to the screen
+            }
+            else if (OUTPUT_LOG_PRINT_FLAG == SEAGATE_LOG_PRINT_PROM)
+            {
+                myFile.append(".prom");
+                printMessage = new CMessage(masterJson, myFile, OUTPUT_LOG_PRINT_FLAG); // Get Prometheus output
+                printMessage->setSerialNumber(masterJson);
+                printMessage->parseJSONToProm(masterJson, printMessage->getSerialNumber(), NULL);
+                std::cout << printMessage->printProm().c_str();	// Print to the screen
+            }
+            else
+            {
+                myFile.append(".json");	
+                printMessage = new CMessage(masterJson, myFile, OUTPUT_LOG_PRINT_FLAG); // Get JSON output by default
+                std::cout << printMessage->get_Msg_JSON_Data().c_str();	// Print to the screen
+            }
             delete(printMessage);
         }
         json_delete(masterJson);
