@@ -55,7 +55,7 @@ using namespace opensea_parser;
     std::string util_name = "openSeaChest_LogParser";
 #endif
 
-std::string buildVersion = "1.3.1";
+std::string buildVersion = "1.3.2";
 std::string buildDate = __DATE__;
 time_t     pCurrentTime;
 std::string timeString = "";
@@ -508,6 +508,14 @@ int32_t main(int argc, char *argv[])
 				printf("\nParsing completed with no issues \n");
 			}
 			break;
+        case NOT_SUPPORTED:
+            exitCode = UTIL_EXIT_OPERATION_NOT_SUPPORTED;
+            if (OUTPUT_LOG_FILE_FLAG)
+            {
+                printf("\nLog Not supported at this time \n");
+                json_push_back(masterJson, json_new_a("Not Supported", "Log Not Supported"));
+            }
+            break;
 		case IN_PROGRESS:
 			exitCode = UTIL_EXIT_OPERATION_STILL_IN_PROGRESS;
 			if (OUTPUT_LOG_FILE_FLAG)
