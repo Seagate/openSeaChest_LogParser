@@ -33,11 +33,11 @@ typedef enum _eUtilExitCodes
     UTIL_EXIT_INVALID_DEVICE_HANDLE,
     UTIL_EXIT_OPERATION_FAILURE,
     UTIL_EXIT_OPERATION_NOT_SUPPORTED,
-	UTIL_EXIT_OPERATION_STILL_IN_PROGRESS,
+    UTIL_EXIT_OPERATION_STILL_IN_PROGRESS,
     UTIL_EXIT_OPERATION_ABORTED,
-	UTIL_EXIT_OPERATION_BAD_PARAMETER,
-	UTIL_EXIT_OPERATION_MEMORY_FAILURE,
-	UTIL_EXIT_OPERATION_INVALID_LENGTH,
+    UTIL_EXIT_OPERATION_BAD_PARAMETER,
+    UTIL_EXIT_OPERATION_MEMORY_FAILURE,
+    UTIL_EXIT_OPERATION_INVALID_LENGTH,
     UTIL_EXIT_PATH_NOT_FOUND,
     UTIL_EXIT_CANNOT_OPEN_FILE,
     UTIL_EXIT_FILE_ALREADY_EXISTS,
@@ -49,61 +49,61 @@ typedef enum _eUtilExitCodes
 
 typedef enum _eLogTypes
 {
-	SEAGATE_LOG_TYPE_UNKNOWN = 0,
-	SEAGATE_LOG_TYPE_FARM,
-	SEAGATE_LOG_TYPE_DEVICE_STATISTICS_LOG,
-	SEAGATE_LOG_TYPE_EXT_COMPREHENSIVE_LOG,
-	SEAGATE_LOG_TYPE_EXT_DST_LOG,
-	SEAGATE_LOG_TYPE_IDENTIFY_LOG,
-	SEAGATE_LOG_TYPE_IDENTIFY_DEVICE_DATA,
-	SEAGATE_LOG_TYPE_SCT_TEMP_LOG,
-	SEAGATE_LOG_TYPE_POWER_CONDITION_LOG,
-	SEAGATE_LOG_TYPE_NCQ_CMD_ERROR_LOG,
-	SEAGATE_LOG_TYPE_SCSI_LOG_PAGES,
+    SEAGATE_LOG_TYPE_UNKNOWN = 0,
+    SEAGATE_LOG_TYPE_FARM,
+    SEAGATE_LOG_TYPE_DEVICE_STATISTICS_LOG,
+    SEAGATE_LOG_TYPE_EXT_COMPREHENSIVE_LOG,
+    SEAGATE_LOG_TYPE_EXT_DST_LOG,
+    SEAGATE_LOG_TYPE_IDENTIFY_LOG,
+    SEAGATE_LOG_TYPE_IDENTIFY_DEVICE_DATA,
+    SEAGATE_LOG_TYPE_SCT_TEMP_LOG,
+    SEAGATE_LOG_TYPE_POWER_CONDITION_LOG,
+    SEAGATE_LOG_TYPE_NCQ_CMD_ERROR_LOG,
+    SEAGATE_LOG_TYPE_SCSI_LOG_PAGES,
 
 }logTypes;
 
 typedef enum _ePrintTypes
 {
-	SEAGATE_LOG_PRINT_JSON,     // default
-	SEAGATE_LOG_PRINT_TEXT,
-	SEAGATE_LOG_PRINT_CSV,
-	SEAGATE_LOG_PRINT_FLAT_CSV,
-	SEAGATE_LOG_PRINT_PROM,
-	SEAGATE_LOG_PRINT_FAILURE,
+    SEAGATE_LOG_PRINT_JSON,     // default
+    SEAGATE_LOG_PRINT_TEXT,
+    SEAGATE_LOG_PRINT_CSV,
+    SEAGATE_LOG_PRINT_FLAT_CSV,
+    SEAGATE_LOG_PRINT_PROM,
+    SEAGATE_LOG_PRINT_FAILURE,
 }printTypes;
 
 //Log Parser Input flag
 #define INPUT_LOG_FILE_FLAG inputLog
 #define INPUT_LOG_FILE_NAME InputLogFile
 #define INPUT_LOG_FILE_VAR \
-	bool INPUT_LOG_FILE_FLAG = false;\
-	std::string INPUT_LOG_FILE_NAME;
+    bool INPUT_LOG_FILE_FLAG = false;\
+    std::string INPUT_LOG_FILE_NAME;
 #define INPUT_LOG_LONG_OPT_STRING "inputLog"
 #define INPUT_LOG_LONG_OPT { INPUT_LOG_LONG_OPT_STRING, required_argument, NULL, 0}
-	void print_Input_Log_Help(bool shortHelp);
+    void print_Input_Log_Help(bool shortHelp);
 
-	//Log Parser Output flag
+    //Log Parser Output flag
 #define OUTPUT_LOG_FILE_FLAG outputFile
 #define OUTPUT_LOG_FILE_NAME outputLogFile
 #define OUTPUT_LOG_FILE_VAR \
-	bool OUTPUT_LOG_FILE_FLAG = false; \
-	std::string OUTPUT_LOG_FILE_NAME;
+    bool OUTPUT_LOG_FILE_FLAG = false; \
+    std::string OUTPUT_LOG_FILE_NAME;
 #define OUTPUT_LOG_LONG_OPT_STRING "outputLog"
 #define OUTPUT_LOG_LONG_OPT { OUTPUT_LOG_LONG_OPT_STRING, required_argument, NULL, 0 }
 
 
-#define LOG_TYPE_STRING_FARM						"farmLog"
-#define LOG_TYPE_STRING_DEVICE_STATISTICS_LOG		"deviceStatisticsLog"
-#define LOG_TYPE_STRING_EXT_COMPREHENSIVE_LOG		"extCompErrorLog"
-#define LOG_TYPE_STRING_COMMON_ERROR_LOG			"commonErrorLog"
-#define LOG_TYPE_STRING_EXT_DST_LOG					"extSelfTestLog"
-#define LOG_TYPE_STRING_IDENTIFY_LOG				"identify"
-#define	LOG_TYPE_STRING_IDENTIFY_DEVICE_DATA_LOG	"IDDataLog"
-#define LOG_TYPE_STRING_SCT_TEMP_LOG				"sctTempLog"
-#define LOG_TYPE_STRING_POWER_CONDITION_LOG			"powerConditionLog"
-#define LOG_TYPE_STRING_NCQ_COMMAND_ERROR_LOG		"ncqErrorLog"
-#define LOG_TYPE_STRING_SCSI_LOG_PAGES				"scsiLogPages"
+#define LOG_TYPE_STRING_FARM                        "farmLog"
+#define LOG_TYPE_STRING_DEVICE_STATISTICS_LOG       "deviceStatisticsLog"
+#define LOG_TYPE_STRING_EXT_COMPREHENSIVE_LOG       "extCompErrorLog"
+#define LOG_TYPE_STRING_COMMON_ERROR_LOG            "commonErrorLog"
+#define LOG_TYPE_STRING_EXT_DST_LOG                 "extSelfTestLog"
+#define LOG_TYPE_STRING_IDENTIFY_LOG                "identify"
+#define LOG_TYPE_STRING_IDENTIFY_DEVICE_DATA_LOG    "IDDataLog"
+#define LOG_TYPE_STRING_SCT_TEMP_LOG                "sctTempLog"
+#define LOG_TYPE_STRING_POWER_CONDITION_LOG         "powerConditionLog"
+#define LOG_TYPE_STRING_NCQ_COMMAND_ERROR_LOG       "ncqErrorLog"
+#define LOG_TYPE_STRING_SCSI_LOG_PAGES              "scsiLogPages"
 
 
 #define INPUT_LOG_TYPE_FLAG logType
@@ -126,7 +126,7 @@ typedef enum _ePrintTypes
 
 
 //standard utility options
-	
+    
 #define SHOW_HELP_FLAG showHelp
 #define SHOW_HELP_VAR bool SHOW_HELP_FLAG = false;
 #define HELP_SHORT_OPT 'h'
@@ -154,6 +154,11 @@ typedef enum _ePrintTypes
 
 #define OUTPUTLOG_LONG_OPT_STRING "outputLog"
 #define OUTPUTLOG_LONG_OPT { OUTPUTLOG_LONG_OPT_STRING, required_argument, NULL, 0}
+
+#define ANALYZE_LOG_FLAG analyzeLog
+#define ANALYZE_LOG_VAR bool ANALYZE_LOG_FLAG = goFalse;
+#define ANALYZE_LONG_OPT_STRING "analyzeLog"
+#define ANALYZE_LONG_OPT { ANALYZE_LONG_OPT_STRING, no_argument, NULL, goTrue }
 
 #define LICENSE_FLAG showLicense
 #define LICENSE_VAR getOptBool LICENSE_FLAG = goFalse;
@@ -242,6 +247,7 @@ void print_Parser_Output_Log_Help(bool shortHelp);
 void print_Log_Type_Help(bool shortHelp);
 void print_Log_Print_Help(bool shortHelp);
 void print_FARM_Command_Line_Option_to_Show_Status_Bytes();
+void print_FARM_Analyze_Command_Line_Option();
 
 
 #define OUTPUTPATH_PARSE outputPathPtr = optarg; 
