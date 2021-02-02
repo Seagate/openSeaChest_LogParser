@@ -401,6 +401,7 @@ int32_t main(int argc, char *argv[])
             analyzeStatus = CFarm->parse_Device_Farm_Log_And_Analyze();
         }
 
+
         /*
          * Print Drive health status.
          */
@@ -480,6 +481,16 @@ int32_t main(int argc, char *argv[])
                 retStatus = CFarm->get_FARM_Status();                               // check to make sure we read in the file form the construtor.
                 if (retStatus == IN_PROGRESS)                                       // if IN_PROGRESS we can continue to parse, else retStatus holds the error information
                 {
+                    if (ANALYZE_LOG_FLAG == true)
+                    {
+                        eAnalyzeStatus  analyzeStatus;
+                        analyzeStatus = CFarm->parse_Device_Farm_Log_And_Analyze();
+                        /**
+                         * Add health info to the master Json
+                         */
+                        CFarm->print_Drive_Health(masterJson, analyzeStatus);
+                    }
+
                     retStatus = CFarm->parse_Device_Farm_Log(masterJson);
                 }
                 delete(CFarm);

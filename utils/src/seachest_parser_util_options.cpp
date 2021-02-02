@@ -559,6 +559,8 @@ void print_FARM_Analyze_Command_Line_Option()
     std::cout << "\t--" << ANALYZE_LONG_OPT_STRING << std::endl;
     std::cout << "\t\t" << "Command Line Option for the FARM Log ONLY " << std::endl;
     std::cout << "\t\t" << "Use this option to analyze the FARM Log and state the Drive Health." << std::endl;
+
+    /*
     std::cout << "\t\t" << "Following are the possable Drive Health status " << std::endl;
     std::cout << "\t\t" << "    NTF " << std::endl;
     std::cout << "\t\t" << "    PRESSURE " << std::endl;
@@ -569,6 +571,7 @@ void print_FARM_Analyze_Command_Line_Option()
     std::cout << "\t\t" << "    UNRECOVERABLE_WRITE " << std::endl;
     std::cout << "\t\t" << "    UNRECOVERABLE_READ_GLIST " << std::endl;
     std::cout << "\t\t" << "    UNDEFINED " << std::endl;
+    */
 
     std::cout << std::endl;
 }
