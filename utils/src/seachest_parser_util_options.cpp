@@ -39,7 +39,7 @@ void seachest_utility_Info(const std::string & utilityName, const std::string & 
     eArchitecture architecture = get_Compiled_Architecture();
     time_t g_curTime = time(NULL);
     std::string       g_timeString;
-	g_timeString.resize(FORMAT_SIZE);
+    g_timeString.resize(FORMAT_SIZE);
     printf("===============================================================================\n");
     printf(" %s - Seagate drive utilities\n", utilityName.c_str());
     printf(" Copyright (c) 2018-2020 Seagate Technology LLC and/or its Affiliates\n");
@@ -68,15 +68,15 @@ void seachest_utility_Info(const std::string & utilityName, const std::string & 
 //-----------------------------------------------------------------------------
 void utility_Full_Version_Info(const std::string & utilityName, const std::string & buildVersion, const std::string & openseaVersion)
 {
-	std::string osName = "";
-	osName.resize(FORMAT_SIZE);
+    std::string osName = "";
+    osName.resize(FORMAT_SIZE);
     OSVersionNumber osversionnumber;
     eCompiler compilerUsed = OPENSEA_COMPILER_UNKNOWN;
     compilerVersion compilerVersionInfo;
     memset(&osversionnumber, 0, sizeof(OSVersionNumber));
     memset(&compilerVersionInfo, 0, sizeof(compilerVersion));
     get_Compiler_Info(&compilerUsed, &compilerVersionInfo);
-	get_Operating_System_Version_And_Name(&osversionnumber, (char *)osName.c_str());
+    get_Operating_System_Version_And_Name(&osversionnumber, (char *)osName.c_str());
 
     printf("Version Info for %s:\n", utilityName.c_str());
     printf("\tUtility Version: %s\n", buildVersion.c_str());
@@ -136,15 +136,15 @@ void print_SeaChest_Util_Exit_Codes(void)
     printf("\t%d = Invalid Device Handle or Missing Device Handle\n", UTIL_EXIT_INVALID_DEVICE_HANDLE);
     printf("\t%d = Operation Failure\n", UTIL_EXIT_OPERATION_FAILURE);
     printf("\t%d = Operation not supported\n", UTIL_EXIT_OPERATION_NOT_SUPPORTED);
-	printf("\t%d = Operation Failed and was still in progress \n", UTIL_EXIT_OPERATION_STILL_IN_PROGRESS);
+    printf("\t%d = Operation Failed and was still in progress \n", UTIL_EXIT_OPERATION_STILL_IN_PROGRESS);
     printf("\t%d = Operation Aborted\n", UTIL_EXIT_OPERATION_ABORTED);
-	printf("\t%d = Operation Failed for Bad Parameter in the log \n", UTIL_EXIT_OPERATION_BAD_PARAMETER);
-	printf("\t%d = Operation had Memory Failures\n", UTIL_EXIT_OPERATION_MEMORY_FAILURE);
-	printf("\t%d = Operation Failed for Invaild Lengths in the log\n", UTIL_EXIT_OPERATION_INVALID_LENGTH);
+    printf("\t%d = Operation Failed for Bad Parameter in the log \n", UTIL_EXIT_OPERATION_BAD_PARAMETER);
+    printf("\t%d = Operation had Memory Failures\n", UTIL_EXIT_OPERATION_MEMORY_FAILURE);
+    printf("\t%d = Operation Failed for Invaild Lengths in the log\n", UTIL_EXIT_OPERATION_INVALID_LENGTH);
     printf("\t%d = File Path Not Found\n", UTIL_EXIT_PATH_NOT_FOUND);
     printf("\t%d = Cannot Open File\n", UTIL_EXIT_CANNOT_OPEN_FILE);
     printf("\t%d = File Already Exists\n", UTIL_EXIT_FILE_ALREADY_EXISTS);
-	printf("\t%d = Not Valid for this parser\n", UTIL_EXIT_FILE_NOT_VALID);
+    printf("\t%d = Not Valid for this parser\n", UTIL_EXIT_FILE_NOT_VALID);
     printf("\t%d = Validation Failed\n", UTIL_EXIT_VALIDATION_FAILURE);
     printf("\t%d = Error in Header and Footer validation\n", UTIL_EXIT_STRIP_HDR_FOOTER_FAILURE);
     printf("\t%d = Parsing Failure\n", UTIL_EXIT_PARSE_FAILURE);    
@@ -268,7 +268,7 @@ void print_Help_Help(bool shortHelp)
 //  print_OutputPath_Help()
 //
 //! \brief   Description:  This function prints out the short or long help for the
-//!						   output folder help.
+//!                        output folder help.
 //
 //  Entry:
 //!   \param[in] shortHelp = bool used to select when to print short or long help
@@ -284,8 +284,8 @@ void print_OutputPath_Help(bool shortHelp)
     {
         printf("\t\tTo set a path to the folder where all logs should be created.\n");
         printf("\t\tThe directory/folder must already exist with write permissions\n");
-		printf("\t\tIf this option is not used, logs are created in the current\n");
-		printf("\t\tworking folder\n\n");
+        printf("\t\tIf this option is not used, logs are created in the current\n");
+        printf("\t\tworking folder\n\n");
     }
 }
 //-----------------------------------------------------------------------------
@@ -293,7 +293,7 @@ void print_OutputPath_Help(bool shortHelp)
 //  print_OutpuFile_Help()
 //
 //! \brief   Description:  This function prints out the short or long help for the
-//!						   output file name help.
+//!                        output file name help.
 //
 //  Entry:
 //!   \param[in] shortHelp = bool used to select when to print short or long help
@@ -304,13 +304,13 @@ void print_OutputPath_Help(bool shortHelp)
 //-----------------------------------------------------------------------------
 void print_OutputFile_Help(bool shortHelp)
 {
-	printf("\t--%s [file] \n", OUTPUTLOG_LONG_OPT_STRING);
-	if (!shortHelp)
-	{
-		printf("\t\tTo set a name of the output file being generated.\n");
-		printf("\t\tThis option will overwrite the file if it exists.\n");
-		printf("\t\tIf no %s given then data will be printed to the screen.\n\n", OUTPUTLOG_LONG_OPT_STRING);
-	}
+    printf("\t--%s [file] \n", OUTPUTLOG_LONG_OPT_STRING);
+    if (!shortHelp)
+    {
+        printf("\t\tTo set a name of the output file being generated.\n");
+        printf("\t\tThis option will overwrite the file if it exists.\n");
+        printf("\t\tIf no %s given then data will be printed to the screen.\n\n", OUTPUTLOG_LONG_OPT_STRING);
+    }
 }
 
 //-----------------------------------------------------------------------------
@@ -327,11 +327,11 @@ void print_OutputFile_Help(bool shortHelp)
 //-----------------------------------------------------------------------------
 void print_Input_Log_Help(bool shortHelp)
 {
-	std::cout << "\t--" << INPUT_LOG_LONG_OPT_STRING << " [log file name]" << std::endl;
-	if (!shortHelp)
-	{
-		std::cout << "\t\t" << "Use this option to pass a log into the tool for parsing." << std::endl << std::endl;
-	}
+    std::cout << "\t--" << INPUT_LOG_LONG_OPT_STRING << " [log file name]" << std::endl;
+    if (!shortHelp)
+    {
+        std::cout << "\t\t" << "Use this option to pass a log into the tool for parsing." << std::endl << std::endl;
+    }
     else
     {
         std::cout << std::endl;
@@ -352,42 +352,42 @@ void print_Input_Log_Help(bool shortHelp)
 void print_Seachest_logType_options()
 {
 #if defined BUILD_FARM_ONLY 
-	std::cout << LOG_TYPE_STRING_FARM;                                      // FarmLog
+    std::cout << LOG_TYPE_STRING_FARM;                                      // FarmLog
 #else
-	std::cout << LOG_TYPE_STRING_FARM;
+    std::cout << LOG_TYPE_STRING_FARM;
 #if defined (INCLUDE_IDENTIFY_LOG)
-	std::cout << ", " << LOG_TYPE_STRING_IDENTIFY_LOG;                       // identify
+    std::cout << ", " << LOG_TYPE_STRING_IDENTIFY_LOG;                       // identify
 #endif
 #if defined (INCLUDE_IDENTIFY_DEVICE_DATA_LOG)
-	std::cout << ", " << LOG_TYPE_STRING_IDENTIFY_DEVICE_DATA_LOG;          // "IDDataLog" 
+    std::cout << ", " << LOG_TYPE_STRING_IDENTIFY_DEVICE_DATA_LOG;          // "IDDataLog" 
 #endif
 #if defined (INCLUDE_DEVICE_STATISTICS_LOG)
-	std::cout << ", " << LOG_TYPE_STRING_DEVICE_STATISTICS_LOG;             //"deviceStatisticsLog"
+    std::cout << ", " << LOG_TYPE_STRING_DEVICE_STATISTICS_LOG;             //"deviceStatisticsLog"
 #endif
 #if defined (INCLUDE_EXT_COMPREHENSIVE_LOG)
-	std::cout << ", " << LOG_TYPE_STRING_EXT_COMPREHENSIVE_LOG;             //ExtCompErrorLog
+    std::cout << ", " << LOG_TYPE_STRING_EXT_COMPREHENSIVE_LOG;             //ExtCompErrorLog
 #endif
 
-	std::cout << std::endl;
+    std::cout << std::endl;
 
-	std::cout << "\t\t ";
+    std::cout << "\t\t ";
 #if defined (INCLUDE_SCT_TEMP_LOG)    
-	std::cout << LOG_TYPE_STRING_SCT_TEMP_LOG;                              //sctTempLog
+    std::cout << LOG_TYPE_STRING_SCT_TEMP_LOG;                              //sctTempLog
 #endif 
 #if defined (INCLUDE_NCQ_CMD_ERROR_LOG)
-	std::cout << ", " << LOG_TYPE_STRING_NCQ_COMMAND_ERROR_LOG;             // ncqErrorLog
+    std::cout << ", " << LOG_TYPE_STRING_NCQ_COMMAND_ERROR_LOG;             // ncqErrorLog
 #endif
 #if defined (INCLUDE_POWER_CONDITION_LOG)
-	std::cout << ", " << LOG_TYPE_STRING_POWER_CONDITION_LOG;                // PowerConditionLog
+    std::cout << ", " << LOG_TYPE_STRING_POWER_CONDITION_LOG;                // PowerConditionLog
 #endif
 #if defined (INCLUDE_COMMON_EXT_DST_LOG)
-	std::cout << ", " << LOG_TYPE_STRING_EXT_DST_LOG;                       // selfTestLog
+    std::cout << ", " << LOG_TYPE_STRING_EXT_DST_LOG;                       // selfTestLog
 #endif
-	std::cout << std::endl;
+    std::cout << std::endl;
 
-	std::cout << "\t\t ";
+    std::cout << "\t\t ";
 #if defined (INCLUDE_SCSI_LOG_PAGES)  
-	std::cout << LOG_TYPE_STRING_SCSI_LOG_PAGES;                              //scsiLogPages
+    std::cout << LOG_TYPE_STRING_SCSI_LOG_PAGES;                              //scsiLogPages
 #endif 
 #endif
 }
@@ -405,17 +405,17 @@ void print_Seachest_logType_options()
 //-----------------------------------------------------------------------------
 void print_Scsi_Log_Pages()
 {
-	std::cout << "\t\t SCSI Log Pages  List -  "<< std::endl;
-	std::cout << "\t\t\t" << SCSI_LOG_PAGES_APPLICATION_CLIENT << ", " << SCSI_LOG_PAGES_BACKGROUND_SCAN << ", " << SCSI_LOG_PAGES_CACHE_STATISTICS  << std::endl;
-	std::cout << "\t\t\t" << SCSI_LOG_PAGES_BACKGROUND_OPERATION << ", " << SCSI_LOG_PAGES_ENVIRONMENTAL_REPORTING << std::endl;
-	std::cout << "\t\t\t" << SCSI_LOG_PAGES_FACTORY_LOG << ", " <<SCSI_LOG_PAGES_ENVIRONMENTAL_LIMITS << std::endl;
-	std::cout << "\t\t\t" << SCSI_LOG_PAGES_WRITE_LOG_PAGE << ", " << SCSI_LOG_PAGES_READ_LOG_PAGE << ", " << SCSI_LOG_PAGES_VERIFY_LOG_PAGE << std::endl;
-	std::cout << "\t\t\t" << SCSI_LOG_PAGES_INFORMATIONAL_EXCEPTIONS << ", "  << SCSI_LOG_PAGES_FORMAT_STATUS << ", " << SCSI_LOG_PAGES_DST_LOG_PAGE << std::endl;
-	std::cout << "\t\t\t" << SCSI_LOG_PAGES_NON_MEDIUM_ERROR << ", " <<  SCSI_LOG_PAGES_LOGICAL_BLOCK_PROVISIONING << std::endl;
-	std::cout << "\t\t\t" << SCSI_LOG_PAGES_POWER_CONDITIONS << ", " << SCSI_LOG_PAGES_PENDING_DEFECTS << ", " << SCSI_LOG_PAGES_PROTOCOL_PAGE << std::endl;
-	std::cout << "\t\t\t" << SCSI_LOG_PAGES_START_STOP_CYCLE_PAGE << ", " << SCSI_LOG_PAGES_SOLID_STATE_MEDIA << std::endl;
-	std::cout << "\t\t\t" << SCSI_LOG_PAGES_SUPPORTED_LOG_PAGES_AND_SUBPAGES << ", " << SCSI_LOG_PAGES_SUPPORTED_LOG_PAGES << std::endl;
-	std::cout << "\t\t\t" << SCSI_LOG_PAGES_TEMPERATURE_LOG_PAGE << ", " << SCSI_LOG_PAGES_UTILIZATION << std::endl;
+    std::cout << "\t\t SCSI Log Pages  List -  "<< std::endl;
+    std::cout << "\t\t\t" << SCSI_LOG_PAGES_APPLICATION_CLIENT << ", " << SCSI_LOG_PAGES_BACKGROUND_SCAN << ", " << SCSI_LOG_PAGES_CACHE_STATISTICS  << std::endl;
+    std::cout << "\t\t\t" << SCSI_LOG_PAGES_BACKGROUND_OPERATION << ", " << SCSI_LOG_PAGES_ENVIRONMENTAL_REPORTING << std::endl;
+    std::cout << "\t\t\t" << SCSI_LOG_PAGES_FACTORY_LOG << ", " <<SCSI_LOG_PAGES_ENVIRONMENTAL_LIMITS << std::endl;
+    std::cout << "\t\t\t" << SCSI_LOG_PAGES_WRITE_LOG_PAGE << ", " << SCSI_LOG_PAGES_READ_LOG_PAGE << ", " << SCSI_LOG_PAGES_VERIFY_LOG_PAGE << std::endl;
+    std::cout << "\t\t\t" << SCSI_LOG_PAGES_INFORMATIONAL_EXCEPTIONS << ", "  << SCSI_LOG_PAGES_FORMAT_STATUS << ", " << SCSI_LOG_PAGES_DST_LOG_PAGE << std::endl;
+    std::cout << "\t\t\t" << SCSI_LOG_PAGES_NON_MEDIUM_ERROR << ", " <<  SCSI_LOG_PAGES_LOGICAL_BLOCK_PROVISIONING << std::endl;
+    std::cout << "\t\t\t" << SCSI_LOG_PAGES_POWER_CONDITIONS << ", " << SCSI_LOG_PAGES_PENDING_DEFECTS << ", " << SCSI_LOG_PAGES_PROTOCOL_PAGE << std::endl;
+    std::cout << "\t\t\t" << SCSI_LOG_PAGES_START_STOP_CYCLE_PAGE << ", " << SCSI_LOG_PAGES_SOLID_STATE_MEDIA << std::endl;
+    std::cout << "\t\t\t" << SCSI_LOG_PAGES_SUPPORTED_LOG_PAGES_AND_SUBPAGES << ", " << SCSI_LOG_PAGES_SUPPORTED_LOG_PAGES << std::endl;
+    std::cout << "\t\t\t" << SCSI_LOG_PAGES_TEMPERATURE_LOG_PAGE << ", " << SCSI_LOG_PAGES_UTILIZATION << std::endl;
 
 }
 //-----------------------------------------------------------------------------
@@ -433,23 +433,23 @@ void print_Scsi_Log_Pages()
 //-----------------------------------------------------------------------------
 void print_Log_Type_Help(bool shortHelp)
 {
-	std::cout << "\t--" << INPUT_LOG_TYPE_LONG_OPT_STRING << " [choose from list below]" << std::endl;
-	std::cout << "\t\t{ ";
-	print_Seachest_logType_options();
+    std::cout << "\t--" << INPUT_LOG_TYPE_LONG_OPT_STRING << " [choose from list below]" << std::endl;
+    std::cout << "\t\t{ ";
+    print_Seachest_logType_options();
     std::cout << " } " << std::endl << std::endl;
 
-	if (!shortHelp)
-	{
-		std::cout << "\t\t" << "Use this option to describe the type of log that is being passed in." << std::endl;
-		std::cout << std::endl;
-		print_Scsi_Log_Pages();
+    if (!shortHelp)
+    {
+        std::cout << "\t\t" << "Use this option to describe the type of log that is being passed in." << std::endl;
+        std::cout << std::endl;
+        print_Scsi_Log_Pages();
 
-	}
-	else
-	{
-		std::cout << std::endl;
-	}
-	std::cout << std::endl;
+    }
+    else
+    {
+        std::cout << std::endl;
+    }
+    std::cout << std::endl;
 }
 //-----------------------------------------------------------------------------
 //
@@ -466,18 +466,18 @@ void print_Log_Type_Help(bool shortHelp)
 //-----------------------------------------------------------------------------
 void print_Parser_Output_Log_Help(bool shortHelp)
 {
-	std::cout << "\t--" << OUTPUT_LOG_LONG_OPT_STRING << " [log file name]" << std::endl;
-	if (!shortHelp)
-	{
-		std::cout << "\t\t" << "To set a name of the output file being generated. This option will overwrite" << std::endl;
-		std::cout << "\t\tfile if it exists." << std::endl;
-		std::cout << "\t\tIf no --" << OUTPUTLOG_LONG_OPT_STRING << " given then data will be printed to the screen." << std::endl;
-		std::cout << std::endl;
-	}
-	else
-	{
-		std::cout << std::endl;
-	}
+    std::cout << "\t--" << OUTPUT_LOG_LONG_OPT_STRING << " [log file name]" << std::endl;
+    if (!shortHelp)
+    {
+        std::cout << "\t\t" << "To set a name of the output file being generated. This option will overwrite" << std::endl;
+        std::cout << "\t\tfile if it exists." << std::endl;
+        std::cout << "\t\tIf no --" << OUTPUTLOG_LONG_OPT_STRING << " given then data will be printed to the screen." << std::endl;
+        std::cout << std::endl;
+    }
+    else
+    {
+        std::cout << std::endl;
+    }
 }
 //-----------------------------------------------------------------------------
 //
@@ -494,31 +494,31 @@ void print_Parser_Output_Log_Help(bool shortHelp)
 //-----------------------------------------------------------------------------
 void print_Log_Print_Help(bool shortHelp)
 {
-	std::cout << "\t--" << OUTPUT_LOG_PRINT_LONG_OPT_STRING << " [choose from list below]" << std::endl;
-	std::cout << "\t\t{" << LOG_PRINT_STRING_JSON << ", " << LOG_PRINT_STRING_TEXT << ", " << LOG_PRINT_STRING_CSV << ", " << LOG_PRINT_STRING_FLATCSV << ", " << LOG_PRINT_STRING_PROM << "}" << std::endl;
-	if (!shortHelp)
-	{
-		std::cout << "\t\t" << "Use this option to set the output format. \n" << std::endl;
-		std::cout << "\t\t" << LOG_PRINT_STRING_JSON << " - prints the data in a printable json format" << std::endl;
-		std::cout << "\t\t" << LOG_PRINT_STRING_TEXT << " - prints the data in a printable and human readable format" << std::endl;
-		std::cout << "\t\t" << LOG_PRINT_STRING_CSV << "  - The data flows downwards" << std::endl;
-		std::cout << "\t\t" << LOG_PRINT_STRING_FLATCSV << " - The data is set to flow in two rows only" << std::endl;
-		std::cout << "\t\t" << LOG_PRINT_STRING_PROM << " - Prints the data in a format readable by Prometheus.\n\n"
-			<< "\t\t\t" << "If no output log is specified (with --outputLog), data is printed\n"
-			<< "\t\t\t" << "out to standard output and a file is automatically created.\n"
-			<< "\t\t\t" << "The output file will have the same name as the input file\n"
-			<< "\t\t\t" << "with the extension \".prom\" which can be opened in any text editor.\n\n" 
-			<< "\t\t\t" << "If an output log is specified (with --outputLog), data is printed\n"
-			<< "\t\t\t" << "directly to the specified file.\n" << std::endl;
-		std::cout << "\t\t\t" << "[USAGE EXAMPLES]" << std::endl;
-		std::cout << "\t\t\t" << "openSeaChest_LogParser --inputLog <fileName>.bin --logType farmLog --printType prom" << std::endl;
-		std::cout << "\t\t\t\t" << "Takes in a FARM log, <fileName>.bin, prints the data in Prometheus' format\n"
-			<< "\t\t\t\t" << "to standard output, and saves the output in the current directory as <fileName>.prom.\n" << std::endl;
-		std::cout << "\t\t\t" << "openSeaChest_LogParser --inputLog <inputFile>.bin --logType farmLog --printType prom --outputLog <outputFile>.prom" << std::endl;
-		std::cout << "\t\t\t\t" << "Takes in a FARM log, <inputFile>.bin, and saves the output in the current directory\n"
-			<< "\t\t\t\t" << "<outputFile>.prom without printing to standard output.\n" << std::endl;
-	}
-	std::cout << std::endl;
+    std::cout << "\t--" << OUTPUT_LOG_PRINT_LONG_OPT_STRING << " [choose from list below]" << std::endl;
+    std::cout << "\t\t{" << LOG_PRINT_STRING_JSON << ", " << LOG_PRINT_STRING_TEXT << ", " << LOG_PRINT_STRING_CSV << ", " << LOG_PRINT_STRING_FLATCSV << ", " << LOG_PRINT_STRING_PROM << "}" << std::endl;
+    if (!shortHelp)
+    {
+        std::cout << "\t\t" << "Use this option to set the output format. \n" << std::endl;
+        std::cout << "\t\t" << LOG_PRINT_STRING_JSON << " - prints the data in a printable json format" << std::endl;
+        std::cout << "\t\t" << LOG_PRINT_STRING_TEXT << " - prints the data in a printable and human readable format" << std::endl;
+        std::cout << "\t\t" << LOG_PRINT_STRING_CSV << "  - The data flows downwards" << std::endl;
+        std::cout << "\t\t" << LOG_PRINT_STRING_FLATCSV << " - The data is set to flow in two rows only" << std::endl;
+        std::cout << "\t\t" << LOG_PRINT_STRING_PROM << " - Prints the data in a format readable by Prometheus.\n\n"
+            << "\t\t\t" << "If no output log is specified (with --outputLog), data is printed\n"
+            << "\t\t\t" << "out to standard output and a file is automatically created.\n"
+            << "\t\t\t" << "The output file will have the same name as the input file\n"
+            << "\t\t\t" << "with the extension \".prom\" which can be opened in any text editor.\n\n" 
+            << "\t\t\t" << "If an output log is specified (with --outputLog), data is printed\n"
+            << "\t\t\t" << "directly to the specified file.\n" << std::endl;
+        std::cout << "\t\t\t" << "[USAGE EXAMPLES]" << std::endl;
+        std::cout << "\t\t\t" << "openSeaChest_LogParser --inputLog <fileName>.bin --logType farmLog --printType prom" << std::endl;
+        std::cout << "\t\t\t\t" << "Takes in a FARM log, <fileName>.bin, prints the data in Prometheus' format\n"
+            << "\t\t\t\t" << "to standard output, and saves the output in the current directory as <fileName>.prom.\n" << std::endl;
+        std::cout << "\t\t\t" << "openSeaChest_LogParser --inputLog <inputFile>.bin --logType farmLog --printType prom --outputLog <outputFile>.prom" << std::endl;
+        std::cout << "\t\t\t\t" << "Takes in a FARM log, <inputFile>.bin, and saves the output in the current directory\n"
+            << "\t\t\t\t" << "<outputFile>.prom without printing to standard output.\n" << std::endl;
+    }
+    std::cout << std::endl;
 }
 //-----------------------------------------------------------------------------
 //
@@ -533,13 +533,46 @@ void print_Log_Print_Help(bool shortHelp)
 //-----------------------------------------------------------------------------
 void print_FARM_Command_Line_Option_to_Show_Status_Bytes()
 {
-	std::cout << "\t--" << SHOW_STATUS_BITS_OPT_STRING  << std::endl;
-	std::cout << "\t\t" << "Command Line Option for the FARM Log ONLY " << std::endl;
-	std::cout << "\t\t" << "Use this option to set the parser to gather the status bytes for each field." << std::endl;
-	std::cout << "\t\t" << "For each field the Supported byte will show TRUE or FALSE " << std::endl;
-	std::cout << "\t\t" << "For each field the Valid byte will show TRUE or FALSE " << std::endl;
-	std::cout << "\t\t" << "Device Information will not show status bytes." << std::endl;
+    std::cout << "\t--" << SHOW_STATUS_BITS_OPT_STRING  << std::endl;
+    std::cout << "\t\t" << "Command Line Option for the FARM Log ONLY " << std::endl;
+    std::cout << "\t\t" << "Use this option to set the parser to gather the status bytes for each field." << std::endl;
+    std::cout << "\t\t" << "For each field the Supported byte will show TRUE or FALSE " << std::endl;
+    std::cout << "\t\t" << "For each field the Valid byte will show TRUE or FALSE " << std::endl;
+    std::cout << "\t\t" << "Device Information will not show status bytes." << std::endl;
 
-	std::cout << std::endl;
+    std::cout << std::endl;
+}
+
+//-----------------------------------------------------------------------------
+//
+//  print_FARM_Analyze_Command_Line_Option()
+//
+//! \brief   Description:  This function prints out the analyze command
+//
+//
+//  Exit:
+//!   \return VOID
+//
+//-----------------------------------------------------------------------------
+void print_FARM_Analyze_Command_Line_Option()
+{
+    std::cout << "\t--" << ANALYZE_LONG_OPT_STRING << std::endl;
+    std::cout << "\t\t" << "Command Line Option for the FARM Log ONLY " << std::endl;
+    std::cout << "\t\t" << "Use this option to analyze the FARM Log and state the Drive Health." << std::endl;
+
+    /*
+    std::cout << "\t\t" << "Following are the possable Drive Health status " << std::endl;
+    std::cout << "\t\t" << "    NTF " << std::endl;
+    std::cout << "\t\t" << "    PRESSURE " << std::endl;
+    std::cout << "\t\t" << "    FW_ASSERTION " << std::endl;
+    std::cout << "\t\t" << "    DATA_PATH " << std::endl;
+    std::cout << "\t\t" << "    SEEK_HARD_ERROR " << std::endl;
+    std::cout << "\t\t" << "    UNRECOVERABLE_SERVO " << std::endl;
+    std::cout << "\t\t" << "    UNRECOVERABLE_WRITE " << std::endl;
+    std::cout << "\t\t" << "    UNRECOVERABLE_READ_GLIST " << std::endl;
+    std::cout << "\t\t" << "    UNDEFINED " << std::endl;
+    */
+
+    std::cout << std::endl;
 }
 
