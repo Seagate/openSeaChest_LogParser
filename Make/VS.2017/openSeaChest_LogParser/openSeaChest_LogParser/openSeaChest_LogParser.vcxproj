@@ -259,7 +259,7 @@
       <Optimization>
       </Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;WIN_API_TARGET_VERSION=81000000L;INCLUDE_FARM_LOG;INCLUDE_DEVICE_STATISTICS_LOG;INCLUDE_EXT_COMPREHENSIVE_LOG;INCLUDE_COMMON_EXT_DST_LOG;INCLUDE_IDENTIFY_LOG;INCLUDE_IDENTIFY_DEVICE_DATA_LOG;INCLUDE_SCT_TEMP_LOG;INCLUDE_POWER_CONDITION_LOG;INCLUDE_NCQ_CMD_ERROR_LOG;INCLUDE_SCSI_LOG_PAGES</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;INCLUDE_FARM_LOG;INCLUDE_DEVICE_STATISTICS_LOG;INCLUDE_EXT_COMPREHENSIVE_LOG;INCLUDE_COMMON_EXT_DST_LOG;INCLUDE_IDENTIFY_LOG;INCLUDE_IDENTIFY_DEVICE_DATA_LOG;INCLUDE_SCT_TEMP_LOG;INCLUDE_POWER_CONDITION_LOG;INCLUDE_NCQ_CMD_ERROR_LOG;INCLUDE_SCSI_LOG_PAGES</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>..\..\..\..\wingetopt\src;..\..\..\..\include;..\..\..\..\opensea-common\include;..\..\..\..\libjson;..\..\..\..\opensea-parser\include;..\..\..\..\opensea-parser\include\Seagate;..\..\..\..\utils\include</AdditionalIncludeDirectories>
       <DebugInformationFormat>OldStyle</DebugInformationFormat>
@@ -285,7 +285,7 @@
       <Optimization>
       </Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;WIN_API_TARGET_VERSION=81000000L;INCLUDE_FARM_LOG;INCLUDE_DEVICE_STATISTICS_LOG;INCLUDE_EXT_COMPREHENSIVE_LOG;INCLUDE_COMMON_EXT_DST_LOG;INCLUDE_IDENTIFY_LOG;INCLUDE_IDENTIFY_DEVICE_DATA_LOG;INCLUDE_SCT_TEMP_LOG;INCLUDE_POWER_CONDITION_LOG;INCLUDE_NCQ_CMD_ERROR_LOG;INCLUDE_SCSI_LOG_PAGES</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;INCLUDE_FARM_LOG;INCLUDE_DEVICE_STATISTICS_LOG;INCLUDE_EXT_COMPREHENSIVE_LOG;INCLUDE_COMMON_EXT_DST_LOG;INCLUDE_IDENTIFY_LOG;INCLUDE_IDENTIFY_DEVICE_DATA_LOG;INCLUDE_SCT_TEMP_LOG;INCLUDE_POWER_CONDITION_LOG;INCLUDE_NCQ_CMD_ERROR_LOG;INCLUDE_SCSI_LOG_PAGES</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>..\..\..\..\wingetopt\src;..\..\..\..\include;..\..\..\..\opensea-common\include;..\..\..\..\libjson;..\..\..\..\opensea-parser\include;..\..\..\..\opensea-parser\include\Seagate;..\..\..\..\utils\include</AdditionalIncludeDirectories>
       <DebugInformationFormat>
@@ -315,7 +315,7 @@
       <Optimization>
       </Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;WIN_API_TARGET_VERSION=81000000L;INCLUDE_FARM_LOG;INCLUDE_DEVICE_STATISTICS_LOG;INCLUDE_EXT_COMPREHENSIVE_LOG;INCLUDE_COMMON_EXT_DST_LOG;INCLUDE_IDENTIFY_LOG;INCLUDE_IDENTIFY_DEVICE_DATA_LOG;INCLUDE_SCT_TEMP_LOG;INCLUDE_POWER_CONDITION_LOG;INCLUDE_NCQ_CMD_ERROR_LOG;INCLUDE_SCSI_LOG_PAGES</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;INCLUDE_FARM_LOG;INCLUDE_DEVICE_STATISTICS_LOG;INCLUDE_EXT_COMPREHENSIVE_LOG;INCLUDE_COMMON_EXT_DST_LOG;INCLUDE_IDENTIFY_LOG;INCLUDE_IDENTIFY_DEVICE_DATA_LOG;INCLUDE_SCT_TEMP_LOG;INCLUDE_POWER_CONDITION_LOG;INCLUDE_NCQ_CMD_ERROR_LOG;INCLUDE_SCSI_LOG_PAGES</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>..\..\..\..\wingetopt\src;..\..\..\..\include;..\..\..\..\opensea-common\include;..\..\..\..\libjson;..\..\..\..\opensea-parser\include;..\..\..\..\opensea-parser\include\Seagate;..\..\..\..\utils\include</AdditionalIncludeDirectories>
       <DebugInformationFormat>OldStyle</DebugInformationFormat>
@@ -343,7 +343,7 @@
       <IntrinsicFunctions>
       </IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;WIN_API_TARGET_VERSION=81000000L;INCLUDE_FARM_LOG;INCLUDE_DEVICE_STATISTICS_LOG;INCLUDE_EXT_COMPREHENSIVE_LOG;INCLUDE_COMMON_EXT_DST_LOG;INCLUDE_IDENTIFY_LOG;INCLUDE_IDENTIFY_DEVICE_DATA_LOG;INCLUDE_SCT_TEMP_LOG;INCLUDE_POWER_CONDITION_LOG;INCLUDE_NCQ_CMD_ERROR_LOG;INCLUDE_SCSI_LOG_PAGES</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;INCLUDE_FARM_LOG;INCLUDE_DEVICE_STATISTICS_LOG;INCLUDE_EXT_COMPREHENSIVE_LOG;INCLUDE_COMMON_EXT_DST_LOG;INCLUDE_IDENTIFY_LOG;INCLUDE_IDENTIFY_DEVICE_DATA_LOG;INCLUDE_SCT_TEMP_LOG;INCLUDE_POWER_CONDITION_LOG;INCLUDE_NCQ_CMD_ERROR_LOG;INCLUDE_SCSI_LOG_PAGES</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>..\..\..\..\wingetopt\src;..\..\..\..\include;..\..\..\..\opensea-common\include;..\..\..\..\libjson;..\..\..\..\opensea-parser\include;..\..\..\..\opensea-parser\include\Seagate;..\..\..\..\utils\include</AdditionalIncludeDirectories>
       <DebugInformationFormat />
@@ -373,7 +373,7 @@
       <IntrinsicFunctions>
       </IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;WIN_API_TARGET_VERSION=81000000L;INCLUDE_FARM_LOG;INCLUDE_DEVICE_STATISTICS_LOG;INCLUDE_EXT_COMPREHENSIVE_LOG;INCLUDE_COMMON_EXT_DST_LOG;INCLUDE_IDENTIFY_LOG;INCLUDE_IDENTIFY_DEVICE_DATA_LOG;INCLUDE_SCT_TEMP_LOG;INCLUDE_POWER_CONDITION_LOG;INCLUDE_NCQ_CMD_ERROR_LOG;INCLUDE_SCSI_LOG_PAGES</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;INCLUDE_FARM_LOG;INCLUDE_DEVICE_STATISTICS_LOG;INCLUDE_EXT_COMPREHENSIVE_LOG;INCLUDE_COMMON_EXT_DST_LOG;INCLUDE_IDENTIFY_LOG;INCLUDE_IDENTIFY_DEVICE_DATA_LOG;INCLUDE_SCT_TEMP_LOG;INCLUDE_POWER_CONDITION_LOG;INCLUDE_NCQ_CMD_ERROR_LOG;INCLUDE_SCSI_LOG_PAGES</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>..\..\..\..\wingetopt\src;..\..\..\..\include;..\..\..\..\opensea-common\include;..\..\..\..\libjson;..\..\..\..\opensea-parser\include;..\..\..\..\opensea-parser\include\Seagate;..\..\..\..\utils\include</AdditionalIncludeDirectories>
       <DebugInformationFormat>
@@ -407,7 +407,7 @@
       <IntrinsicFunctions>
       </IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;WIN_API_TARGET_VERSION=81000000L;INCLUDE_FARM_LOG;INCLUDE_DEVICE_STATISTICS_LOG;INCLUDE_EXT_COMPREHENSIVE_LOG;INCLUDE_COMMON_EXT_DST_LOG;INCLUDE_IDENTIFY_LOG;INCLUDE_IDENTIFY_DEVICE_DATA_LOG;INCLUDE_SCT_TEMP_LOG;INCLUDE_POWER_CONDITION_LOG;INCLUDE_NCQ_CMD_ERROR_LOG;INCLUDE_SCSI_LOG_PAGES</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;INCLUDE_FARM_LOG;INCLUDE_DEVICE_STATISTICS_LOG;INCLUDE_EXT_COMPREHENSIVE_LOG;INCLUDE_COMMON_EXT_DST_LOG;INCLUDE_IDENTIFY_LOG;INCLUDE_IDENTIFY_DEVICE_DATA_LOG;INCLUDE_SCT_TEMP_LOG;INCLUDE_POWER_CONDITION_LOG;INCLUDE_NCQ_CMD_ERROR_LOG;INCLUDE_SCSI_LOG_PAGES</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>..\..\..\..\wingetopt\src;..\..\..\..\include;..\..\..\..\opensea-common\include;..\..\..\..\libjson;..\..\..\..\opensea-parser\include;..\..\..\..\opensea-parser\include\Seagate;..\..\..\..\utils\include</AdditionalIncludeDirectories>
       <DebugInformationFormat />
@@ -437,7 +437,7 @@
       <IntrinsicFunctions>
       </IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;WIN_API_TARGET_VERSION=81000000L;INCLUDE_FARM_LOG;INCLUDE_DEVICE_STATISTICS_LOG;INCLUDE_EXT_COMPREHENSIVE_LOG;INCLUDE_COMMON_EXT_DST_LOG;INCLUDE_IDENTIFY_LOG;INCLUDE_IDENTIFY_DEVICE_DATA_LOG;INCLUDE_SCT_TEMP_LOG;INCLUDE_POWER_CONDITION_LOG;INCLUDE_NCQ_CMD_ERROR_LOG;INCLUDE_SCSI_LOG_PAGES</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;INCLUDE_FARM_LOG;INCLUDE_DEVICE_STATISTICS_LOG;INCLUDE_EXT_COMPREHENSIVE_LOG;INCLUDE_COMMON_EXT_DST_LOG;INCLUDE_IDENTIFY_LOG;INCLUDE_IDENTIFY_DEVICE_DATA_LOG;INCLUDE_SCT_TEMP_LOG;INCLUDE_POWER_CONDITION_LOG;INCLUDE_NCQ_CMD_ERROR_LOG;INCLUDE_SCSI_LOG_PAGES</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>..\..\..\..\wingetopt\src;..\..\..\..\include;..\..\..\..\opensea-common\include;..\..\..\..\libjson;..\..\..\..\opensea-parser\include;..\..\..\..\opensea-parser\include\Seagate;..\..\..\..\utils\include</AdditionalIncludeDirectories>
       <DebugInformationFormat>
@@ -471,7 +471,7 @@
       <IntrinsicFunctions>
       </IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;WIN_API_TARGET_VERSION=81000000L;INCLUDE_FARM_LOG;INCLUDE_DEVICE_STATISTICS_LOG;INCLUDE_EXT_COMPREHENSIVE_LOG;INCLUDE_COMMON_EXT_DST_LOG;INCLUDE_IDENTIFY_LOG;INCLUDE_IDENTIFY_DEVICE_DATA_LOG;INCLUDE_SCT_TEMP_LOG;INCLUDE_POWER_CONDITION_LOG;INCLUDE_NCQ_CMD_ERROR_LOG;INCLUDE_SCSI_LOG_PAGES</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;INCLUDE_FARM_LOG;INCLUDE_DEVICE_STATISTICS_LOG;INCLUDE_EXT_COMPREHENSIVE_LOG;INCLUDE_COMMON_EXT_DST_LOG;INCLUDE_IDENTIFY_LOG;INCLUDE_IDENTIFY_DEVICE_DATA_LOG;INCLUDE_SCT_TEMP_LOG;INCLUDE_POWER_CONDITION_LOG;INCLUDE_NCQ_CMD_ERROR_LOG;INCLUDE_SCSI_LOG_PAGES</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>..\..\..\..\wingetopt\src;..\..\..\..\include;..\..\..\..\opensea-common\include;..\..\..\..\libjson;..\..\..\..\opensea-parser\include;..\..\..\..\opensea-parser\include\Seagate;..\..\..\..\utils\include</AdditionalIncludeDirectories>
       <DebugInformationFormat />
@@ -500,7 +500,7 @@
       <IntrinsicFunctions>
       </IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;WIN_API_TARGET_VERSION=81000000L;INCLUDE_FARM_LOG;INCLUDE_DEVICE_STATISTICS_LOG;INCLUDE_EXT_COMPREHENSIVE_LOG;INCLUDE_COMMON_EXT_DST_LOG;INCLUDE_IDENTIFY_LOG;INCLUDE_IDENTIFY_DEVICE_DATA_LOG;INCLUDE_SCT_TEMP_LOG;INCLUDE_POWER_CONDITION_LOG;INCLUDE_NCQ_CMD_ERROR_LOG;INCLUDE_SCSI_LOG_PAGES</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;INCLUDE_FARM_LOG;INCLUDE_DEVICE_STATISTICS_LOG;INCLUDE_EXT_COMPREHENSIVE_LOG;INCLUDE_COMMON_EXT_DST_LOG;INCLUDE_IDENTIFY_LOG;INCLUDE_IDENTIFY_DEVICE_DATA_LOG;INCLUDE_SCT_TEMP_LOG;INCLUDE_POWER_CONDITION_LOG;INCLUDE_NCQ_CMD_ERROR_LOG;INCLUDE_SCSI_LOG_PAGES</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>..\..\..\..\wingetopt\src;..\..\..\..\include;..\..\..\..\opensea-common\include;..\..\..\..\libjson;..\..\..\..\opensea-parser\include;..\..\..\..\opensea-parser\include\Seagate;..\..\..\..\utils\include</AdditionalIncludeDirectories>
       <DebugInformationFormat>OldStyle</DebugInformationFormat>
@@ -532,7 +532,7 @@
       <IntrinsicFunctions />
       <OmitFramePointers />
       <WholeProgramOptimization>false</WholeProgramOptimization>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;WIN_API_TARGET_VERSION=81000000L;INCLUDE_FARM_LOG;INCLUDE_DEVICE_STATISTICS_LOG;INCLUDE_EXT_COMPREHENSIVE_LOG;INCLUDE_COMMON_EXT_DST_LOG;INCLUDE_IDENTIFY_LOG;INCLUDE_IDENTIFY_DEVICE_DATA_LOG;INCLUDE_SCT_TEMP_LOG;INCLUDE_POWER_CONDITION_LOG;INCLUDE_NCQ_CMD_ERROR_LOG;INCLUDE_SCSI_LOG_PAGES</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;INCLUDE_FARM_LOG;INCLUDE_DEVICE_STATISTICS_LOG;INCLUDE_EXT_COMPREHENSIVE_LOG;INCLUDE_COMMON_EXT_DST_LOG;INCLUDE_IDENTIFY_LOG;INCLUDE_IDENTIFY_DEVICE_DATA_LOG;INCLUDE_SCT_TEMP_LOG;INCLUDE_POWER_CONDITION_LOG;INCLUDE_NCQ_CMD_ERROR_LOG;INCLUDE_SCSI_LOG_PAGES</PreprocessorDefinitions>
       <MinimalRebuild />
       <BasicRuntimeChecks />
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -556,7 +556,7 @@
       <OmitFramePointers>
       </OmitFramePointers>
       <WholeProgramOptimization>false</WholeProgramOptimization>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;WIN_API_TARGET_VERSION=81000000L;INCLUDE_FARM_LOG;INCLUDE_DEVICE_STATISTICS_LOG;INCLUDE_EXT_COMPREHENSIVE_LOG;INCLUDE_COMMON_EXT_DST_LOG;INCLUDE_IDENTIFY_LOG;INCLUDE_IDENTIFY_DEVICE_DATA_LOG;INCLUDE_SCT_TEMP_LOG;INCLUDE_POWER_CONDITION_LOG;INCLUDE_NCQ_CMD_ERROR_LOG;INCLUDE_SCSI_LOG_PAGES</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;INCLUDE_FARM_LOG;INCLUDE_DEVICE_STATISTICS_LOG;INCLUDE_EXT_COMPREHENSIVE_LOG;INCLUDE_COMMON_EXT_DST_LOG;INCLUDE_IDENTIFY_LOG;INCLUDE_IDENTIFY_DEVICE_DATA_LOG;INCLUDE_SCT_TEMP_LOG;INCLUDE_POWER_CONDITION_LOG;INCLUDE_NCQ_CMD_ERROR_LOG;INCLUDE_SCSI_LOG_PAGES</PreprocessorDefinitions>
       <MinimalRebuild>
       </MinimalRebuild>
       <BasicRuntimeChecks>
@@ -577,7 +577,7 @@
       <Optimization />
       <IntrinsicFunctions />
       <WholeProgramOptimization>false</WholeProgramOptimization>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;WIN_API_TARGET_VERSION=81000000L;INCLUDE_FARM_LOG;INCLUDE_DEVICE_STATISTICS_LOG;INCLUDE_EXT_COMPREHENSIVE_LOG;INCLUDE_COMMON_EXT_DST_LOG;INCLUDE_IDENTIFY_LOG;INCLUDE_IDENTIFY_DEVICE_DATA_LOG;INCLUDE_SCT_TEMP_LOG;INCLUDE_POWER_CONDITION_LOG;INCLUDE_NCQ_CMD_ERROR_LOG;INCLUDE_SCSI_LOG_PAGES</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;INCLUDE_FARM_LOG;INCLUDE_DEVICE_STATISTICS_LOG;INCLUDE_EXT_COMPREHENSIVE_LOG;INCLUDE_COMMON_EXT_DST_LOG;INCLUDE_IDENTIFY_LOG;INCLUDE_IDENTIFY_DEVICE_DATA_LOG;INCLUDE_SCT_TEMP_LOG;INCLUDE_POWER_CONDITION_LOG;INCLUDE_NCQ_CMD_ERROR_LOG;INCLUDE_SCSI_LOG_PAGES</PreprocessorDefinitions>
       <MinimalRebuild />
       <BasicRuntimeChecks />
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
