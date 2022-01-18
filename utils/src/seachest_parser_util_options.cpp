@@ -38,8 +38,11 @@ void seachest_utility_Info(const std::string & utilityName, const std::string & 
 {
     eArchitecture architecture = get_Compiled_Architecture();
     time_t g_curTime = time(NULL);
-    std::string       g_timeString;
-	g_timeString.resize(FORMAT_SIZE);
+    struct tm timeStruct;
+    char timeCString[64] = { 0 };
+    char timeBuffer[CURRENT_TIME_STRING_LENGTH] = { 0 };
+    memset(&timeStruct, 0, sizeof(struct tm));
+
     printf("===============================================================================\n");
     printf(" %s - Seagate drive utilities\n", utilityName.c_str());
     printf(" Copyright (c) 2018-2020 Seagate Technology LLC and/or its Affiliates\n");
@@ -47,9 +50,9 @@ void seachest_utility_Info(const std::string & utilityName, const std::string & 
     print_Architecture(architecture);
     printf("\n");
     printf(" Build Date: %s\n", __DATE__);
-    printf(" Today: %s", ctime(&g_curTime));
+    printf(" Today: %s", get_Current_Time_String(&g_curTime, timeBuffer, CURRENT_TIME_STRING_LENGTH));
     printf("===============================================================================\n");
-    strftime((char *)g_timeString.c_str(), (size_t)FORMAT_SIZE, " %Y-%m-%d__%H_%M_%S", localtime(&g_curTime));
+    strftime(timeCString, 64, " %Y-%m-%d__%H_%M_%S", get_Localtime(&g_curTime, &timeStruct));
 }
 //-----------------------------------------------------------------------------
 //
@@ -68,15 +71,14 @@ void seachest_utility_Info(const std::string & utilityName, const std::string & 
 //-----------------------------------------------------------------------------
 void utility_Full_Version_Info(const std::string & utilityName, const std::string & buildVersion, const std::string & openseaVersion)
 {
-	std::string osName = "";
-	osName.resize(FORMAT_SIZE);
+    char osNameCstring[OS_NAME_SIZE] = { 0 };
     OSVersionNumber osversionnumber;
     eCompiler compilerUsed = OPENSEA_COMPILER_UNKNOWN;
     compilerVersion compilerVersionInfo;
     memset(&osversionnumber, 0, sizeof(OSVersionNumber));
     memset(&compilerVersionInfo, 0, sizeof(compilerVersion));
     get_Compiler_Info(&compilerUsed, &compilerVersionInfo);
-	get_Operating_System_Version_And_Name(&osversionnumber, (char *)osName.c_str());
+    get_Operating_System_Version_And_Name(&osversionnumber, osNameCstring);
 
     printf("Version Info for %s:\n", utilityName.c_str());
     printf("\tUtility Version: %s\n", buildVersion.c_str());
@@ -94,7 +96,7 @@ void utility_Full_Version_Info(const std::string & utilityName, const std::strin
     print_OS_Type(osversionnumber.osVersioningIdentifier);
     printf("\n\tOperating System Version: ");
     print_OS_Version(&osversionnumber);
-    printf("\n\tOperating System Name: %s\n", osName.c_str());
+    printf("\n\tOperating System Name: %s\n", osNameCstring);
 }
 //-----------------------------------------------------------------------------
 //
