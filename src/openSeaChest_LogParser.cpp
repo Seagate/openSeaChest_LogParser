@@ -104,7 +104,7 @@ int32_t main(int argc, char *argv[])
     std::cout << test.capacity() << " " << test.max_size() << std::endl;
 
 
-    int8_t args = 0;
+    int args = 0;
     uint8_t argIndex = 0;
     int32_t optionIndex = 0;
 
@@ -147,7 +147,7 @@ int32_t main(int argc, char *argv[])
     //get options we know we need
     while (1) //changed to while 1 in order to parse multiple options when longs options are involved
     {
-        args =(int8_t) getopt_long(argc, argv, "d:hisF:Vv:q%:", longopts, &optionIndex);
+        args = getopt_long(argc, argv, "d:hisF:Vv:q%:", longopts, &optionIndex);
         if (args == -1)
         {
             break;

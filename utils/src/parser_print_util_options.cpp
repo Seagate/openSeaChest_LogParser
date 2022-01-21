@@ -806,9 +806,8 @@ std::string CPrintTXT::get_Msg_Text_Format(const std::string message)
  *  @param  The drive's serial number (string)
  *  @param  The name of the JSON node superceding (one level above) the current one
  */
-void CPrintProm::parseJSONToProm(JSONNODE* nData, std::string serialNumber, json_char *json_nodeName) {
+void CPrintProm::parseJSONToProm(JSONNODE* nData, std::string inserialNumber, json_char *json_nodeName) {
     // Declare a metric
-    metric currentMetric;
     JSONNODE_ITERATOR it_json = json_begin(nData);
     // Iterate through master JSON data
     while (it_json != json_end(nData)) {
@@ -831,7 +830,7 @@ void CPrintProm::parseJSONToProm(JSONNODE* nData, std::string serialNumber, json
                     std::string arrayIndex_str = stream.str();
                     currentMetric.labelMap.insert(std::pair<std::string, std::string>("index", arrayIndex_str));
                     // Insert the drive's serial number as a label
-                    currentMetric.labelMap.insert(std::pair<std::string, std::string>("device", serialNumber));
+                    currentMetric.labelMap.insert(std::pair<std::string, std::string>("device", inserialNumber));
                     // If the JSON type is a string, check if it can be parsed as a number; otherwise, pass the value in though the label
                     if (json_type(*it_json) == JSON_STRING) {
                         // If the value is a number, set the value accordingly
@@ -857,7 +856,7 @@ void CPrintProm::parseJSONToProm(JSONNODE* nData, std::string serialNumber, json
                     // Clear the pointer holding the value
                     json_free(currentValue);
                     // Clear the metric struct
-                    metric currentMetric;
+                    memset(&currentMetric, 0, sizeof(currentMetric));
                     arrayIndex++;
                     it_jsonArray++;
                 }
@@ -874,7 +873,7 @@ void CPrintProm::parseJSONToProm(JSONNODE* nData, std::string serialNumber, json
                     break;
                 }
                 // Run this method recursively
-                parseJSONToProm(*it_jsonArray, serialNumber, jsonArrayNodeName);
+                parseJSONToProm(*it_jsonArray, inserialNumber, jsonArrayNodeName);
                 // Clear pointers
                 json_free(jsonArrayNodeName);
                 json_free(jsonArrayName);
@@ -889,7 +888,7 @@ void CPrintProm::parseJSONToProm(JSONNODE* nData, std::string serialNumber, json
             currentMetric.key = trim(std::string(jsonName), " ");
             json_char *currentValue = json_as_string(*it_json);
             // Insert the drive's serial number as a label
-            currentMetric.labelMap.insert(std::pair<std::string, std::string>("device", serialNumber));
+            currentMetric.labelMap.insert(std::pair<std::string, std::string>("device", inserialNumber));
             // If the key is describing a head with a given number, convert that to a label
             if (currentMetric.key.find("Head ") != std::string::npos) {
                 if (currentMetric.key.find_first_of("0123456789") != std::string::npos) {
@@ -949,7 +948,7 @@ void CPrintProm::parseJSONToProm(JSONNODE* nData, std::string serialNumber, json
             // Clear the pointer storing the JSON array's name
             json_free(jsonName);
             // Clear the metric struct
-            metric currentMetric;
+            memset(&currentMetric, 0, sizeof(currentMetric));
         // If the current JSON object is a node, recursively run this function
         } else if (json_type(*it_json) == JSON_NODE) {
             json_char *jsonNodeName = json_name(*it_json);
@@ -960,7 +959,7 @@ void CPrintProm::parseJSONToProm(JSONNODE* nData, std::string serialNumber, json
                 break;
             }
             // Run this method recursively
-            parseJSONToProm(*it_json, serialNumber, jsonNodeName);
+            parseJSONToProm(*it_json, inserialNumber, jsonNodeName);
             // Clear pointers
             json_free(jsonNodeName);
         }
@@ -1021,8 +1020,8 @@ std::string CPrintProm::toPrometheusKey(std::string key) {
     const std::string PREFIX = "seachest";
     const std::string REPLACE = "_";
     // Removes spaces and other undesired characters with this regular expression
-    int replaceIndex = 0;
-    int replaceLength = 0;
+    size_t replaceIndex = 0;
+    size_t replaceLength = 0;
     // Replaces non-alphanumeric characters with one REPLACE string (consecutive characters get replaced by one REPLACE string)
     for (std::string::size_type i = 0; i < key.size(); i++) {
         if (!isdigit(key.at(i)) && !isalpha(key.at(i))) {
