@@ -770,7 +770,7 @@ bool CPrintTXT::parse_Json_to_Text(JSONNODE *nData, uint16_t numberOfTabs)
 //!   \return 
 //
 //---------------------------------------------------------------------------
-std::string CPrintTXT::get_Msg_Text_Format(const std::string message)
+std::string CPrintTXT::get_Msg_Text_Format(M_ATTR_UNUSED const std::string message)
 {
     std::string r = "";
     for (std::vector<sFrameData>::iterator it = m_vData.begin(); it != m_vData.end(); ++it)
@@ -856,7 +856,9 @@ void CPrintProm::parseJSONToProm(JSONNODE* nData, std::string inserialNumber, js
                     // Clear the pointer holding the value
                     json_free(currentValue);
                     // Clear the metric struct
-                    memset(&currentMetric, 0, sizeof(currentMetric));
+                    currentMetric.key.clear();
+                    currentMetric.labelMap.clear();
+                    currentMetric.value.clear();
                     arrayIndex++;
                     it_jsonArray++;
                 }
@@ -948,7 +950,9 @@ void CPrintProm::parseJSONToProm(JSONNODE* nData, std::string inserialNumber, js
             // Clear the pointer storing the JSON array's name
             json_free(jsonName);
             // Clear the metric struct
-            memset(&currentMetric, 0, sizeof(currentMetric));
+            currentMetric.key.clear();
+            currentMetric.labelMap.clear();
+            currentMetric.value.clear();
         // If the current JSON object is a node, recursively run this function
         } else if (json_type(*it_json) == JSON_NODE) {
             json_char *jsonNodeName = json_name(*it_json);
