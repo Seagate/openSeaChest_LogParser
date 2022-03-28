@@ -162,21 +162,8 @@ CPrintCSV::~CPrintCSV()
 //---------------------------------------------------------------------------
 bool CPrintCSV::parse_Json(JSONNODE *nData, uint16_t numberOfTabs)
 {
-#define CHARSIZE 4
-    std::string title = "";
-    std::string data = "";
-    if (m_csv)
-    {
-        title.resize(BASIC);
-        data.resize(BASIC * 4);
-    }
-    else
-    {
-        title.resize(BASIC * 10000);
-        data.resize(BASIC * 10000);
-        m_csvData.title.resize(BASIC * 1000);
-        m_csvData.data.resize(BASIC * 1000);
-    }
+    std::string title;
+    std::string data;
     JSONNODE_ITERATOR i = json_begin(nData);
 
     while (i != json_end(nData))
@@ -622,11 +609,8 @@ bool CPrintTXT::Create_Tabs(std::string &title, std::string&data, uint16_t numbe
 //---------------------------------------------------------------------------
 bool CPrintTXT::parse_Json_to_Text(JSONNODE *nData, uint16_t numberOfTabs)
 {
-#define CHARSIZE 4
-    std::string title = "";
-    std::string data = "";
-    title.resize(BASIC);
-    data.resize(BASIC * 4);
+    std::string title;
+    std::string data;
     sFrameData frame;
     JSONNODE_ITERATOR i = json_begin(nData);
     while (i != json_end(nData))
