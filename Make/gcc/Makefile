@@ -26,8 +26,8 @@ CXX ?= g++
 STRIP ?= strip
 TOOL_CHAIN=gcc
 LIB_FILE_OUTPUT_DIR=lib
-CXXFLAGS = -Wall -std=c++98
-CFLAGS ?= -Wall 
+CXXFLAGS = -Wall -std=c++98 -Wextra
+CFLAGS ?= -Wall -Wextra
 ARCHIVE ?= ar
 ARCH=x86_$(shell getconf LONG_BIT)
 

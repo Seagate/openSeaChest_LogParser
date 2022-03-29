@@ -57,8 +57,6 @@ using namespace opensea_parser;
 
 std::string buildVersion = "1.3.2";
 std::string buildDate = __DATE__;
-time_t     pCurrentTime;
-std::string timeString = "";
 
 ////////////////////////////
 //  functions to declare  //
@@ -90,19 +88,23 @@ int32_t main(int argc, char *argv[])
     eReturnValues       retStatus = IN_PROGRESS;
     eUtilExitCodes      exitCode = UTIL_EXIT_NO_ERROR;
     LICENSE_VAR
-    ECHO_COMMAND_LINE_VAR
-	SHOW_STATUS_BIT_VAR
-    SHOW_VERSION_VAR
-    SHOW_HELP_VAR
-    //Tool specific
-    INPUT_LOG_FILE_VAR
-    OUTPUT_LOG_FILE_VAR
-    INPUT_LOG_TYPE_VAR
-    OUTPUT_LOG_PRINT_VAR
-    //OUTPUTPATH_VAR
-    //OUTPUTFILE_VAR
+        ECHO_COMMAND_LINE_VAR
+        SHOW_STATUS_BIT_VAR
+        SHOW_VERSION_VAR
+        SHOW_HELP_VAR
+        //Tool specific
+        INPUT_LOG_FILE_VAR
+        OUTPUT_LOG_FILE_VAR
+        INPUT_LOG_TYPE_VAR
+        OUTPUT_LOG_PRINT_VAR
+        //OUTPUTPATH_VAR
+        //OUTPUTFILE_VAR
 
-    int8_t args = 0;
+        std::string test;
+    std::cout << test.capacity() << " " << test.max_size() << std::endl;
+
+
+    int args = 0;
     uint8_t argIndex = 0;
     int32_t optionIndex = 0;
 
@@ -145,7 +147,7 @@ int32_t main(int argc, char *argv[])
     //get options we know we need
     while (1) //changed to while 1 in order to parse multiple options when longs options are involved
     {
-        args =(int8_t) getopt_long(argc, argv, "d:hisF:Vv:q%:", longopts, &optionIndex);
+        args = getopt_long(argc, argv, "d:hisF:Vv:q%:", longopts, &optionIndex);
         if (args == -1)
         {
             break;
@@ -329,7 +331,7 @@ int32_t main(int argc, char *argv[])
     if (ECHO_COMMAND_LINE_FLAG)
     {
         uint64_t commandLineIter = 1;//start at 1 as starting at 0 means printing the directory info+ SeaChest.exe (or ./SeaChest)
-        for (commandLineIter = 1; commandLineIter < (uint64_t)argc; commandLineIter++)
+        for (commandLineIter = 1; commandLineIter < static_cast<uint64_t>(argc); commandLineIter++)
         {
             if (strncmp(argv[commandLineIter], "--echoCommandLine", strlen(argv[commandLineIter])) == 0)
             {
@@ -704,7 +706,7 @@ void utility_Usage(bool shortUsage)
     print_Help_Help(shortUsage);
     print_License_Help(shortUsage);
     print_Verbose_Help(shortUsage);
-    print_Version_Help(shortUsage, (char *)util_name.c_str());
+    print_Version_Help(shortUsage, util_name.c_str());
 }
 //-----------------------------------------------------------------------------
 //
@@ -724,13 +726,17 @@ void utility_Usage(bool shortUsage)
 static void UtilityHeader(JSONNODE *masterData)
 {
 	// get current Time and Date 
-	pCurrentTime = time(NULL);	
-	strftime((char *)timeString.c_str(), 64, "%m-%d-%Y__%H:%M:%S", localtime(&pCurrentTime));
+    char timeCString[64];
+    const char * constTimeCString = &timeCString[0];
+	time_t pCurrentTime = time(NULL);
+    struct tm localTimeBuffer;
+    memset(&localTimeBuffer, 0, sizeof(struct tm));
+	strftime(timeCString, 64, "%m-%d-%Y__%H:%M:%S", get_Localtime(&pCurrentTime, &localTimeBuffer));
 	JSONNODE *toolHeader = json_new(JSON_NODE);
 	json_set_name(toolHeader, util_name.c_str());
-	json_push_back(toolHeader, json_new_a("Utility Build Version", (char *)buildVersion.c_str()));
+	json_push_back(toolHeader, json_new_a("Utility Build Version", buildVersion.c_str()));
     json_push_back(toolHeader, json_new_a("Library Build Version", OPENSEA_PARSER_VERSION));
 	json_push_back(toolHeader, json_new_a("Build Date", buildDate.c_str()));
-	json_push_back(toolHeader, json_new_a("Run as Date", (char *)timeString.c_str()));
+	json_push_back(toolHeader, json_new_a("Run as Date", constTimeCString));
 	json_push_back(masterData, toolHeader);
 }
