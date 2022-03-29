@@ -1014,7 +1014,7 @@ std::string CPrintProm::toPrometheusKey(std::string key) {
     for (std::string::size_type i = 0; i < key.size(); i++) {
         if (!isdigit(key.at(i)) && !isalpha(key.at(i))) {
             if (replaceLength == 0) {
-                replaceIndex = i;
+                replaceIndex = static_cast<int>(i);
             }
             replaceLength++;
             if (i == key.size() - 1) {
