@@ -886,14 +886,15 @@ std::string CPrintTXT::get_Msg_Text_Format(const std::string message)
  *  @param  The drive's serial number (string)
  *  @param  The name of the JSON node superceding (one level above) the current one
  */
-void CPrintProm::parseJSONToProm(JSONNODE* nData, std::string serialNumber, json_char *json_nodeName) {
+void CPrintProm::parseJSONToProm(JSONNODE* nData, std::string sn, json_char *json_nodeName) {
     // Declare a metric
     metric currentMetric;
     JSONNODE_ITERATOR it_json = json_begin(nData);
     // Iterate through master JSON data
     while (it_json != json_end(nData)) {
         // Clear the metric struct
-        metric currentMetric;
+        currentMetric = { 0 };
+        //metric currentMetric;
         // If the current JSON object is an array, check the types of the objects in the array
         if (json_type(*it_json) == JSON_ARRAY) {
             json_char *jsonArrayName = json_name(*it_json);
@@ -937,7 +938,8 @@ void CPrintProm::parseJSONToProm(JSONNODE* nData, std::string serialNumber, json
                     // Clear the pointer holding the value
                     json_free(currentValue);
                     // Clear the metric struct
-                    metric currentMetric;
+                    //metric currentMetric;
+                    currentMetric = { 0 };
                     arrayIndex++;
                     it_jsonArray++;
                 }
@@ -1029,7 +1031,8 @@ void CPrintProm::parseJSONToProm(JSONNODE* nData, std::string serialNumber, json
             // Clear the pointer storing the JSON array's name
             json_free(jsonName);
             // Clear the metric struct
-            metric currentMetric;
+            // metric currentMetric;
+            currentMetric = { 0 };
         // If the current JSON object is a node, recursively run this function
         } else if (json_type(*it_json) == JSON_NODE) {
             json_char *jsonNodeName = json_name(*it_json);
@@ -1107,7 +1110,7 @@ std::string CPrintProm::toPrometheusKey(std::string key) {
     for (std::string::size_type i = 0; i < key.size(); i++) {
         if (!isdigit(key.at(i)) && !isalpha(key.at(i))) {
             if (replaceLength == 0) {
-                replaceIndex = i;
+                replaceIndex = static_cast<int>(i);
             }
             replaceLength++;
             if (i == key.size() - 1) {
