@@ -50,7 +50,7 @@ void seachest_utility_Info(const std::string & utilityName, const std::string & 
     print_Architecture(architecture);
     printf("\n");
     printf(" Build Date: %s\n", __DATE__);
-    printf(" Today: %s", get_Current_Time_String(&g_curTime, timeBuffer, CURRENT_TIME_STRING_LENGTH));
+    printf(" Today: %s\n", get_Current_Time_String(&g_curTime, timeBuffer, CURRENT_TIME_STRING_LENGTH));
     printf("===============================================================================\n");
     strftime(timeCString, 64, " %Y-%m-%d__%H_%M_%S", get_Localtime(&g_curTime, &timeStruct));
 }
@@ -332,7 +332,8 @@ void print_Input_Log_Help(bool shortHelp)
 	std::cout << "\t--" << INPUT_LOG_LONG_OPT_STRING << " [log file name]" << std::endl;
 	if (!shortHelp)
 	{
-		std::cout << "\t\t" << "Use this option to pass a log into the tool for parsing." << std::endl << std::endl;
+		std::cout << "\t\t" << "Use this option to pass a log into the tool for parsing." << std::endl;
+		std::cout << "\t\t" << "Use --inputLog <fromPipe> option to pass a farm log buffer into the tool for parsing." << std::endl << std::endl;
 	}
     else
     {
