@@ -102,10 +102,10 @@ int32_t main(int argc, char *argv[])
         OUTPUT_LOG_PRINT_VAR
         //OUTPUTPATH_VAR
         //OUTPUTFILE_VAR
-
+#if defined(_DEBUG)
     std::string test;
     std::cout << test.capacity() << " " << test.max_size() << std::endl;
-
+#endif
 
     int args = 0;
     uint8_t argIndex = 0;
@@ -143,10 +143,12 @@ int32_t main(int argc, char *argv[])
     ////////////////////////
     std::vector<uint8_t> lineInputData;
     std::string lineinput;
+#if defined(_DEBUG)
     for (int i = 0; i < argc; ++i)
     {
         std::cout << argv[i] << std::endl;
     }
+#endif
     if (argc < 2)
     {
 		seachest_utility_Info(util_name, buildVersion, OPENSEA_PARSER_VERSION);
