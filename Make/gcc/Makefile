@@ -26,7 +26,8 @@ CXX ?= g++
 STRIP ?= strip
 TOOL_CHAIN=gcc
 LIB_FILE_OUTPUT_DIR=lib
-CXXFLAGS = -Wall -std=c++98 -Wextra
+CXXFLAGS = -Wall -Wextra -Werror=old-style-cast -Wshadow -Wmaybe-uninitialized -Wvla -Wfloat-equal \
+    -Wlogical-op -Wdouble-promotion -Wformat-security -std=c++98
 CFLAGS ?= -Wall -Wextra
 ARCHIVE ?= ar
 ARCH=x86_$(shell getconf LONG_BIT)
@@ -55,6 +56,32 @@ else
 LFLAGS += -lrt
 endif
 
+#Add more warnings for the GCC versions that support them
+#gcc 5.5 and up : -Wlogical-not-parentheses
+#    6.5 and up : -Wnull-dereference -Wduplicated-cond -Wshift-overflow=2
+ifeq ($(UNAME),Linux)
+	GCC_VERSION_STRING = $(shell $(CC) -dumpversion)
+	GCC_VER = $(subst ., ,$(GCC_VERSION_STRING))
+	GCC_MAJOR = $(word 1,$(GCC_VER))
+	GCC_MINOR = $(word 2,$(GCC_VER))
+	GCC_SUBMINOR = $(word 3,$(GCC_VER))
+	ifeq ($(GCC_MINOR),)
+		GCC_MINOR = 0
+	endif 
+	ifeq ($(GCC_SUBMINOR),)
+		GCC_SUBMINOR = 0
+	endif
+	ifeq ($(shell test $(GCC_MAJOR) -gt 4; echo $$?),0)
+		ifeq ($(shell test $(GCC_MINOR) -gt 4; echo $$?),0)
+			CXXFLAGS += -Wlogical-not-parentheses
+		endif
+	endif
+	ifeq ($(shell test $(GCC_MAJOR) -gt 5; echo $$?),0)
+		ifeq ($(shell test $(GCC_MINOR) -gt 4; echo $$?),0)
+			CXXFLAGS += -Wnull-dereference -Wduplicated-cond -Wshift-overflow=2
+		endif
+	endif
+endif
 
 #Files for the final binary
 SOURCES = $(UTIL_DIR)/openSeaChest_LogParser.cpp\
