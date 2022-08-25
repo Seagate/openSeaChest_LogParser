@@ -78,12 +78,13 @@ typedef enum _ePrintTypes
 #define INPUT_LOG_FILE_NAME InputLogFile
 #define INPUT_LOG_FILE_VAR \
 	bool INPUT_LOG_FILE_FLAG = false;\
+	bool INPUT_LOG_FROM_PIPE_FLAG = false;\
 	std::string INPUT_LOG_FILE_NAME;
 #define INPUT_LOG_LONG_OPT_STRING "inputLog"
 #define INPUT_LOG_LONG_OPT { INPUT_LOG_LONG_OPT_STRING, required_argument, NULL, 0}
 	void print_Input_Log_Help(bool shortHelp);
 
-	//Log Parser Output flag
+//Log Parser Output flag
 #define OUTPUT_LOG_FILE_FLAG outputFile
 #define OUTPUT_LOG_FILE_NAME outputLogFile
 #define OUTPUT_LOG_FILE_VAR \

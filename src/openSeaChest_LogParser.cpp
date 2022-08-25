@@ -3,7 +3,7 @@
 //
 // Do NOT modify or remove this copyright and license
 //
-// Copyright (c) 2020 Seagate Technology LLC and/or its Affiliates, All Rights Reserved
+// Copyright (c) 2022 Seagate Technology LLC and/or its Affiliates, All Rights Reserved
 //
 // This software is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,6 +17,7 @@
 //////////////////////
 #include <stdio.h>
 #include <ctype.h>
+#include <vector>
 #if defined (__unix__) || defined(__APPLE__) //using this definition because linux and unix compilers both define this. Apple does not define this, which is why it has it's own definition
 #include <unistd.h>
 #include <getopt.h>
@@ -34,6 +35,8 @@
 #include "libjson.h"
 #include <inttypes.h>
 #include <string>
+#include <cstdlib>
+#include <iomanip>
 
 #include "CFARM_Log.h"
 #include "CAta_Device_Stat_Log.h"
@@ -99,10 +102,10 @@ int32_t main(int argc, char *argv[])
         OUTPUT_LOG_PRINT_VAR
         //OUTPUTPATH_VAR
         //OUTPUTFILE_VAR
-
-        std::string test;
+#if defined(_DEBUG)
+    std::string test;
     std::cout << test.capacity() << " " << test.max_size() << std::endl;
-
+#endif
 
     int args = 0;
     uint8_t argIndex = 0;
@@ -138,6 +141,14 @@ int32_t main(int argc, char *argv[])
     ////////////////////////
     //  Argument Parsing  //
     ////////////////////////
+    std::vector<uint8_t> lineInputData;
+    std::string lineinput;
+#if defined(_DEBUG)
+    for (int i = 0; i < argc; ++i)
+    {
+        std::cout << argv[i] << std::endl;
+    }
+#endif
     if (argc < 2)
     {
 		seachest_utility_Info(util_name, buildVersion, OPENSEA_PARSER_VERSION);
@@ -159,6 +170,15 @@ int32_t main(int argc, char *argv[])
             //parse long options that have no short option and required arguments here
             if (strncmp(longopts[optionIndex].name, INPUT_LOG_LONG_OPT_STRING, strlen(longopts[optionIndex].name)) == 0)
             {
+                if (strstr(optarg, "fromPipe"))
+                {
+                    while (std::cin >> lineinput)
+                    {
+                        lineInputData.push_back(std::strtoul(lineinput.c_str(), NULL, 16));
+                        //std::cout << std::hex << std::setw(2) << std::setfill('0') << std::uppercase << static_cast<uint16_t>(lineInputData.at(lineInputData.size() - 1));
+                    }
+                    INPUT_LOG_FROM_PIPE_FLAG = true;
+                }
                 INPUT_LOG_FILE_FLAG = true;
                 INPUT_LOG_FILE_NAME.resize(sizeof(optarg));
                 INPUT_LOG_FILE_NAME.assign(optarg);
@@ -390,16 +410,32 @@ int32_t main(int argc, char *argv[])
 		UtilityHeader(masterJson);
         switch (INPUT_LOG_TYPE_FLAG) 
         {
-        case SEAGATE_LOG_TYPE_FARM:   
+        case SEAGATE_LOG_TYPE_FARM:
             {
-				CFARMLog *CFarm;
-				CFarm = new CFARMLog(INPUT_LOG_FILE_NAME, SHOW_STATUS_BIT_FLAG);
-				retStatus = CFarm->get_FARM_Status();								// check to make sure we read in the file form the construtor.
-				if (retStatus == IN_PROGRESS)										// if IN_PROGRESS we can continue to parse, else retStatus holds the error information
-				{
-					retStatus = CFarm->parse_Device_Farm_Log(masterJson);
-				}
-				delete(CFarm);
+                if (INPUT_LOG_FROM_PIPE_FLAG)
+                {
+                    uint8_t* plineInputData;
+                    plineInputData = lineInputData.data();
+                    CFARMLog* CFarm;
+                    CFarm = new CFARMLog(plineInputData, lineInputData.size(), SHOW_STATUS_BIT_FLAG);
+                    retStatus = CFarm->get_FARM_Status();								// check to make sure we read in the file form the construtor.
+                    if (retStatus == IN_PROGRESS)										// if IN_PROGRESS we can continue to parse, else retStatus holds the error information
+                    {
+                        retStatus = CFarm->parse_Device_Farm_Log(masterJson);            
+                    }
+                    delete(CFarm);
+                }
+                else
+                {
+                    CFARMLog* CFarm;
+                    CFarm = new CFARMLog(INPUT_LOG_FILE_NAME, SHOW_STATUS_BIT_FLAG);
+                    retStatus = CFarm->get_FARM_Status();								// check to make sure we read in the file form the construtor.
+                    if (retStatus == IN_PROGRESS)										// if IN_PROGRESS we can continue to parse, else retStatus holds the error information
+                    {
+                        retStatus = CFarm->parse_Device_Farm_Log(masterJson);
+                    }
+                    delete(CFarm);
+                }
             }
             break;
         case   SEAGATE_LOG_TYPE_DEVICE_STATISTICS_LOG:
@@ -589,7 +625,6 @@ int32_t main(int argc, char *argv[])
 		}
         if (OUTPUT_LOG_FILE_FLAG)
         {
-
 			CMessage *printMessage;
             printMessage = new CMessage(masterJson, OUTPUT_LOG_FILE_NAME, OUTPUT_LOG_PRINT_FLAG);
 			delete(printMessage);
