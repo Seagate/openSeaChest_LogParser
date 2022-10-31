@@ -119,6 +119,7 @@ typedef enum _ePrintTypes
 #define LOG_PRINT_STRING_CSV "csv"
 #define LOG_PRINT_STRING_FLATCSV "flatcsv"
 #define LOG_PRINT_STRING_PROM "prom"
+#define LOG_PRINT_STRING_TELEMETRY "TELEMETRY"
 
 #define OUTPUT_LOG_PRINT_FLAG printType
 #define OUTPUT_LOG_PRINT_VAR printTypes OUTPUT_LOG_PRINT_FLAG = SEAGATE_LOG_PRINT_JSON;
@@ -203,12 +204,19 @@ uint32_t SECONDS_TIME_FLAG = 0;
 #define SCSI_LOG_PAGES_BACKGROUND_SCAN                          "Background Scan"
 #define SCSI_LOG_PAGES_BACKGROUND_OPERATION                     "Background Operation"
 #define SCSI_LOG_PAGES_CACHE_STATISTICS                         "Cache Statistics"
-#define SCSI_LOG_PAGES_ENVIRONMENTAL_LIMITS                     "Environmental Limits (Coming soon)"
-#define SCSI_LOG_PAGES_ENVIRONMENTAL_REPORTING                  "Environmental Reporting (Coming soon)"
+#define SCSI_LOG_PAGE_COMMAND_DURATION_LIMITES					"Command Duration Limites"
+#define SCSI_LOG_PAGES_ERROR_COUNTER							"Error Counter"
+#define SCSI_LOG_PAGES_ENVIRONMENTAL_LIMITS                     "Environmental Limits"
+#define SCSI_LOG_PAGES_ENVIRONMENTAL_REPORTING                  "Environmental Reporting"
 #define SCSI_LOG_PAGES_READ_LOG_PAGE                            "Read Log Page"
 #define SCSI_LOG_PAGES_WRITE_LOG_PAGE                           "Write Log Page"
 #define SCSI_LOG_PAGES_VERIFY_LOG_PAGE                          "Verify Log Page"
 #define SCSI_LOG_PAGES_FACTORY_LOG                              "Factory Log"
+#define SCSI_LOG_PAGES_FARM										"FARM Log 0x3D 03"
+#define SCSI_LOG_PAGES_FARM_FACTORY								"FARM Factory Log 0x3D 04"
+#define SCSI_LOG_PAGES_FARM_COMBO								"FARM Combined Log (all FARM logs in one)"
+#define SCSI_LOG_PAGES_FARM_TIME_SERIES							"FARM Time Series Log 0x3D 10h - 1Fh"
+#define SCSI_LOG_PAGES_FARM_STICKY								"FARM Sticky Log 0x3D C0h - C7h"
 #define SCSI_LOG_PAGES_FORMAT_STATUS                            "Format Status"
 #define SCSI_LOG_PAGES_INFORMATIONAL_EXCEPTIONS                 "Informational Exceptions"
 #define SCSI_LOG_PAGES_LOGICAL_BLOCK_PROVISIONING               "Logical Block Provisioning"
@@ -217,12 +225,13 @@ uint32_t SECONDS_TIME_FLAG = 0;
 #define SCSI_LOG_PAGES_POWER_CONDITIONS                         "Power Conditions"
 #define SCSI_LOG_PAGES_PROTOCOL_PAGE                            "Protocol Page" 
 #define SCSI_LOG_PAGES_DST_LOG_PAGE                             "DST Log Page" 
-#define SCSI_LOG_PAGES_SOLID_STATE_MEDIA                        "Solid State Media (Coming soon)"
+#define SCSI_LOG_PAGES_SOLID_STATE_MEDIA                        "Solid State Media"
 #define SCSI_LOG_PAGES_START_STOP_CYCLE_PAGE                    "Start Stop Cycle Page"
 #define SCSI_LOG_PAGES_SUPPORTED_LOG_PAGES                      "Supported Log Pages"
 #define SCSI_LOG_PAGES_SUPPORTED_LOG_PAGES_AND_SUBPAGES         "Supported Log Pages and Subpages"
 #define SCSI_LOG_PAGES_TEMPERATURE_LOG_PAGE                     "Temperature Log Page" 
-#define SCSI_LOG_PAGES_UTILIZATION                              "Utilization (Coming soon)"
+#define SCSI_LOG_PAGES_UTILIZATION                              "Utilization"
+#define SCSI_LOG_PAGES_ZONED_DEVICE_STAT						"Zoned Device Statistics"
 
 void seachest_utility_Info(const std::string & utilityName, const std::string & buildVersion, const std::string & seaCPublicVersion);
 void utility_Full_Version_Info(const std::string & utilityName, const std::string & buildVersion, const std::string & openseaVersion);

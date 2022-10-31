@@ -45,7 +45,7 @@ void seachest_utility_Info(const std::string & utilityName, const std::string & 
 
     printf("===============================================================================\n");
     printf(" %s - Seagate drive utilities\n", utilityName.c_str());
-    printf(" Copyright (c) 2018-2020 Seagate Technology LLC and/or its Affiliates\n");
+    printf(" Copyright (c) 2018-2022 Seagate Technology LLC and/or its Affiliates\n");
     printf(" %s Version: %s-%s ", utilityName.c_str(), buildVersion.c_str(), openseaVersion.c_str());
     print_Architecture(architecture);
     printf("\n");
@@ -355,43 +355,45 @@ void print_Input_Log_Help(bool shortHelp)
 void print_Seachest_logType_options()
 {
 #if defined BUILD_FARM_ONLY 
-	std::cout << LOG_TYPE_STRING_FARM;                                      // FarmLog
+	std::cout << LOG_TYPE_STRING_FARM" (for FARM combined, FARM Factory, FARM Time Series, FARM, Saved, FARM Sticky logs), ";       // FarmLog
 #else
-	std::cout << LOG_TYPE_STRING_FARM;
-#if defined (INCLUDE_IDENTIFY_LOG)
-	std::cout << ", " << LOG_TYPE_STRING_IDENTIFY_LOG;                       // identify
-#endif
-#if defined (INCLUDE_IDENTIFY_DEVICE_DATA_LOG)
-	std::cout << ", " << LOG_TYPE_STRING_IDENTIFY_DEVICE_DATA_LOG;          // "IDDataLog" 
-#endif
-#if defined (INCLUDE_DEVICE_STATISTICS_LOG)
-	std::cout << ", " << LOG_TYPE_STRING_DEVICE_STATISTICS_LOG;             //"deviceStatisticsLog"
-#endif
-#if defined (INCLUDE_EXT_COMPREHENSIVE_LOG)
-	std::cout << ", " << LOG_TYPE_STRING_EXT_COMPREHENSIVE_LOG;             //ExtCompErrorLog
-#endif
-
+	std::cout << LOG_TYPE_STRING_FARM " (for FARM combined, FARM Factory, FARM Time Series, FARM, Saved, FARM Sticky logs), ";      // FARM log
 	std::cout << std::endl;
-
 	std::cout << "\t\t ";
-#if defined (INCLUDE_SCT_TEMP_LOG)    
-	std::cout << LOG_TYPE_STRING_SCT_TEMP_LOG;                              //sctTempLog
-#endif 
-#if defined (INCLUDE_NCQ_CMD_ERROR_LOG)
-	std::cout << ", " << LOG_TYPE_STRING_NCQ_COMMAND_ERROR_LOG;             // ncqErrorLog
-#endif
-#if defined (INCLUDE_POWER_CONDITION_LOG)
-	std::cout << ", " << LOG_TYPE_STRING_POWER_CONDITION_LOG;                // PowerConditionLog
-#endif
-#if defined (INCLUDE_COMMON_EXT_DST_LOG)
-	std::cout << ", " << LOG_TYPE_STRING_EXT_DST_LOG;                       // selfTestLog
-#endif
-	std::cout << std::endl;
+	#if defined (INCLUDE_IDENTIFY_LOG)
+		std::cout << LOG_TYPE_STRING_IDENTIFY_LOG;                       // identify
+	#endif
+	#if defined (INCLUDE_IDENTIFY_DEVICE_DATA_LOG)
+		std::cout << ", " << LOG_TYPE_STRING_IDENTIFY_DEVICE_DATA_LOG;          // "IDDataLog" 
+	#endif
+	#if defined (INCLUDE_DEVICE_STATISTICS_LOG)
+		std::cout << ", " << LOG_TYPE_STRING_DEVICE_STATISTICS_LOG;             //"deviceStatisticsLog"
+	#endif
+	#if defined (INCLUDE_EXT_COMPREHENSIVE_LOG)
+		std::cout << ", " << LOG_TYPE_STRING_EXT_COMPREHENSIVE_LOG;             //ExtCompErrorLog
+	#endif
 
-	std::cout << "\t\t ";
-#if defined (INCLUDE_SCSI_LOG_PAGES)  
-	std::cout << LOG_TYPE_STRING_SCSI_LOG_PAGES;                              //scsiLogPages
-#endif 
+		std::cout << std::endl;
+
+		std::cout << "\t\t ";
+	#if defined (INCLUDE_SCT_TEMP_LOG)    
+		std::cout << LOG_TYPE_STRING_SCT_TEMP_LOG;                              //sctTempLog
+	#endif 
+	#if defined (INCLUDE_NCQ_CMD_ERROR_LOG)
+		std::cout << ", " << LOG_TYPE_STRING_NCQ_COMMAND_ERROR_LOG;             // ncqErrorLog
+	#endif
+	#if defined (INCLUDE_POWER_CONDITION_LOG)
+		std::cout << ", " << LOG_TYPE_STRING_POWER_CONDITION_LOG;                // PowerConditionLog
+	#endif
+	#if defined (INCLUDE_COMMON_EXT_DST_LOG)
+		std::cout << ", " << LOG_TYPE_STRING_EXT_DST_LOG;                       // selfTestLog
+	#endif
+		std::cout << std::endl;
+
+		std::cout << "\t\t ";
+	#if defined (INCLUDE_SCSI_LOG_PAGES)  
+		std::cout << LOG_TYPE_STRING_SCSI_LOG_PAGES;                              //scsiLogPages
+	#endif 
 #endif
 }
 //-----------------------------------------------------------------------------
@@ -408,17 +410,19 @@ void print_Seachest_logType_options()
 //-----------------------------------------------------------------------------
 void print_Scsi_Log_Pages()
 {
-	std::cout << "\t\t SCSI Log Pages  List -  "<< std::endl;
-	std::cout << "\t\t\t" << SCSI_LOG_PAGES_APPLICATION_CLIENT << ", " << SCSI_LOG_PAGES_BACKGROUND_SCAN << ", " << SCSI_LOG_PAGES_CACHE_STATISTICS  << std::endl;
-	std::cout << "\t\t\t" << SCSI_LOG_PAGES_BACKGROUND_OPERATION << ", " << SCSI_LOG_PAGES_ENVIRONMENTAL_REPORTING << std::endl;
-	std::cout << "\t\t\t" << SCSI_LOG_PAGES_FACTORY_LOG << ", " <<SCSI_LOG_PAGES_ENVIRONMENTAL_LIMITS << std::endl;
+	std::cout << "\t\t SCSI Log Pages List -  "<< std::endl;
 	std::cout << "\t\t\t" << SCSI_LOG_PAGES_WRITE_LOG_PAGE << ", " << SCSI_LOG_PAGES_READ_LOG_PAGE << ", " << SCSI_LOG_PAGES_VERIFY_LOG_PAGE << std::endl;
-	std::cout << "\t\t\t" << SCSI_LOG_PAGES_INFORMATIONAL_EXCEPTIONS << ", "  << SCSI_LOG_PAGES_FORMAT_STATUS << ", " << SCSI_LOG_PAGES_DST_LOG_PAGE << std::endl;
-	std::cout << "\t\t\t" << SCSI_LOG_PAGES_NON_MEDIUM_ERROR << ", " <<  SCSI_LOG_PAGES_LOGICAL_BLOCK_PROVISIONING << std::endl;
-	std::cout << "\t\t\t" << SCSI_LOG_PAGES_POWER_CONDITIONS << ", " << SCSI_LOG_PAGES_PENDING_DEFECTS << ", " << SCSI_LOG_PAGES_PROTOCOL_PAGE << std::endl;
-	std::cout << "\t\t\t" << SCSI_LOG_PAGES_START_STOP_CYCLE_PAGE << ", " << SCSI_LOG_PAGES_SOLID_STATE_MEDIA << std::endl;
-	std::cout << "\t\t\t" << SCSI_LOG_PAGES_SUPPORTED_LOG_PAGES_AND_SUBPAGES << ", " << SCSI_LOG_PAGES_SUPPORTED_LOG_PAGES << std::endl;
-	std::cout << "\t\t\t" << SCSI_LOG_PAGES_TEMPERATURE_LOG_PAGE << ", " << SCSI_LOG_PAGES_UTILIZATION << std::endl;
+	std::cout << "\t\t\t" << SCSI_LOG_PAGES_APPLICATION_CLIENT << ", " << SCSI_LOG_PAGES_BACKGROUND_SCAN << ", " << SCSI_LOG_PAGES_BACKGROUND_OPERATION << std::endl;
+	std::cout << "\t\t\t" << SCSI_LOG_PAGES_CACHE_STATISTICS << ", " << SCSI_LOG_PAGE_COMMAND_DURATION_LIMITES << ", " << SCSI_LOG_PAGES_ENVIRONMENTAL_REPORTING << std::endl;
+	std::cout << "\t\t\t" << SCSI_LOG_PAGES_ERROR_COUNTER << ", " << SCSI_LOG_PAGES_ENVIRONMENTAL_LIMITS << ", " << SCSI_LOG_PAGES_ENVIRONMENTAL_REPORTING << std::endl;
+	std::cout << "\t\t\t" << SCSI_LOG_PAGES_FACTORY_LOG << ", " << SCSI_LOG_PAGES_FARM << ", " << SCSI_LOG_PAGES_FARM_FACTORY << std::endl;
+	std::cout << "\t\t\t" << SCSI_LOG_PAGES_FARM_COMBO << std::endl;
+	std::cout << "\t\t\t" << SCSI_LOG_PAGES_FARM_TIME_SERIES << ", " << SCSI_LOG_PAGES_FARM_STICKY << std::endl;
+	std::cout << "\t\t\t" << SCSI_LOG_PAGES_FORMAT_STATUS << ", " << SCSI_LOG_PAGES_INFORMATIONAL_EXCEPTIONS << ", " << SCSI_LOG_PAGES_LOGICAL_BLOCK_PROVISIONING << std::endl;
+	std::cout << "\t\t\t" << SCSI_LOG_PAGES_NON_MEDIUM_ERROR << ", " << SCSI_LOG_PAGES_PENDING_DEFECTS << ", " << SCSI_LOG_PAGES_POWER_CONDITIONS <<  std::endl;
+	std::cout << "\t\t\t" << SCSI_LOG_PAGES_PROTOCOL_PAGE << ", "  << SCSI_LOG_PAGES_DST_LOG_PAGE << SCSI_LOG_PAGES_SOLID_STATE_MEDIA << std::endl;
+	std::cout << "\t\t\t" << SCSI_LOG_PAGES_START_STOP_CYCLE_PAGE << ", "  SCSI_LOG_PAGES_SUPPORTED_LOG_PAGES_AND_SUBPAGES << ", " << SCSI_LOG_PAGES_SUPPORTED_LOG_PAGES << std::endl;
+	std::cout << "\t\t\t" << SCSI_LOG_PAGES_TEMPERATURE_LOG_PAGE << ", "<< SCSI_LOG_PAGES_UTILIZATION <<  ", " << SCSI_LOG_PAGES_ZONED_DEVICE_STAT << std::endl;
 
 }
 //-----------------------------------------------------------------------------
@@ -502,6 +506,9 @@ void print_Log_Print_Help(bool shortHelp)
 	if (!shortHelp)
 	{
 		std::cout << "\t\t" << "Use this option to set the output format. \n" << std::endl;
+#if defined BUILD_FARM_ONLY 
+		std::cout << "\t\t" << LOG_PRINT_STRING_TELEMETRY << " - prints the data into a tdf format for data base" << std::endl;
+#endif
 		std::cout << "\t\t" << LOG_PRINT_STRING_JSON << " - prints the data in a printable json format" << std::endl;
 		std::cout << "\t\t" << LOG_PRINT_STRING_TEXT << " - prints the data in a printable and human readable format" << std::endl;
 		std::cout << "\t\t" << LOG_PRINT_STRING_CSV << "  - The data flows downwards" << std::endl;
