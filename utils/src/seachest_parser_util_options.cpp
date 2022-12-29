@@ -506,9 +506,6 @@ void print_Log_Print_Help(bool shortHelp)
 	if (!shortHelp)
 	{
 		std::cout << "\t\t" << "Use this option to set the output format. \n" << std::endl;
-#if defined BUILD_FARM_ONLY 
-		std::cout << "\t\t" << LOG_PRINT_STRING_TELEMETRY << " - prints the data into a tdf format for data base" << std::endl;
-#endif
 		std::cout << "\t\t" << LOG_PRINT_STRING_JSON << " - prints the data in a printable json format" << std::endl;
 		std::cout << "\t\t" << LOG_PRINT_STRING_TEXT << " - prints the data in a printable and human readable format" << std::endl;
 		std::cout << "\t\t" << LOG_PRINT_STRING_CSV << "  - The data flows downwards" << std::endl;
