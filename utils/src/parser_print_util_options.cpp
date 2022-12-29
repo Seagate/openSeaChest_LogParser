@@ -202,46 +202,35 @@ bool CPrintCSV::parse_Json(JSONNODE *nData, uint16_t numberOfTabs)
                 m_line.append("\n");
                 title = "";
 
-                // Now get the next node string and then get the node data
-                json_char *node_name = json_name(*q);
-                if (m_csv)
-                {
-                    for (uint16_t j = 0; j < numberOfTabs +1; j++)
-                    {
-                        title.insert(j, ",");
-
-                    }
-                }
-                else    // for the flatcsv
-                {
-                    title = ",";
-                }
-
-                title.append(node_name);
-                title = title + ",";
-
                 // go through all the nodes and get the data but don't change the title
                 if (m_csv)
                 {
                     while (q != json_end(*i))
                     {
+                        for (uint16_t j = 0; j < numberOfTabs + 1; j++)
+                        {
+                            data.insert(j, ",");
+
+                        }
                         json_char* newData = json_as_string(*q);
                         data.append(newData);
-                        data.append(",");
+                        data.append(",\n");
+                        //m_csvData.data.resize(data.size());
+
+                        m_csvData.data.append(data.c_str());
                         json_free(newData);
+                        data = "";
                         q++;
                     }
                     m_csvData.title.resize(sizeof(title));
                     m_csvData.title = title;
-                    m_csvData.data.resize(data.size());
-
-                    m_csvData.data = data;
+                    
 
                     if (m_csvData.data.size() > 1)  // check to make sure title and data have data ??
                     {
                         m_line.append(m_csvData.title);     // move the title to the line
                         m_line.append(m_csvData.data);      // move the data to the line
-                        m_line.append("\n");
+                        //m_line.append("\n");
                         m_csvData.title = "";               // clear title
                         m_csvData.data = "";                // clear data
                     }
@@ -270,7 +259,7 @@ bool CPrintCSV::parse_Json(JSONNODE *nData, uint16_t numberOfTabs)
                     
                 }
                 // clean up on the json_char*
-                json_free(node_name);
+                //json_free(node_name);
                 json_free(main_name);
             }
             else if (json_type(*q) == JSON_NUMBER)
@@ -324,6 +313,34 @@ bool CPrintCSV::parse_Json(JSONNODE *nData, uint16_t numberOfTabs)
                     m_csvData.title.append(title);
                     m_csvData.data.append(data);
                 }
+            }
+            else if (json_type(*q) == JSON_ARRAY)
+            {
+                if (m_csv)
+                {
+                    if (numberOfTabs != 0)
+                    {
+                        for (uint16_t j = 0; j <= numberOfTabs; j++)
+                        {
+                            m_line.append(",");
+                        }
+                        m_line.append(main_name);
+                        m_line.append("\n");
+                    }
+                    else
+                    {
+                        m_line.append(main_name);
+                        m_line.append("\n");
+                    }
+                }
+                else        // flatcsv needs to copy the data   to the m_csvData strings
+                {
+                    m_csvData.title = m_csvData.title + main_name;
+                    m_csvData.title = m_csvData.title + ",";
+                    // data is just a comma
+                    m_csvData.data = m_csvData.data + ",";
+                }
+                parse_Json(*q, numberOfTabs + 2);
             }
             else if (json_type(*q) == JSON_NODE)
             {
