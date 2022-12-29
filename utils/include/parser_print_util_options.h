@@ -53,10 +53,12 @@ namespace opensea_parser {
         }sCSVFrameData;
     #pragma pack(pop)
         sCSVFrameData               m_csvData;                                                  //!< frame Parameter data
+        sCSVFrameData				m_singleLine;												//!< line string for flatcsv formating
 		std::string					m_line;														//!< line string for csv formating
 		bool						m_csv;														//!< if true then we need to format for csv print				
        
         bool parse_Json(JSONNODE *nData, uint16_t numberOfTabs);
+        bool parse_Json_Flat(JSONNODE* nData, uint16_t numberOfTabs);
 
     public:
         CPrintCSV();
@@ -64,6 +66,7 @@ namespace opensea_parser {
         std::string get_Msg_CSV(JSONNODE *masterData);											//!< returns string data for a normal CSV, comma delimited
         std::string get_Msg_Flat_csv(JSONNODE *masterData);                                     //!< returns string data for creating a csv all on two lines, comma delimited
 		bool createData(std::string &title, std::string &data, uint16_t numberOfTabs);          //!< creates the Data for the csv and flat csv, tab vs comma
+        bool createLineData(char* title, char* data);                                           //!< create the data for a csb that is flat only.
     };
 
     class CPrintTXT

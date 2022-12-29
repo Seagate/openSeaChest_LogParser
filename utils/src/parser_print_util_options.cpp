@@ -148,6 +148,120 @@ CPrintCSV::~CPrintCSV()
 }
 //-----------------------------------------------------------------------------
 //
+//! \fn CPrintCSV::parse_Json_Flat()
+//
+//! \brief
+//!   Description: parse the json informaton to get it into the structue for printing. ( recursion )
+//
+//  Entry:
+//! \param nData - the json node that we are parsing out at this point in time 
+//! \param numberOfTabs - the number of tab or comma's to be place
+//  Exit:
+//!   \return bool
+//
+//---------------------------------------------------------------------------
+bool CPrintCSV::parse_Json_Flat(JSONNODE* nData, uint16_t numberOfTabs)
+{
+#define CHARSIZE 4
+
+    JSONNODE_ITERATOR i = json_begin(nData);
+
+    while (i != json_end(nData))
+    {
+        // recursively call ourselves to dig deeper into the tree
+        if (json_type(*i) == JSON_ARRAY)
+        {
+            // Get the main name 
+            json_char* main_name = json_name(*i);
+            JSONNODE_ITERATOR q = json_begin(*i);
+            if (q == NULL)
+            {
+                json_free(main_name);
+                break;
+            }
+            if (json_type(*q) == JSON_STRING)
+            {
+                // go through all the array nodes and get the data but don't change the title
+                while (q != json_end(*i))
+                {
+
+                    json_char* newData = json_as_string(*q);
+                    try
+                    {
+                        createLineData(main_name, newData);
+                    }
+                    catch (...)
+                    {
+                        std::cout << "Data to Large for file format." << main_name << " exiting Early" << std::endl;
+                        break;
+                    }
+                    json_free(newData);
+                    q++;
+                }
+                // clean up on the json_char*
+                json_free(main_name);
+            }
+            else if (json_type(*q) == JSON_NUMBER)
+            {
+                // set the string data for the array of data
+                while (q != json_end(*i))
+                {
+                    // this format seems to be perfect and the size is working
+                    json_char* node_value = json_as_string(*i);
+                    createLineData(main_name, node_value);
+                    q++;
+                    json_free(node_value);
+                }
+
+            }
+            else if (json_type(*q) == JSON_NODE)
+            {
+                m_singleLine.title.append(main_name);
+                m_singleLine.title.append(",");
+                // data is just a comma
+                m_singleLine.data.append(",");
+
+                parse_Json(*q, numberOfTabs + 2);
+                printf("\n dark hole  ********************* \n");
+                //do something here
+            }
+            else
+            {
+                json_free(main_name);
+            }
+        }
+        if (json_type(*i) == JSON_NODE)
+        {
+            //JSONNODE_ITERATOR q = json_begin(*i);
+            parse_Json_Flat(*i, numberOfTabs + 1);
+            if (VERBOSITY_COMMAND_VERBOSE <= g_verbosity)
+            {
+                printf("return from a NODE");
+            }
+        }
+        if (json_type(*i) == JSON_STRING || json_type(*i) == JSON_BOOL)
+        {
+            json_char* node_name = json_name(*i);
+            json_char* node_value = json_as_string(*i);
+            createLineData(node_name, node_value);
+            json_free(node_name);
+            json_free(node_value);
+
+        }
+        if ((json_type(*i) == JSON_NUMBER))
+        {
+            json_char* node_name = json_name(*i);
+            json_char* node_value = json_as_string(*i);
+            createLineData(node_name, node_value);
+            json_free(node_name);
+            json_free(node_value);
+        }
+        i++;
+    }
+    return true;
+}
+//-----------------------------------------------------------------------------
+//
 //! \fn CPrintCSV::parse_Json()
 //
 //! \brief
@@ -475,17 +589,40 @@ std::string CPrintCSV::get_Msg_Flat_csv(JSONNODE *masterData)
 
     uint16_t numberOfTabs = 0;
 
-    parse_Json(masterData, numberOfTabs);
-    rTitle.insert(0, m_csvData.title);
-    rData.insert(0, m_csvData.data);
+    parse_Json_Flat(masterData, numberOfTabs);
+    rTitle.insert(0, m_singleLine.title);
+    rData.insert(0, m_singleLine.data);
   
-    m_csvData.title = "";
-    m_csvData.data = "";
+    m_singleLine.title = "";
+    m_singleLine.data = "";
 
     rTitle.append("\n");
     rData.append("\n");
     rTitle.append( rData );
     return rTitle;
+}
+//-----------------------------------------------------------------------------
+//
+//! \fn createLineData
+//
+//! \brief
+//!   Description: Takes the title and the data to format the information for csv or flatcsv 
+//
+//  Entry:
+//! \param title -> title string
+//! \param data -> data from the nodes
+//
+//  Exit:
+//!   \return bool
+//
+//---------------------------------------------------------------------------
+bool CPrintCSV::createLineData(char* title, char* data)
+{
+    m_singleLine.title.append(title);
+    m_singleLine.title.append(",");
+    m_singleLine.data.append(data);
+    m_singleLine.data.append(",");
+    return true;
 }
 //-----------------------------------------------------------------------------
 //
