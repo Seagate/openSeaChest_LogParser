@@ -416,7 +416,6 @@ void print_Scsi_Log_Pages()
 	std::cout << "\t\t\t" << SCSI_LOG_PAGES_CACHE_STATISTICS << ", " << SCSI_LOG_PAGE_COMMAND_DURATION_LIMITES << ", " << SCSI_LOG_PAGES_ENVIRONMENTAL_REPORTING << std::endl;
 	std::cout << "\t\t\t" << SCSI_LOG_PAGES_ERROR_COUNTER << ", " << SCSI_LOG_PAGES_ENVIRONMENTAL_LIMITS << ", " << SCSI_LOG_PAGES_ENVIRONMENTAL_REPORTING << std::endl;
 	std::cout << "\t\t\t" << SCSI_LOG_PAGES_FACTORY_LOG << ", " << SCSI_LOG_PAGES_FARM << ", " << SCSI_LOG_PAGES_FARM_FACTORY << std::endl;
-	std::cout << "\t\t\t" << SCSI_LOG_PAGES_FARM_COMBO << std::endl;
 	std::cout << "\t\t\t" << SCSI_LOG_PAGES_FARM_TIME_SERIES << ", " << SCSI_LOG_PAGES_FARM_STICKY << std::endl;
 	std::cout << "\t\t\t" << SCSI_LOG_PAGES_FORMAT_STATUS << ", " << SCSI_LOG_PAGES_INFORMATIONAL_EXCEPTIONS << ", " << SCSI_LOG_PAGES_LOGICAL_BLOCK_PROVISIONING << std::endl;
 	std::cout << "\t\t\t" << SCSI_LOG_PAGES_NON_MEDIUM_ERROR << ", " << SCSI_LOG_PAGES_PENDING_DEFECTS << ", " << SCSI_LOG_PAGES_POWER_CONDITIONS <<  std::endl;
