@@ -6,34 +6,35 @@
 #### Welcome to the openSeaChest_LogParser open source project!
 
 ### Summary of supported SCSI/SAS log pages
-Page Code   Subpage Code Log    Page Name Reference
-    0Fh         00h                 Application Client 
-    15h         00h                 Background Scan
-    15h         02h                 Background Operation 
-    37h         00h                 Cache Statistics
-    19h         20h                 Cache Memory Statistics 
-    19h         21h                 Command Duration Limits Statistics 
-    0Dh         02h                 Environmental Limits 
-    0Dh         01h                 Environmental Reporting 
-    03h         00h                 Read Error Counter
-    05h         00h                 Verify Error Counter 
-    02h         00h                 Write Error Counter
-    3Eh         00h                 Factory Log 
-    08h         00h                 Format Status 
-    2Fh         00h                 Informational Exceptions 
-    0Ch         00h                 Logical Block Provisioning 
-    06h         00h                 Non-Medium Error 
-    15h         01h                 Pending Defects 
-    1Ah         00h                 Power Condition Transitions 
-    18h         00h                 Protocol Specific Port 
-    10h         00h                 Self-Test Results 
-    11h         00h                 Solid State Media
-    0Eh         00h                 Start-Stop Cycle Counter 
-    00h         00h                 Supported Log Pages 
-    00h         FFh                 Supported Log Pages and Subpages 
-    0Dh         00h                 Temperature 
-    0Eh         01h                 Utilization 
-    14h         01h                 Zoned Block Device Statistics 
+Page Code  |  Subpage Code Log  |  Page Name Reference
+-----------|--------------------|--------------------------------------
+    0Fh    |     00h            |     Application Client 
+    15h    |     00h            |     Background Scan
+    15h    |     02h            |     Background Operation 
+    37h    |     00h            |     Cache Statistics
+    19h    |     20h            |     Cache Memory Statistics 
+    19h    |     21h            |     Command Duration Limits Statistics 
+    0Dh    |     02h            |     Environmental Limits 
+    0Dh    |     01h            |     Environmental Reporting 
+    03h    |     00h            |     Read Error Counter
+    05h    |     00h            |     Verify Error Counter 
+    02h    |     00h            |     Write Error Counter
+    3Eh    |     00h            |     Factory Log 
+    08h    |     00h            |     Format Status 
+    2Fh    |     00h            |     Informational Exceptions 
+    0Ch    |     00h            |     Logical Block Provisioning 
+    06h    |     00h            |     Non-Medium Error 
+    15h    |     01h            |     Pending Defects 
+    1Ah    |     00h            |     Power Condition Transitions 
+    18h    |     00h            |     Protocol Specific Port 
+    10h    |     00h            |     Self-Test Results 
+    11h    |     00h            |     Solid State Media
+    0Eh    |     00h            |     Start-Stop Cycle Counter 
+    00h    |     00h            |     Supported Log Pages 
+    00h    |     FFh            |     Supported Log Pages and Subpages 
+    0Dh    |     00h            |     Temperature 
+    0Eh    |     01h            |     Utilization 
+    14h    |     01h            |     Zoned Block Device Statistics 
 
 [![Build Status](https://travis-ci.org/Seagate/openSeaChest_LogParser.svg?branch=develop)](https://travis-ci.org/Seagate/openSeaChest_LogParser)
 
