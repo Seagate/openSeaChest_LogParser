@@ -58,7 +58,7 @@ using namespace opensea_parser;
     std::string util_name = "openSeaChest_LogParser";
 #endif
 
-std::string buildVersion = "1.4.0";
+std::string buildVersion = "1.5.0";
 std::string buildDate = __DATE__;
 
 ////////////////////////////
@@ -646,7 +646,7 @@ int32_t main(int argc, char *argv[])
                 myFile.append(".txt");
                 printMessage = new CMessage(masterJson, myFile, OUTPUT_LOG_PRINT_FLAG); // Get text output
                 printMessage->parse_Json_to_Text(masterJson, 0);
-                std::cout << printMessage->get_Msg_Text_Format("").c_str();	// Print to the screen
+                std::cout << printMessage->get_Msg_Text_Format().c_str();	// Print to the screen
             }
             else if (OUTPUT_LOG_PRINT_FLAG == SEAGATE_LOG_PRINT_CSV)
             {

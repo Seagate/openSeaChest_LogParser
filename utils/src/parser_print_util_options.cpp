@@ -3,7 +3,7 @@
 //
 // Do NOT modify or remove this copyright and license
 //
-// Copyright (c) 2015 - 2020 Seagate Technology LLC and/or its Affiliates, All Rights Reserved
+// Copyright 2012 - 2023 Seagate Technology LLC and/or its Affiliates, All Rights Reserved
 //
 // This software is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -160,19 +160,15 @@ CPrintCSV::~CPrintCSV()
 //!   \return bool
 //
 //---------------------------------------------------------------------------
-bool CPrintCSV::parse_Json_Flat(JSONNODE* nData, uint16_t numberOfTabs)
+bool CPrintCSV::parse_Json_Flat(JSONNODE *nData)
 {
-#define CHARSIZE 4
-
     JSONNODE_ITERATOR i = json_begin(nData);
-
     while (i != json_end(nData))
     {
         // recursively call ourselves to dig deeper into the tree
         if (json_type(*i) == JSON_ARRAY)
         {
-            // Get the main name 
-            json_char* main_name = json_name(*i);
+            json_char *main_name = json_name(*i);
             JSONNODE_ITERATOR q = json_begin(*i);
             if (q == NULL)
             {
@@ -181,10 +177,9 @@ bool CPrintCSV::parse_Json_Flat(JSONNODE* nData, uint16_t numberOfTabs)
             }
             if (json_type(*q) == JSON_STRING)
             {
-                // go through all the array nodes and get the data but don't change the title
+                 // go through all the nodes and get the data but don't change the title
                 while (q != json_end(*i))
                 {
-
                     json_char* newData = json_as_string(*q);
                     try
                     {
@@ -198,8 +193,6 @@ bool CPrintCSV::parse_Json_Flat(JSONNODE* nData, uint16_t numberOfTabs)
                     json_free(newData);
                     q++;
                 }
-                // clean up on the json_char*
-                json_free(main_name);
             }
             else if (json_type(*q) == JSON_NUMBER)
             {
@@ -207,42 +200,40 @@ bool CPrintCSV::parse_Json_Flat(JSONNODE* nData, uint16_t numberOfTabs)
                 while (q != json_end(*i))
                 {
                     // this format seems to be perfect and the size is working
-                    json_char* node_value = json_as_string(*i);
-                    createLineData(main_name, node_value);
+                    m_singleLine.title.append(main_name);
+                    m_singleLine.title.append(",");
+                    std::ostringstream intData;
+                    intData << std::dec << json_as_int(*q) << ",";
+                    m_singleLine.data.append(intData.str());
                     q++;
-                    json_free(node_value);
                 }
-
             }
             else if (json_type(*q) == JSON_NODE)
-            {
-                m_singleLine.title.append(main_name);
-                m_singleLine.title.append(",");
-                // data is just a comma
-                m_singleLine.data.append(",");
-
-                parse_Json(*q, numberOfTabs + 2);
-                printf("\n dark hole  ********************* \n");
-                //do something here
+            {  
+                createLineData(main_name, "");
+                parse_Json_Flat(*q);
             }
-            else
+            else   // Node is not found
             {
-                json_free(main_name);
+                printf("Something went wrong (array)");
             }
+            json_free(main_name);
         }
         if (json_type(*i) == JSON_NODE)
         {
-            //JSONNODE_ITERATOR q = json_begin(*i);
-            parse_Json_Flat(*i, numberOfTabs + 1);
+            json_char *main_name = json_name(*i);
+            createLineData(main_name, "");
+            json_free(main_name);
+            parse_Json_Flat(*i);
             if (VERBOSITY_COMMAND_VERBOSE <= g_verbosity)
             {
-                printf("return from a NODE");
+                printf("return from a new parse");
             }
         }
         if (json_type(*i) == JSON_STRING || json_type(*i) == JSON_BOOL)
         {
-            json_char* node_name = json_name(*i);
-            json_char* node_value = json_as_string(*i);
+            json_char *node_name = json_name(*i);
+            json_char *node_value = json_as_string(*i);
             createLineData(node_name, node_value);
             json_free(node_name);
             json_free(node_value);
@@ -250,8 +241,8 @@ bool CPrintCSV::parse_Json_Flat(JSONNODE* nData, uint16_t numberOfTabs)
         }
         if ((json_type(*i) == JSON_NUMBER))
         {
-            json_char* node_name = json_name(*i);
-            json_char* node_value = json_as_string(*i);
+            json_char *node_name = json_name(*i);
+            json_char *node_value = json_as_string(*i);
             createLineData(node_name, node_value);
             json_free(node_name);
             json_free(node_value);
@@ -330,7 +321,6 @@ bool CPrintCSV::parse_Json(JSONNODE *nData, uint16_t numberOfTabs)
                         data.append(newData);
                         data.append(",\n");
                         //m_csvData.data.resize(data.size());
-
                         m_csvData.data.append(data.c_str());
                         json_free(newData);
                         data = "";
@@ -338,13 +328,12 @@ bool CPrintCSV::parse_Json(JSONNODE *nData, uint16_t numberOfTabs)
                     }
                     m_csvData.title.resize(sizeof(title));
                     m_csvData.title = title;
-                    
 
                     if (m_csvData.data.size() > 1)  // check to make sure title and data have data ??
                     {
                         m_line.append(m_csvData.title);     // move the title to the line
                         m_line.append(m_csvData.data);      // move the data to the line
-                        //m_line.append("\n");
+                        m_line.append("\n");
                         m_csvData.title = "";               // clear title
                         m_csvData.data = "";                // clear data
                     }
@@ -373,7 +362,6 @@ bool CPrintCSV::parse_Json(JSONNODE *nData, uint16_t numberOfTabs)
                     
                 }
                 // clean up on the json_char*
-                //json_free(node_name);
                 json_free(main_name);
             }
             else if (json_type(*q) == JSON_NUMBER)
@@ -427,34 +415,6 @@ bool CPrintCSV::parse_Json(JSONNODE *nData, uint16_t numberOfTabs)
                     m_csvData.title.append(title);
                     m_csvData.data.append(data);
                 }
-            }
-            else if (json_type(*q) == JSON_ARRAY)
-            {
-                if (m_csv)
-                {
-                    if (numberOfTabs != 0)
-                    {
-                        for (uint16_t j = 0; j <= numberOfTabs; j++)
-                        {
-                            m_line.append(",");
-                        }
-                        m_line.append(main_name);
-                        m_line.append("\n");
-                    }
-                    else
-                    {
-                        m_line.append(main_name);
-                        m_line.append("\n");
-                    }
-                }
-                else        // flatcsv needs to copy the data   to the m_csvData strings
-                {
-                    m_csvData.title = m_csvData.title + main_name;
-                    m_csvData.title = m_csvData.title + ",";
-                    // data is just a comma
-                    m_csvData.data = m_csvData.data + ",";
-                }
-                parse_Json(*q, numberOfTabs + 2);
             }
             else if (json_type(*q) == JSON_NODE)
             {
@@ -583,13 +543,10 @@ bool CPrintCSV::parse_Json(JSONNODE *nData, uint16_t numberOfTabs)
 //---------------------------------------------------------------------------
 std::string CPrintCSV::get_Msg_Flat_csv(JSONNODE *masterData)
 {
-	m_csv = false;
     std::string rTitle = "";
     std::string rData = "";
 
-    uint16_t numberOfTabs = 0;
-
-    parse_Json_Flat(masterData, numberOfTabs);
+    parse_Json_Flat(masterData);
     rTitle.insert(0, m_singleLine.title);
     rData.insert(0, m_singleLine.data);
   
@@ -616,13 +573,13 @@ std::string CPrintCSV::get_Msg_Flat_csv(JSONNODE *masterData)
 //!   \return bool
 //
 //---------------------------------------------------------------------------
-bool CPrintCSV::createLineData(char* title, char* data)
+bool CPrintCSV::createLineData(const char *title, const char *data)
 {
     m_singleLine.title.append(title);
     m_singleLine.title.append(",");
     m_singleLine.data.append(data);
     m_singleLine.data.append(",");
-    return true;
+	return true;
 }
 //-----------------------------------------------------------------------------
 //
@@ -640,28 +597,28 @@ bool CPrintCSV::createLineData(char* title, char* data)
 //!   \return bool
 //
 //---------------------------------------------------------------------------
-bool CPrintCSV::createData( std::string &title, std::string &data, uint16_t numberOfTabs)
+bool CPrintCSV::createData(std::string &title, std::string &data, uint16_t numberOfTabs)
 {
-	if (m_csv)
-	{
+    if (m_csv)
+    {
         for (uint16_t i = 0; i < numberOfTabs; i++)
         {
             title.insert(i, ",");
-            
+
         }
         title = title + ",";
-		m_line.append(title);
-		data = data + "\n";
-		m_line.append(data);
-	}
-	else
-	{
-		title = title + ",";
+        m_line.append(title);
+        data = data + "\n";
+        m_line.append(data);
+    }
+    else
+    {
+        title = title + ",";
         m_csvData.title.append(title);
 		data = data + ",";
         m_csvData.data.append(data);
-	}
-	return true;
+    }
+    return true;
 }
 //-----------------------------------------------------------------------------
 //
@@ -734,7 +691,7 @@ CPrintTXT::~CPrintTXT()
 //
 //---------------------------------------------------------------------------
 
-bool CPrintTXT::Create_Tabs(std::string &title, std::string&data, uint16_t numberOfTabs)
+bool CPrintTXT::Create_Tabs(std::string &title, const std::string &data, uint16_t numberOfTabs)
 {
     sFrameData frame;
     frame.data.resize(sizeof(data));
@@ -825,26 +782,23 @@ bool CPrintTXT::parse_Json_to_Text(JSONNODE *nData, uint16_t numberOfTabs)
             else if (json_type(*q) == JSON_NODE)
             {  
                 JSONNODE_ITERATOR k = json_begin(*q);
-                json_char *node_name = json_name(*k);
-                // need to parse out the NULLS
-                if (k == NULL)
-                {
-                    json_free(node_name);
-                    json_free(main_name);
-                    break;
-                }
-                // set the string data for the array of data
-                title.assign(main_name);
-                title.append("\n");
-                frame.title = title;
-                m_vData.push_back(frame);
-                frame.title = "";
-                frame.data = "";
-
-                parse_Json_to_Text(*q, (numberOfTabs +1));
-                json_free(node_name);
-                json_free(main_name);
                 
+                // need to parse out the NULLS
+                if (k != NULL)
+                {
+                    // set the string data for the array of data
+                    json_char* node_name = json_name(*k);
+                    title.assign(main_name);
+                    title.append("\n");
+                    frame.title = title;
+                    m_vData.push_back(frame);
+                    frame.title = "";
+                    frame.data = "";
+
+                    parse_Json_to_Text(*q, (numberOfTabs + 1));
+                    json_free(node_name);
+                }
+                json_free(main_name);  
             }
             else
             {
@@ -908,7 +862,7 @@ bool CPrintTXT::parse_Json_to_Text(JSONNODE *nData, uint16_t numberOfTabs)
 //!   \return 
 //
 //---------------------------------------------------------------------------
-std::string CPrintTXT::get_Msg_Text_Format(M_ATTR_UNUSED const std::string message)
+std::string CPrintTXT::get_Msg_Text_Format()
 {
     std::string r = "";
     for (std::vector<sFrameData>::iterator it = m_vData.begin(); it != m_vData.end(); ++it)
@@ -1005,18 +959,16 @@ void CPrintProm::parseJSONToProm(JSONNODE* nData, std::string inserialNumber, js
             // If the values in the array are nodes, run this method recursively on the JSON array
             } else if (json_type(*it_jsonArray) == JSON_NODE) {
                 JSONNODE_ITERATOR it_jsonArrayNode = json_begin(*it_jsonArray);
-                json_char *jsonArrayNodeName = json_name(*it_jsonArrayNode);
-                // Do nothing if the node is NULL
-                if (it_jsonArrayNode == NULL) {
+                if (it_jsonArrayNode != NULL)
+                {
+                    json_char* jsonArrayNodeName = json_name(*it_jsonArrayNode);
+                    // Run this method recursively
+                    parseJSONToProm(*it_jsonArray, inserialNumber, jsonArrayNodeName);
+                    // Clear pointers
                     json_free(jsonArrayNodeName);
-                    json_free(jsonArrayName);
-                    break;
                 }
-                // Run this method recursively
-                parseJSONToProm(*it_jsonArray, inserialNumber, jsonArrayNodeName);
-                // Clear pointers
-                json_free(jsonArrayNodeName);
                 json_free(jsonArrayName);
+ 
             // Otherwise, simply free the data as it cannot be made into a Prometheus metric
             } else {
                 json_free(jsonArrayName);
@@ -1168,7 +1120,7 @@ std::string CPrintProm::toPrometheusKey(std::string key) {
     for (std::string::size_type i = 0; i < key.size(); i++) {
         if (!isdigit(key.at(i)) && !isalpha(key.at(i))) {
             if (replaceLength == 0) {
-                replaceIndex = static_cast<int>(i);
+                replaceIndex = i;
             }
             replaceLength++;
             if (i == key.size() - 1) {
@@ -1192,7 +1144,7 @@ std::string CPrintProm::toPrometheusKey(std::string key) {
  *  @param  The given string to replace (const string)
  *  @return A string with all its leading instances of REPLACE removed
  */
-std::string CPrintProm::trimLeft(std::string s, const std::string REPLACE) {
+std::string CPrintProm::trimLeft(std::string s, const std::string &REPLACE) {
     size_t start = s.find_first_not_of(REPLACE);
     return (start == std::string::npos) ? "" : s.substr(start);
 }
@@ -1204,7 +1156,7 @@ std::string CPrintProm::trimLeft(std::string s, const std::string REPLACE) {
  *  @param  The given string to replace (const string)
  *  @return A string with all its trailing instances of REPLACE removed
  */
-std::string CPrintProm::trimRight(std::string s, const std::string REPLACE) {
+std::string CPrintProm::trimRight(std::string s, const std::string &REPLACE) {
     size_t end = s.find_last_not_of(REPLACE);
     return (end == std::string::npos) ? "" : s.substr(0, end + 1);
 }
@@ -1216,7 +1168,7 @@ std::string CPrintProm::trimRight(std::string s, const std::string REPLACE) {
  *  @param  The given string to replace (const string)
  *  @return A string with all its leading and trailing instances of REPLACE removed
  */
-std::string CPrintProm::trim(std::string s, const std::string REPLACE) {
+std::string CPrintProm::trim(std::string s, const std::string &REPLACE) {
     return trimRight(trimLeft(s, REPLACE), REPLACE);
 }
 
@@ -1478,8 +1430,8 @@ CMessage::CMessage(JSONNODE *masterData, std::string fileName, int toolPrintType
     , printStatus(NOT_SUPPORTED)
     , printType(toolPrintType)
     , m_fileName(fileName)
+    , message()
 {
-    message = "";
     WriteBuffer();
 }
 //-----------------------------------------------------------------------------
@@ -1521,7 +1473,7 @@ int CMessage::WriteBuffer()
         break;
     case OPENSEA_LOG_PRINT_TEXT:
         parse_Json_to_Text(msgData,0);                        // parse the json data into a vector 
-        message = get_Msg_Text_Format(message);             // get the string message for printable test format data
+        message = get_Msg_Text_Format();             // get the string message for printable test format data
         break;
     case OPENSEA_LOG_PRINT_CSV:
         message = get_Msg_CSV(msgData);                     // get the string message normal CSV format data
@@ -1558,7 +1510,7 @@ int CMessage::WriteBuffer()
 
     if (VERBOSITY_DEFAULT < g_verbosity)
     {
-        printf("\nWrite Buffer wrote %zd bytes to file. \n", message.length());
+        printf("\nWrite Buffer wrote %zu bytes to file. \n", message.length());
     }
 
     return SUCCESS;

@@ -38,7 +38,7 @@ namespace opensea_parser {
 
     public:
 		CPrintJSON();
-        CPrintJSON(JSONNODE *masterData);
+        explicit CPrintJSON(JSONNODE *masterData);
         virtual ~CPrintJSON();
         std::string get_Msg_JSON_Data(){ return m_jsonMessage; };                               //!< returns string data for printing json data 
     };
@@ -58,7 +58,7 @@ namespace opensea_parser {
 		bool						m_csv;														//!< if true then we need to format for csv print				
        
         bool parse_Json(JSONNODE *nData, uint16_t numberOfTabs);
-        bool parse_Json_Flat(JSONNODE* nData, uint16_t numberOfTabs);
+        bool parse_Json_Flat(JSONNODE* nData);
 
     public:
         CPrintCSV();
@@ -66,7 +66,7 @@ namespace opensea_parser {
         std::string get_Msg_CSV(JSONNODE *masterData);											//!< returns string data for a normal CSV, comma delimited
         std::string get_Msg_Flat_csv(JSONNODE *masterData);                                     //!< returns string data for creating a csv all on two lines, comma delimited
 		bool createData(std::string &title, std::string &data, uint16_t numberOfTabs);          //!< creates the Data for the csv and flat csv, tab vs comma
-        bool createLineData(char* title, char* data);                                           //!< create the data for a csb that is flat only.
+        bool createLineData(const char* title, const char* data);                               //!< create the data for a csb that is flat only.
     };
 
     class CPrintTXT
@@ -79,15 +79,15 @@ namespace opensea_parser {
             std::string data;                                                                   //!< Data information from the node
         }sFrameData;
 #pragma pack(pop)
-        std::vector<sFrameData>               m_vData;                                      //!< frame Parameter data
+        std::vector<sFrameData>               m_vData;                                          //!< frame Parameter data
         std::string					m_line;														//!< line string for csv formating
         
     public:
         CPrintTXT();
         virtual ~CPrintTXT();
         bool parse_Json_to_Text(JSONNODE *nData, uint16_t numberOfTabs);
-        bool Create_Tabs(std::string &title, std::string &data, uint16_t numberOfTabs);          //!< creates the Data for the text tabs
-        std::string get_Msg_Text_Format(const std::string message);                              //!< returns the json data as a text string
+        bool Create_Tabs(std::string &title, const std::string &data, uint16_t numberOfTabs);    //!< creates the Data for the text tabs
+        std::string get_Msg_Text_Format();                              //!< returns the json data as a text string
     };
 
     class CPrintProm {
@@ -101,9 +101,9 @@ namespace opensea_parser {
         std::vector<metric> m_metricList;                                                               // List of metrics
         std::string serialNumber;                                                                       // Serial number of current drive
         std::string toPrometheusKey(std::string key);                                                   // Converts a key to Prometheus' desired format
-        std::string trimLeft(std::string s, const std::string REPLACE);                                 // Removes all leading instances of the given string REPLACE
-        std::string trimRight(std::string s, const std::string REPLACE);                                // Removes all trailing instances of the given string REPLACE
-        std::string trim(std::string s, const std::string REPLACE);                                     // Removes all leading and trailing instances of the given string REPLACE
+        std::string trimLeft(std::string s, const std::string &REPLACE);                                 // Removes all leading instances of the given string REPLACE
+        std::string trimRight(std::string s, const std::string &REPLACE);                                // Removes all trailing instances of the given string REPLACE
+        std::string trim(std::string s, const std::string &REPLACE);                                     // Removes all leading and trailing instances of the given string REPLACE
         bool isNumber(std::string s);                                                                   // Determines if the given string can be parsed as a number
         metric headToLabel(metric currentMetric);                                                       // Modifies a metric so that the head number is a label rather than part of the key
         metric zoneToLabel(metric currentMetric);                                                       // Modifies a metric so that the test zone number is a label rather than part of the key
@@ -124,7 +124,7 @@ namespace opensea_parser {
         std::string m_fileName;
         std::string message;
     public:
-		CMessage(JSONNODE *masterData);
+		explicit CMessage(JSONNODE *masterData);
         CMessage(JSONNODE *masterData, std::string fileName, int toolPrintType);
         virtual ~CMessage();
         void Msg(char *message);
