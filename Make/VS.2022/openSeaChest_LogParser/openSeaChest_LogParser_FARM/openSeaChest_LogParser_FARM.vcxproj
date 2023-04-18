@@ -183,6 +183,7 @@
       <IntrinsicFunctions />
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -206,6 +207,7 @@
       <IntrinsicFunctions>
       </IntrinsicFunctions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+	  <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
@@ -229,6 +231,7 @@
       <IntrinsicFunctions />
       <OmitFramePointers />
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+	  <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
@@ -255,6 +258,7 @@
       <OmitFramePointers>
       </OmitFramePointers>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+	  <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
@@ -280,6 +284,7 @@
       <DebugInformationFormat />
       <OmitFramePointers />
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+	  <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
@@ -306,6 +311,7 @@
       <AdditionalIncludeDirectories>..\..\..\..\wingetopt\src;..\..\..\..\include;..\..\..\..\opensea-common\include;..\..\..\..\libjson;..\..\..\..\opensea-parser\include;..\..\..\..\opensea-parser\include\Seagate;..\..\..\..\utils\include</AdditionalIncludeDirectories>
       <DebugInformationFormat />
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+	  <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
@@ -330,6 +336,7 @@
       <OmitFramePointers />
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;BUILD_FARM_ONLY;INCLUDE_FARM_LOG</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+	  <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
   </ItemDefinitionGroup>
@@ -345,6 +352,7 @@
       <IntrinsicFunctions />
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;BUILD_FARM_ONLY;INCLUDE_FARM_LOG</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+	  <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
   </ItemDefinitionGroup>
