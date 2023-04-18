@@ -1510,7 +1510,7 @@ int CMessage::WriteBuffer()
 
     if (VERBOSITY_DEFAULT < g_verbosity)
     {
-        printf("\nWrite Buffer wrote %lld bytes to file. \n", message.length());
+        printf("\nWrite Buffer wrote %zu bytes to file. \n", message.length());
     }
 
     return SUCCESS;
