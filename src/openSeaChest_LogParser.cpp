@@ -3,7 +3,7 @@
 //
 // Do NOT modify or remove this copyright and license
 //
-// Copyright (c) 2020 Seagate Technology LLC and/or its Affiliates, All Rights Reserved
+// Copyright (c) 2023 Seagate Technology LLC and/or its Affiliates, All Rights Reserved
 //
 // This software is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,6 +17,7 @@
 //////////////////////
 #include <stdio.h>
 #include <ctype.h>
+#include <vector>
 #if defined (__unix__) || defined(__APPLE__) //using this definition because linux and unix compilers both define this. Apple does not define this, which is why it has it's own definition
 #include <unistd.h>
 #include <getopt.h>
@@ -34,6 +35,8 @@
 #include "libjson.h"
 #include <inttypes.h>
 #include <string>
+#include <cstdlib>
+#include <iomanip>
 
 #include "CFARM_Log.h"
 #include "CAta_Device_Stat_Log.h"
@@ -55,10 +58,9 @@ using namespace opensea_parser;
     std::string util_name = "openSeaChest_LogParser";
 #endif
 
-std::string buildVersion = "1.3.2";
+std::string buildVersion = "1.5.2";
 std::string buildDate = __DATE__;
-time_t     pCurrentTime;
-std::string timeString = "";
+
 
 ////////////////////////////
 //  functions to declare  //
@@ -103,7 +105,7 @@ int32_t main(int argc, char *argv[])
     //OUTPUTPATH_VAR
     //OUTPUTFILE_VAR
 
-    int8_t args = 0;
+    int args = 0;
     uint8_t argIndex = 0;
     int32_t optionIndex = 0;
 
@@ -138,6 +140,14 @@ int32_t main(int argc, char *argv[])
     ////////////////////////
     //  Argument Parsing  //
     ////////////////////////
+    std::vector<uint8_t> lineInputData;
+    std::string lineinput;
+#if defined(_DEBUG)
+    for (int i = 0; i < argc; ++i)
+    {
+        std::cout << argv[i] << std::endl;
+    }
+#endif
     if (argc < 2)
     {
         seachest_utility_Info(util_name, buildVersion, OPENSEA_PARSER_VERSION);
@@ -147,7 +157,7 @@ int32_t main(int argc, char *argv[])
     //get options we know we need
     while (1) //changed to while 1 in order to parse multiple options when longs options are involved
     {
-        args =(int8_t) getopt_long(argc, argv, "d:hisF:Vv:q%:", longopts, &optionIndex);
+        args = getopt_long(argc, argv, "d:hisF:Vv:q%:", longopts, &optionIndex);
         if (args == -1)
         {
             break;
@@ -159,16 +169,25 @@ int32_t main(int argc, char *argv[])
             //parse long options that have no short option and required arguments here
             if (strncmp(longopts[optionIndex].name, INPUT_LOG_LONG_OPT_STRING, strlen(longopts[optionIndex].name)) == 0)
             {
+                if (strstr(optarg, "fromPipe"))
+                {
+                    while (std::cin >> lineinput)
+                    {
+                        lineInputData.push_back(std::strtoul(lineinput.c_str(), NULL, 16));
+                        //std::cout << std::hex << std::setw(2) << std::setfill('0') << std::uppercase << static_cast<uint16_t>(lineInputData.at(lineInputData.size() - 1));
+                    }
+                    INPUT_LOG_FROM_PIPE_FLAG = true;
+                }
                 INPUT_LOG_FILE_FLAG = true;
                 INPUT_LOG_FILE_NAME.resize(sizeof(optarg));
                 INPUT_LOG_FILE_NAME.assign(optarg);
             }
 
 #if defined BUILD_FARM_ONLY 
-            if (strcmp(optarg, LOG_TYPE_STRING_FARM) == 0)
-            {
-                INPUT_LOG_TYPE_FLAG = SEAGATE_LOG_TYPE_FARM;
-            }
+			if (strcmp(optarg, LOG_TYPE_STRING_FARM) == 0)
+			{
+				INPUT_LOG_TYPE_FLAG = SEAGATE_LOG_TYPE_FARM;
+			}
 #else
             else if (strncmp(longopts[optionIndex].name, INPUT_LOG_TYPE_LONG_OPT_STRING, strlen(longopts[optionIndex].name)) == 0)
             {
@@ -204,10 +223,10 @@ int32_t main(int argc, char *argv[])
                 }
 #endif
 #if defined (INCLUDE_IDENTIFY_DEVICE_DATA_LOG)
-                if (strcmp(optarg, LOG_TYPE_STRING_IDENTIFY_DEVICE_DATA_LOG) == 0)
-                {
-                    INPUT_LOG_TYPE_FLAG = SEAGATE_LOG_TYPE_IDENTIFY_DEVICE_DATA;
-                }
+				if (strcmp(optarg, LOG_TYPE_STRING_IDENTIFY_DEVICE_DATA_LOG) == 0)
+				{
+					INPUT_LOG_TYPE_FLAG = SEAGATE_LOG_TYPE_IDENTIFY_DEVICE_DATA;
+				}
 #endif
 #if defined (INCLUDE_SCT_TEMP_LOG)
                 if (strcmp(optarg, LOG_TYPE_STRING_SCT_TEMP_LOG) == 0)
@@ -217,10 +236,10 @@ int32_t main(int argc, char *argv[])
 #endif
 
 #if defined (INCLUDE_POWER_CONDITION_LOG)
-                if (strcmp(optarg, LOG_TYPE_STRING_POWER_CONDITION_LOG) == 0)
-                {
-                    INPUT_LOG_TYPE_FLAG = SEAGATE_LOG_TYPE_POWER_CONDITION_LOG;
-                }
+				if (strcmp(optarg, LOG_TYPE_STRING_POWER_CONDITION_LOG) == 0)
+				{
+					INPUT_LOG_TYPE_FLAG = SEAGATE_LOG_TYPE_POWER_CONDITION_LOG;
+				}
 #endif
 #if defined (INCLUDE_NCQ_CMD_ERROR_LOG)
                 if (strcmp(optarg, LOG_TYPE_STRING_NCQ_COMMAND_ERROR_LOG) == 0)
@@ -229,10 +248,10 @@ int32_t main(int argc, char *argv[])
                 }
 #endif
 #if defined (INCLUDE_SCSI_LOG_PAGES)
-                if (strcmp(optarg, LOG_TYPE_STRING_SCSI_LOG_PAGES) == 0)
-                {
-                    INPUT_LOG_TYPE_FLAG = SEAGATE_LOG_TYPE_SCSI_LOG_PAGES;
-                }
+				if (strcmp(optarg, LOG_TYPE_STRING_SCSI_LOG_PAGES) == 0)
+				{
+					INPUT_LOG_TYPE_FLAG = SEAGATE_LOG_TYPE_SCSI_LOG_PAGES;
+				}
 #endif
 
             }
@@ -335,7 +354,7 @@ int32_t main(int argc, char *argv[])
     if (ECHO_COMMAND_LINE_FLAG)
     {
         uint64_t commandLineIter = 1;//start at 1 as starting at 0 means printing the directory info+ SeaChest.exe (or ./SeaChest)
-        for (commandLineIter = 1; commandLineIter < (uint64_t)argc; commandLineIter++)
+        for (commandLineIter = 1; commandLineIter < static_cast<uint64_t>(argc); commandLineIter++)
         {
             if (strncmp(argv[commandLineIter], "--echoCommandLine", strlen(argv[commandLineIter])) == 0)
             {
@@ -370,14 +389,14 @@ int32_t main(int argc, char *argv[])
     }
 #if defined BUILD_FARM_ONLY 
 #else
-    if (INPUT_LOG_TYPE_FLAG == SEAGATE_LOG_TYPE_UNKNOWN )
-    {
-        std::cout << "\t ******   Missing Input Log Type ****** " << std::endl << std::endl;
-        print_Log_Type_Help(false);
-        utility_Usage(false);
-        exitCode = UTIL_EXIT_ERROR_IN_COMMAND_LINE;
-        return exitCode;
-    }
+	if (INPUT_LOG_TYPE_FLAG == SEAGATE_LOG_TYPE_UNKNOWN )
+	{
+		std::cout << "\t ******   Missing Input Log Type ****** " << std::endl << std::endl;
+		print_Log_Type_Help(false);
+		utility_Usage(false);
+		exitCode = UTIL_EXIT_ERROR_IN_COMMAND_LINE;
+		return exitCode;
+	}
 #endif
     //print out errors for unknown arguments for remaining args that haven't been processed yet
     for (argIndex = static_cast<uint8_t>(optind); argIndex < argc; argIndex++)
@@ -471,36 +490,54 @@ int32_t main(int argc, char *argv[])
     if (INPUT_LOG_FILE_FLAG)
     {
         JSONNODE *masterJson = json_new(JSON_NODE);
-        UtilityHeader(masterJson);
+		UtilityHeader(masterJson);
         switch (INPUT_LOG_TYPE_FLAG) 
         {
-        case SEAGATE_LOG_TYPE_FARM:   
+        case SEAGATE_LOG_TYPE_FARM:
             {
-                CFARMLog *CFarm;
-                CFarm = new CFARMLog(INPUT_LOG_FILE_NAME, SHOW_STATUS_BIT_FLAG);
-                retStatus = CFarm->get_FARM_Status();                               // check to make sure we read in the file form the construtor.
-                if (retStatus == IN_PROGRESS)                                       // if IN_PROGRESS we can continue to parse, else retStatus holds the error information
+                if (INPUT_LOG_FROM_PIPE_FLAG)
                 {
-                    if (ANALYZE_LOG_FLAG == true)
+                    uint8_t* plineInputData;
+                    plineInputData = lineInputData.data();
+                    CFARMLog* CFarm;
+                    CFarm = new CFARMLog(plineInputData, lineInputData.size(), SHOW_STATUS_BIT_FLAG);
+                    retStatus = CFarm->get_FARM_Status();								// check to make sure we read in the file form the construtor.
+                    if (retStatus == IN_PROGRESS)										// if IN_PROGRESS we can continue to parse, else retStatus holds the error information
                     {
-                        eAnalyzeStatus  analyzeStatus;
-                        analyzeStatus = CFarm->parse_Device_Farm_Log_And_Analyze();
-                        /**
-                         * Add health info to the master Json
-                         */
-                        CFarm->print_Drive_Health(masterJson, analyzeStatus);
+                        retStatus = CFarm->parse_Device_Farm_Log(masterJson);            
                     }
-
-                    retStatus = CFarm->parse_Device_Farm_Log(masterJson);
+                    delete(CFarm);
                 }
-                delete(CFarm);
+                else
+                {
+                    CFARMLog* CFarm;
+                    CFarm = new CFARMLog(INPUT_LOG_FILE_NAME, SHOW_STATUS_BIT_FLAG);
+                    retStatus = CFarm->get_FARM_Status();								// check to make sure we read in the file form the construtor.
+                    if (retStatus == IN_PROGRESS)										// if IN_PROGRESS we can continue to parse, else retStatus holds the error information
+                    {
+                        if (ANALYZE_LOG_FLAG)
+                        {
+                            eAnalyzeStatus  analyzeStatus;
+                            analyzeStatus = CFarm->parse_Device_Farm_Log_And_Analyze();
+                            /**
+                             * Add health info to the master Json
+                             */
+                            CFarm->print_Drive_Health(masterJson, analyzeStatus);
+                        }
+                        else
+                        {
+                            retStatus = CFarm->parse_Device_Farm_Log(masterJson);
+                        }
+                    }
+                    delete(CFarm);
+                }
             }
             break;
         case   SEAGATE_LOG_TYPE_DEVICE_STATISTICS_LOG:
             {
                 CAtaDeviceStatisticsLogs *cDevicStat;
                 cDevicStat = new CAtaDeviceStatisticsLogs(INPUT_LOG_FILE_NAME, masterJson);
-                retStatus = cDevicStat->get_Device_Stat_Status();                   // All checks and parseing are done in the construtor
+                retStatus = cDevicStat->get_Device_Stat_Status();					// All checks and parseing are done in the construtor
                 delete(cDevicStat);
             }
             break;
@@ -508,7 +545,7 @@ int32_t main(int argc, char *argv[])
             {
                 CExtComp *cEC;
                 cEC = new CExtComp(INPUT_LOG_FILE_NAME, masterJson);
-                retStatus = cEC->get_EC_Status();                                   // All checks and parseing are done in the construtor
+                retStatus = cEC->get_EC_Status();									// All checks and parseing are done in the construtor
                 delete(cEC);
             }
             break;
@@ -523,201 +560,224 @@ int32_t main(int argc, char *argv[])
         case   SEAGATE_LOG_TYPE_IDENTIFY_LOG:
             {
                 CAta_Identify_log * cIdent;
-                cIdent = new CAta_Identify_log(INPUT_LOG_FILE_NAME);            // constructor will make sure we read in the file and start the parseing of the binary
-                retStatus = cIdent->get_Identify_Information_Status();          // if IN_PROGRESS we can continue to print out the data
-                if (retStatus == IN_PROGRESS)
-                {
-                    retStatus = cIdent->print_Identify_Information(masterJson);
-                }
+                cIdent = new CAta_Identify_log(INPUT_LOG_FILE_NAME);			// constructor will make sure we read in the file and start the parseing of the binary
+				retStatus = cIdent->get_Identify_Information_Status();			// if IN_PROGRESS we can continue to print out the data
+				if (retStatus == IN_PROGRESS)
+				{
+					retStatus = cIdent->print_Identify_Information(masterJson);
+				}
                 delete (cIdent);
             }
-            break;
+			break;
         case SEAGATE_LOG_TYPE_IDENTIFY_DEVICE_DATA:
             {
                 CAta_Identify_Log_30 *cIdData = NULL;
-                cIdData = new CAta_Identify_Log_30( INPUT_LOG_FILE_NAME);       // constructor will make sure we read in the file and start the parseing of the binary
-                retStatus = cIdData->get_identify_Status();                     // if IN_PROGRESS we can continue to print out the data
-                if (retStatus == IN_PROGRESS)
-                {
-                    retStatus = cIdData->parse_Identify_Log_30(masterJson);
-                }
+                cIdData = new CAta_Identify_Log_30( INPUT_LOG_FILE_NAME);		// constructor will make sure we read in the file and start the parseing of the binary
+				retStatus = cIdData->get_identify_Status();						// if IN_PROGRESS we can continue to print out the data
+				if (retStatus == IN_PROGRESS)
+				{
+					retStatus = cIdData->parse_Identify_Log_30(masterJson);
+				}
                 delete (cIdData);
             }
             break;
         case    SEAGATE_LOG_TYPE_SCT_TEMP_LOG:
             {
                 CSAtaDevicStatisticsTempLogs *cSCTTemp;
-                cSCTTemp = new CSAtaDevicStatisticsTempLogs(INPUT_LOG_FILE_NAME, masterJson);   // constructor will make sure we read in the file and start the parseing of the binary
-                retStatus = cSCTTemp->get_Status();                                     // if IN_PROGRESS we can continue to print out the data
-                if (retStatus == IN_PROGRESS)
-                {
-                    retStatus = cSCTTemp->parse_SCT_Temp_Log();
-                }
+                cSCTTemp = new CSAtaDevicStatisticsTempLogs(INPUT_LOG_FILE_NAME, masterJson);	// constructor will make sure we read in the file and start the parseing of the binary
+				retStatus = cSCTTemp->get_Status();										// if IN_PROGRESS we can continue to print out the data
+				if (retStatus == IN_PROGRESS)
+				{
+					retStatus = cSCTTemp->parse_SCT_Temp_Log();
+				}
                 delete (cSCTTemp);
             }
             break;
         case SEAGATE_LOG_TYPE_POWER_CONDITION_LOG:
             {
                 CAtaPowerConditionsLog * cPowerCon;
-                cPowerCon = new CAtaPowerConditionsLog(INPUT_LOG_FILE_NAME);            // constructor will make sure we read in the file and start the parseing of the binary
-                retStatus = cPowerCon->get_Power_Status();                              // if IN_PROGRESS we can continue to print out the data
-                if (retStatus == IN_PROGRESS)
-                {
-                    retStatus = cPowerCon->printPowerConditionLog(masterJson);
-                }
-                delete (cPowerCon);
+                cPowerCon = new CAtaPowerConditionsLog(INPUT_LOG_FILE_NAME);			// constructor will make sure we read in the file and start the parseing of the binary
+				retStatus = cPowerCon->get_Power_Status();								// if IN_PROGRESS we can continue to print out the data
+				if (retStatus == IN_PROGRESS)
+				{
+					retStatus = cPowerCon->printPowerConditionLog(masterJson);
+				}
+				delete (cPowerCon);
             }
-            break;
+			break;
         case SEAGATE_LOG_TYPE_NCQ_CMD_ERROR_LOG:
             {
                 CAta_NCQ_Command_Error_Log * cNCQ;
-                cNCQ = new CAta_NCQ_Command_Error_Log(INPUT_LOG_FILE_NAME);             // constructor will make sure we read in the file and start the parseing of the binary
-                retStatus = cNCQ->get_NCQ_Command_Error_Log_Status();                   // if IN_PROGRESS we can continue to print out the data
-                if (retStatus == IN_PROGRESS)
+                cNCQ = new CAta_NCQ_Command_Error_Log(INPUT_LOG_FILE_NAME);				// constructor will make sure we read in the file and start the parseing of the binary
+				retStatus = cNCQ->get_NCQ_Command_Error_Log_Status();					// if IN_PROGRESS we can continue to print out the data
+				if (retStatus == IN_PROGRESS)
+				{
+					retStatus = cNCQ->get_NCQ_Command_Error_Log(masterJson);
+				}
+				delete (cNCQ);
+            }
+			break;
+		case SEAGATE_LOG_TYPE_SCSI_LOG_PAGES:
+			{
+				CScsiLog * cLogPages;
+				cLogPages = new CScsiLog(INPUT_LOG_FILE_NAME, masterJson);				// All checks and parseing are done in the construtor
+				retStatus = cLogPages->get_Log_Status();
+				delete (cLogPages);
+			}
+			break;
+        default:
+            {
+                // set to unknown to pass through the case statement below no type set was given or didn't match
+                exitCode = UTIL_EXIT_ERROR_IN_COMMAND_LINE;
+                retStatus = UNKNOWN;
+            }
+            break;
+        }
+		// todo really check the status vs error code
+		switch (retStatus)
+		{
+		case SUCCESS:
+            {
+                exitCode = UTIL_EXIT_NO_ERROR;
+                if (OUTPUT_LOG_FILE_FLAG)
                 {
-                    retStatus = cNCQ->get_NCQ_Command_Error_Log(masterJson);
+                    printf("\nParsing completed with no issues \n");
                 }
-                delete (cNCQ);
             }
-            break;
-        case SEAGATE_LOG_TYPE_SCSI_LOG_PAGES:
-            {
-                CScsiLog * cLogPages;
-                cLogPages = new CScsiLog(INPUT_LOG_FILE_NAME, masterJson);              // All checks and parseing are done in the construtor
-                retStatus = cLogPages->get_Log_Status();
-                delete (cLogPages);
-            }
-            break;
-        default:
-            // set to unknown to pass through the case statement below no type set was given or didn't match
-            exitCode = UTIL_EXIT_ERROR_IN_COMMAND_LINE;
-            retStatus = UNKNOWN;
-            break;
-        }
-        // todo really check the status vs error code
-        switch (retStatus)
-        {
-        case SUCCESS:
-            exitCode = UTIL_EXIT_NO_ERROR;
-            if (OUTPUT_LOG_FILE_FLAG)
-            {
-                printf("\nParsing completed with no issues \n");
-            }
-            break;
+		    break;
         case NOT_SUPPORTED:
-            exitCode = UTIL_EXIT_OPERATION_NOT_SUPPORTED;
-            if (OUTPUT_LOG_FILE_FLAG)
             {
-                printf("\nLog Not supported at this time \n");
-                json_push_back(masterJson, json_new_a("Not Supported", "Log Not Supported"));
+                exitCode = UTIL_EXIT_OPERATION_NOT_SUPPORTED;
+                if (OUTPUT_LOG_FILE_FLAG)
+                {
+                    printf("\nLog Not supported at this time \n");
+                    json_push_back(masterJson, json_new_a("Not Supported", "Log Not Supported"));
+                }
             }
             break;
-        case IN_PROGRESS:
-            exitCode = UTIL_EXIT_OPERATION_STILL_IN_PROGRESS;
-            if (OUTPUT_LOG_FILE_FLAG)
+		case IN_PROGRESS:
             {
-                printf("\nParsing incomplete Operation was still in progress \n");
-                json_push_back(masterJson, json_new_a("Parsing Error", "Incomplete Operation was still in progress"));
+                exitCode = UTIL_EXIT_OPERATION_STILL_IN_PROGRESS;
+                if (OUTPUT_LOG_FILE_FLAG)
+                {
+                    printf("\nParsing incomplete Operation was still in progress \n");
+                    json_push_back(masterJson, json_new_a("Parsing Error", "Incomplete Operation was still in progress"));
+                }
             }
-            break;
-        case FAILURE:
-            exitCode = UTIL_EXIT_OPERATION_FAILURE;
-            if (OUTPUT_LOG_FILE_FLAG)
+			break;
+		case FAILURE:
             {
-                printf("\nOperation Failure \n");
-                json_push_back(masterJson, json_new_a("Parsing Error", "Operation Failure"));
+                exitCode = UTIL_EXIT_OPERATION_FAILURE;
+                if (OUTPUT_LOG_FILE_FLAG)
+                {
+                    printf("\nOperation Failure \n");
+                    json_push_back(masterJson, json_new_a("Parsing Error", "Operation Failure"));
+                }
             }
-            break;
-        case ABORTED:
-            exitCode = UTIL_EXIT_OPERATION_ABORTED;
-            if (OUTPUT_LOG_FILE_FLAG)
+			break;
+		case ABORTED:
             {
-                printf("\nAborted \n");
-                json_push_back(masterJson, json_new_a("Parsing Error", "Aborted"));
+                exitCode = UTIL_EXIT_OPERATION_ABORTED;
+                if (OUTPUT_LOG_FILE_FLAG)
+                {
+                    printf("\nAborted \n");
+                    json_push_back(masterJson, json_new_a("Parsing Error", "Aborted"));
+                }
             }
-            break;
-        case BAD_PARAMETER:
-            exitCode = UTIL_EXIT_OPERATION_BAD_PARAMETER;
-            if (OUTPUT_LOG_FILE_FLAG)
+			break;
+		case BAD_PARAMETER:
             {
-                printf("\nBad Parameter \n");
-                printf("Check --logType\n");
-                json_push_back(masterJson, json_new_a("Parsing Error", "Bad Parameter"));
+                exitCode = UTIL_EXIT_OPERATION_BAD_PARAMETER;
+                if (OUTPUT_LOG_FILE_FLAG)
+                {
+                    printf("\nBad Parameter \n");
+                    printf("Check --logType\n");
+                    json_push_back(masterJson, json_new_a("Parsing Error", "Bad Parameter"));
+                }
             }
-            break;
-        case MEMORY_FAILURE:
-            exitCode = UTIL_EXIT_OPERATION_MEMORY_FAILURE;
-            if (OUTPUT_LOG_FILE_FLAG)
+			break;
+		case MEMORY_FAILURE:
             {
-                printf("\nMemory Failure \n");
-                json_push_back(masterJson, json_new_a("Parsing Error", "Memory Failure"));
+                exitCode = UTIL_EXIT_OPERATION_MEMORY_FAILURE;
+                if (OUTPUT_LOG_FILE_FLAG)
+                {
+                    printf("\nMemory Failure \n");
+                    json_push_back(masterJson, json_new_a("Parsing Error", "Memory Failure"));
+                }
             }
-            break;
-        case FILE_OPEN_ERROR:
-            exitCode = UTIL_EXIT_CANNOT_OPEN_FILE;
-            if (OUTPUT_LOG_FILE_FLAG)
+			break;
+		case FILE_OPEN_ERROR:
             {
-                printf("\nCould not Open File \n");
-                json_push_back(masterJson, json_new_a("Parsing Error", "Could not Open File"));
+                exitCode = UTIL_EXIT_CANNOT_OPEN_FILE;
+                if (OUTPUT_LOG_FILE_FLAG)
+                {
+                    printf("\nCould not Open File \n");
+                    json_push_back(masterJson, json_new_a("Parsing Error", "Could not Open File"));
+                }
             }
-            break;
+			break;
         case VALIDATION_FAILURE:
-            exitCode = UTIL_EXIT_VALIDATION_FAILURE;
-            if (OUTPUT_LOG_FILE_FLAG)
             {
-                printf("\nBinary File has Failed Validation \n");
-                json_push_back(masterJson, json_new_a("Parsing Error", "Validation Failure"));
+                exitCode = UTIL_EXIT_VALIDATION_FAILURE;
+                if (OUTPUT_LOG_FILE_FLAG)
+                {
+                    printf("\nBinary File has Failed Validation \n");
+                    json_push_back(masterJson, json_new_a("Parsing Error", "Validation Failure"));
+                }
             }
             break;
-        case INVALID_LENGTH:
-            exitCode = UTIL_EXIT_OPERATION_INVALID_LENGTH;
-            if (OUTPUT_LOG_FILE_FLAG)
+		case INVALID_LENGTH:
             {
-                printf("\nBinary File With Invalid Length \n");
-                json_push_back(masterJson, json_new_a("Parsing Error", "Invalid Length"));
+                exitCode = UTIL_EXIT_OPERATION_INVALID_LENGTH;
+                if (OUTPUT_LOG_FILE_FLAG)
+                {
+                    printf("\nBinary File With Invalid Length \n");
+                    json_push_back(masterJson, json_new_a("Parsing Error", "Invalid Length"));
+                }
             }
-            break;
-        default:
-            printf("\n %d failure", retStatus);
-            break;
-        }
+			break;
+		default:
+            {
+                printf("\n %d failure", retStatus);
+            }
+			break;
+		}
         if (OUTPUT_LOG_FILE_FLAG)
         {
-
-            CMessage *printMessage;
+			CMessage *printMessage;
             printMessage = new CMessage(masterJson, OUTPUT_LOG_FILE_NAME, OUTPUT_LOG_PRINT_FLAG);
-            delete(printMessage);
+			delete(printMessage);
 
         }
         else //print it to stdout. 
         {
-            std::string myFile = INPUT_LOG_FILE_NAME;               // myFile for the auto creation of the output file
-            myFile = myFile.substr(0, myFile.rfind("."));           // remove the extension from the file
+			std::string myFile = INPUT_LOG_FILE_NAME;				// myFile for the auto creation of the output file
+			myFile = myFile.substr(0, myFile.rfind("."));           // remove the extension from the file
             CMessage *printMessage;
             if (OUTPUT_LOG_PRINT_FLAG == SEAGATE_LOG_PRINT_JSON)         // Append output extension, .json by default
             {
                 myFile.append(".json");
                 printMessage = new CMessage(masterJson, myFile, OUTPUT_LOG_PRINT_FLAG); // Get JSON output
-                std::cout << printMessage->get_Msg_JSON_Data().c_str(); // Print to the screen
+                std::cout << printMessage->get_Msg_JSON_Data().c_str();	// Print to the screen
             }
             else if (OUTPUT_LOG_PRINT_FLAG == SEAGATE_LOG_PRINT_TEXT)
             {
                 myFile.append(".txt");
                 printMessage = new CMessage(masterJson, myFile, OUTPUT_LOG_PRINT_FLAG); // Get text output
                 printMessage->parse_Json_to_Text(masterJson, 0);
-                std::cout << printMessage->get_Msg_Text_Format("").c_str(); // Print to the screen
+                std::cout << printMessage->get_Msg_Text_Format().c_str();	// Print to the screen
             }
             else if (OUTPUT_LOG_PRINT_FLAG == SEAGATE_LOG_PRINT_CSV)
             {
                 myFile.append(".csv");
                 printMessage = new CMessage(masterJson, myFile, OUTPUT_LOG_PRINT_FLAG); // Get CSV output
-                std::cout << printMessage->get_Msg_CSV(masterJson).c_str(); // Print to the screen
+                std::cout << printMessage->get_Msg_CSV(masterJson).c_str();	// Print to the screen
             }
             else if (OUTPUT_LOG_PRINT_FLAG == SEAGATE_LOG_PRINT_FLAT_CSV)
             {
                 myFile.append(".csv");
                 printMessage = new CMessage(masterJson, myFile, OUTPUT_LOG_PRINT_FLAG); // Get flat CSV output
-                std::cout << printMessage->get_Msg_Flat_csv(masterJson).c_str();    // Print to the screen
+                std::cout << printMessage->get_Msg_Flat_csv(masterJson).c_str();	// Print to the screen
             }
             else if (OUTPUT_LOG_PRINT_FLAG == SEAGATE_LOG_PRINT_PROM)
             {
@@ -725,13 +785,13 @@ int32_t main(int argc, char *argv[])
                 printMessage = new CMessage(masterJson, myFile, OUTPUT_LOG_PRINT_FLAG); // Get Prometheus output
                 printMessage->setSerialNumber(masterJson);
                 printMessage->parseJSONToProm(masterJson, printMessage->getSerialNumber(), NULL);
-                std::cout << printMessage->printProm().c_str(); // Print to the screen
+                std::cout << printMessage->printProm().c_str();	// Print to the screen
             }
             else
             {
-                myFile.append(".json"); 
+                myFile.append(".json");	
                 printMessage = new CMessage(masterJson, myFile, OUTPUT_LOG_PRINT_FLAG); // Get JSON output by default
-                std::cout << printMessage->get_Msg_JSON_Data().c_str(); // Print to the screen
+                std::cout << printMessage->get_Msg_JSON_Data().c_str();	// Print to the screen
             }
             delete(printMessage);
         }
@@ -774,7 +834,7 @@ void utility_Usage(bool shortUsage)
 #else
     printf("\t%s --inputLog <filename> --logType %s --printType json --outputLog <filename>\n", util_name.c_str(), LOG_TYPE_STRING_FARM);
 #endif
-    printf("\n");
+	printf("\n");
     //return codes
     printf("Return Codes\n");
     printf("============\n");
@@ -801,7 +861,7 @@ void utility_Usage(bool shortUsage)
     print_Help_Help(shortUsage);
     print_License_Help(shortUsage);
     print_Verbose_Help(shortUsage);
-    print_Version_Help(shortUsage, (char *)util_name.c_str());
+    print_Version_Help(shortUsage, util_name.c_str());
 }
 //-----------------------------------------------------------------------------
 //
@@ -820,14 +880,18 @@ void utility_Usage(bool shortUsage)
 //---------------------------------------------------------------------------
 static void UtilityHeader(JSONNODE *masterData)
 {
-    // get current Time and Date 
-    pCurrentTime = time(NULL);  
-    strftime((char *)timeString.c_str(), 64, "%m-%d-%Y__%H:%M:%S", localtime(&pCurrentTime));
-    JSONNODE *toolHeader = json_new(JSON_NODE);
-    json_set_name(toolHeader, util_name.c_str());
-    json_push_back(toolHeader, json_new_a("Utility Build Version", (char *)buildVersion.c_str()));
+	// get current Time and Date 
+    char timeCString[64];
+    const char * constTimeCString = &timeCString[0];
+	time_t pCurrentTime = time(NULL);
+    struct tm localTimeBuffer;
+    memset(&localTimeBuffer, 0, sizeof(struct tm));
+	strftime(timeCString, 64, "%m-%d-%Y__%H:%M:%S", get_Localtime(&pCurrentTime, &localTimeBuffer));
+	JSONNODE *toolHeader = json_new(JSON_NODE);
+	json_set_name(toolHeader, util_name.c_str());
+	json_push_back(toolHeader, json_new_a("Utility Build Version", buildVersion.c_str()));
     json_push_back(toolHeader, json_new_a("Library Build Version", OPENSEA_PARSER_VERSION));
-    json_push_back(toolHeader, json_new_a("Build Date", buildDate.c_str()));
-    json_push_back(toolHeader, json_new_a("Run as Date", (char *)timeString.c_str()));
-    json_push_back(masterData, toolHeader);
+	json_push_back(toolHeader, json_new_a("Build Date", buildDate.c_str()));
+	json_push_back(toolHeader, json_new_a("Run as Date", constTimeCString));
+	json_push_back(masterData, toolHeader);
 }

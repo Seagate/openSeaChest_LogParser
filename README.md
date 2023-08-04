@@ -1,9 +1,41 @@
 # **openSeaChest_LogParser**
 ## Cross platform utility useful for reading binary data logs from SATA, SAS, NVMe, and USB storage devices.
 
-##### Copyright (c) 2014-2020 Seagate Technology LLC and/or its Affiliates, All Rights Reserved
+##### Copyright (c) 2014-2023 Seagate Technology LLC and/or its Affiliates, All Rights Reserved
 
 #### Welcome to the openSeaChest_LogParser open source project!
+
+### Summary of supported SCSI/SAS log pages
+Page Code  |  Subpage Code Log  |  Page Name Reference                  |
+-----------|--------------------|:-------------------------------------:|
+0Fh        |     00h            |     Application Client                |
+15h        |     00h            |     Background Scan                   |
+15h        |     02h            |     Background Operation              |
+37h        |     00h            |     Cache Statistics                  |
+19h        |     20h            |     Cache Memory Statistics           |
+19h        |     21h            |     Command Duration Limits Statistics| 
+0Dh        |     02h            |     Environmental Limits              |
+0Dh        |     01h            |     Environmental Reporting           |
+03h        |     00h            |     Read Error Counter                |
+05h        |     00h            |     Verify Error Counter              |
+02h        |     00h            |     Write Error Counter               |
+3Eh        |     00h            |     Factory Log                       |
+08h        |     00h            |     Format Status                     |
+2Fh        |     00h            |     Informational Exceptions          |
+0Ch        |     00h            |     Logical Block Provisioning        |
+06h        |     00h            |     Non-Medium Error                  |
+15h        |     01h            |     Pending Defects                   |
+1Ah        |     00h            |     Power Condition Transitions       |
+18h        |     00h            |     Protocol Specific Port            |
+10h        |     00h            |     Self-Test Results                 |
+11h        |     00h            |     Solid State Media                 |
+0Eh        |     00h            |     Start-Stop Cycle Counter          |
+00h        |     00h            |     Supported Log Pages               |
+00h        |     FFh            |     Supported Log Pages and Subpages  |
+0Dh        |     00h            |     Temperature                       |
+0Eh        |     01h            |     Utilization                       |
+14h        |     01h            |     Zoned Block Device Statistics     |
+
 
 [![Build Status](https://travis-ci.org/Seagate/openSeaChest_LogParser.svg?branch=develop)](https://travis-ci.org/Seagate/openSeaChest_LogParser)
 
@@ -57,9 +89,15 @@ After compilation is complete, the tool binary will be located in the same folde
 Required Tools:
 * Visual Studio 2017 (can also use msbuild)
   * Windows 10 SDK version 10.0.15063.0 for Visual Studio 2017 (x86 and x86_84)
+* Visual Studio 2019 (can also use msbuild) 
+ * Windows 10 SDK (latest installed version) for Visual Studio 2019 (x86 and x86_84)
+ * Platform Toolset version 142 c++ 14 standard
+* Visual Studio 2022 (can also use msbuild)
+ * Windows 10 SDK (latest installed version) for Visual Studio 2022 (x86 and x86_84)
+ * Platform Toolset version 143 c++ 14 standard
 
   ##### Visual Studio
-  Open the solution file in "openSeaChest_LogParser/Make/VS.(version)/openseachest.sln".
+  Open the solution file in "openSeaChest_LogParser/Make/VS.(version)/openSeaChest_LogParser/openSeaChest_LogParser/openseachest.sln".
   Set the desired build configuration.
   Press "F7" to build all of the tools and libraries, or select "Build->Build All" from the menu.
   The tools will be output into "openSeaChest_LogParser/Make/VS.(version)/(platform)/(build type)".
@@ -167,12 +205,23 @@ analytical review.  Identification and inquiry data stored on the drive is also
 provided.  A view of SMART and device statistics is available when supported by
 the drive.
 
-**openSeaChest_LogParser** - Tool for parsing the T-13 logs generic. With support for
+**openSeaChest_LogParser** - Tool for parsing the Scsi/SAS generic logs. Also support
+for ATA logs (identify, device statistics log, ext comp error log, sct temp log, 
+NCQ error log, power condition log ext Self Test log), With support for Seagates
 FARM Log and other Seagate Vendor Specific Logs.
 
-**openSeaChest_Logs** -
+**openSeaChest_Logs** - Several binary logs are maintained on disk drives. These logs 
+are not stored in the user data area. Sometimes these logs are reviewed by support 
+engineers to help analyze event history on the device. These binary data logs are 
+saved to filenames using the drive's serial number and date-time. Some logs are 
+Seagate-specific while many others are common to the interface specifications. 
+Several of these binary logs may be parsed into human-readable form by using the 
+openSeaChest_LogParser utility.
 
-**openSeaChest_NVMe** -
+**openSeaChest_NVMe** - NVMe interface devices tend to have unique commands and 
+challenges. Many of these commands are also unique to NVMe SSD products. This 
+tool gathers the most important commands under one title. This tool is similar 
+to openSeaChest_Basics but for NVMe.
 
 **openSeaChest_PowerControl** - Seagate disk drives offer a multitude of options to
 manage power.  This tool manipulates the various power modes.
@@ -220,7 +269,7 @@ The newest online version of the openSeaChest Utilities documentation, open
 source usage and acknowledgement licenses, and our Linux USB Boot Maker FAQ can
 be found at: https://github.com/Seagate/openSeaChest.
 
-Copyright (c) 2014-2020 Seagate Technology LLC and/or its Affiliates, All Rights Reserved
+Copyright (c) 2014-2023 Seagate Technology LLC and/or its Affiliates, All Rights Reserved
 
 -----------------------------------------
 
