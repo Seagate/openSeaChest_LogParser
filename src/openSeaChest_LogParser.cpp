@@ -3,7 +3,7 @@
 //
 // Do NOT modify or remove this copyright and license
 //
-// Copyright (c) 2022 Seagate Technology LLC and/or its Affiliates, All Rights Reserved
+// Copyright (c) 2023 Seagate Technology LLC and/or its Affiliates, All Rights Reserved
 //
 // This software is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -45,7 +45,7 @@
 #include "CAta_Identify_Log.h"
 #include "CAta_Power_Conditions_Log.h"
 #include "CAta_NCQ_Command_Error_Log.h"
-#include  "CScsi_Log.h"
+#include "CScsi_Log.h"
 
 using namespace opensea_parser;
 
@@ -58,7 +58,7 @@ using namespace opensea_parser;
     std::string util_name = "openSeaChest_LogParser";
 #endif
 
-std::string buildVersion = "1.5.0";
+std::string buildVersion = "1.5.2";
 std::string buildDate = __DATE__;
 
 ////////////////////////////
@@ -91,21 +91,17 @@ int32_t main(int argc, char *argv[])
     eReturnValues       retStatus = IN_PROGRESS;
     eUtilExitCodes      exitCode = UTIL_EXIT_NO_ERROR;
     LICENSE_VAR
-        ECHO_COMMAND_LINE_VAR
-        SHOW_STATUS_BIT_VAR
-        SHOW_VERSION_VAR
-        SHOW_HELP_VAR
-        //Tool specific
-        INPUT_LOG_FILE_VAR
-        OUTPUT_LOG_FILE_VAR
-        INPUT_LOG_TYPE_VAR
-        OUTPUT_LOG_PRINT_VAR
-        //OUTPUTPATH_VAR
-        //OUTPUTFILE_VAR
-#if defined(_DEBUG)
-    std::string test;
-    std::cout << test.capacity() << " " << test.max_size() << std::endl;
-#endif
+    ECHO_COMMAND_LINE_VAR
+    SHOW_STATUS_BIT_VAR
+    SHOW_VERSION_VAR
+    SHOW_HELP_VAR
+    //Tool specific
+    INPUT_LOG_FILE_VAR
+    OUTPUT_LOG_FILE_VAR
+    INPUT_LOG_TYPE_VAR
+    OUTPUT_LOG_PRINT_VAR
+    //OUTPUTPATH_VAR
+    //OUTPUTFILE_VAR
 
     int args = 0;
     uint8_t argIndex = 0;
@@ -119,7 +115,7 @@ int32_t main(int argc, char *argv[])
         VERBOSE_LONG_OPT,
         LICENSE_LONG_OPT,
         ECHO_COMMAND_LINE_LONG_OPT,
-		SHOW_STATUS_BITS_OPT,
+        SHOW_STATUS_BITS_OPT,
         //tool specific options go here
         INPUT_LOG_LONG_OPT,
         INPUT_LOG_TYPE_LONG_OPT,
@@ -151,7 +147,7 @@ int32_t main(int argc, char *argv[])
 #endif
     if (argc < 2)
     {
-		seachest_utility_Info(util_name, buildVersion, OPENSEA_PARSER_VERSION);
+        seachest_utility_Info(util_name, buildVersion, OPENSEA_PARSER_VERSION);
         utility_Usage(true);
         exit(UTIL_EXIT_ERROR_IN_COMMAND_LINE);
     }
@@ -300,12 +296,12 @@ int32_t main(int argc, char *argv[])
                 printf("Ignoring option --%s\n",longopts[optionIndex].name);
             }
             break;
-		case 1:
-			if (strncmp(longopts[optionIndex].name, SHOW_STATUS_BITS_OPT_STRING, strlen(longopts[optionIndex].name)) == 0)
-			{
-				SHOW_STATUS_BIT_FLAG = true;
-			}
-			break;
+        case 1:
+            if (strncmp(longopts[optionIndex].name, SHOW_STATUS_BITS_OPT_STRING, strlen(longopts[optionIndex].name)) == 0)
+            {
+                SHOW_STATUS_BIT_FLAG = true;
+            }
+            break;
         case ':'://missing required argument
             exitCode = UTIL_EXIT_ERROR_IN_COMMAND_LINE;
             switch (optopt)
@@ -531,96 +527,120 @@ int32_t main(int argc, char *argv[])
 			}
 			break;
         default:
-            // set to unknown to pass through the case statement below no type set was given or didn't match
-            exitCode = UTIL_EXIT_ERROR_IN_COMMAND_LINE;
-            retStatus = UNKNOWN;
+            {
+                // set to unknown to pass through the case statement below no type set was given or didn't match
+                exitCode = UTIL_EXIT_ERROR_IN_COMMAND_LINE;
+                retStatus = UNKNOWN;
+            }
             break;
         }
 		// todo really check the status vs error code
 		switch (retStatus)
 		{
 		case SUCCESS:
-			exitCode = UTIL_EXIT_NO_ERROR;
-			if (OUTPUT_LOG_FILE_FLAG)
-			{
-				printf("\nParsing completed with no issues \n");
-			}
-			break;
-        case NOT_SUPPORTED:
-            exitCode = UTIL_EXIT_OPERATION_NOT_SUPPORTED;
-            if (OUTPUT_LOG_FILE_FLAG)
             {
-                printf("\nLog Not supported at this time \n");
-                json_push_back(masterJson, json_new_a("Not Supported", "Log Not Supported"));
+                exitCode = UTIL_EXIT_NO_ERROR;
+                if (OUTPUT_LOG_FILE_FLAG)
+                {
+                    printf("\nParsing completed with no issues \n");
+                }
+            }
+		    break;
+        case NOT_SUPPORTED:
+            {
+                exitCode = UTIL_EXIT_OPERATION_NOT_SUPPORTED;
+                if (OUTPUT_LOG_FILE_FLAG)
+                {
+                    printf("\nLog Not supported at this time \n");
+                    json_push_back(masterJson, json_new_a("Not Supported", "Log Not Supported"));
+                }
             }
             break;
 		case IN_PROGRESS:
-			exitCode = UTIL_EXIT_OPERATION_STILL_IN_PROGRESS;
-			if (OUTPUT_LOG_FILE_FLAG)
-			{
-				printf("\nParsing incomplete Operation was still in progress \n");
-				json_push_back(masterJson, json_new_a("Parsing Error", "Incomplete Operation was still in progress"));
-			}
+            {
+                exitCode = UTIL_EXIT_OPERATION_STILL_IN_PROGRESS;
+                if (OUTPUT_LOG_FILE_FLAG)
+                {
+                    printf("\nParsing incomplete Operation was still in progress \n");
+                    json_push_back(masterJson, json_new_a("Parsing Error", "Incomplete Operation was still in progress"));
+                }
+            }
 			break;
 		case FAILURE:
-			exitCode = UTIL_EXIT_OPERATION_FAILURE;
-			if (OUTPUT_LOG_FILE_FLAG)
-			{
-				printf("\nOperation Failure \n");
-				json_push_back(masterJson, json_new_a("Parsing Error", "Operation Failure"));
-			}
+            {
+                exitCode = UTIL_EXIT_OPERATION_FAILURE;
+                if (OUTPUT_LOG_FILE_FLAG)
+                {
+                    printf("\nOperation Failure \n");
+                    json_push_back(masterJson, json_new_a("Parsing Error", "Operation Failure"));
+                }
+            }
 			break;
 		case ABORTED:
-			exitCode = UTIL_EXIT_OPERATION_ABORTED;
-			if (OUTPUT_LOG_FILE_FLAG)
-			{
-				printf("\nAborted \n");
-				json_push_back(masterJson, json_new_a("Parsing Error", "Aborted"));
-			}
+            {
+                exitCode = UTIL_EXIT_OPERATION_ABORTED;
+                if (OUTPUT_LOG_FILE_FLAG)
+                {
+                    printf("\nAborted \n");
+                    json_push_back(masterJson, json_new_a("Parsing Error", "Aborted"));
+                }
+            }
 			break;
 		case BAD_PARAMETER:
-			exitCode = UTIL_EXIT_OPERATION_BAD_PARAMETER;
-			if (OUTPUT_LOG_FILE_FLAG)
-			{
-				printf("\nBad Parameter \n");
-				printf("Check --logType\n");
-				json_push_back(masterJson, json_new_a("Parsing Error", "Bad Parameter"));
-			}
+            {
+                exitCode = UTIL_EXIT_OPERATION_BAD_PARAMETER;
+                if (OUTPUT_LOG_FILE_FLAG)
+                {
+                    printf("\nBad Parameter \n");
+                    printf("Check --logType\n");
+                    json_push_back(masterJson, json_new_a("Parsing Error", "Bad Parameter"));
+                }
+            }
 			break;
 		case MEMORY_FAILURE:
-			exitCode = UTIL_EXIT_OPERATION_MEMORY_FAILURE;
-			if (OUTPUT_LOG_FILE_FLAG)
-			{
-				printf("\nMemory Failure \n");
-				json_push_back(masterJson, json_new_a("Parsing Error", "Memory Failure"));
-			}
+            {
+                exitCode = UTIL_EXIT_OPERATION_MEMORY_FAILURE;
+                if (OUTPUT_LOG_FILE_FLAG)
+                {
+                    printf("\nMemory Failure \n");
+                    json_push_back(masterJson, json_new_a("Parsing Error", "Memory Failure"));
+                }
+            }
 			break;
 		case FILE_OPEN_ERROR:
-			exitCode = UTIL_EXIT_CANNOT_OPEN_FILE;
-			if (OUTPUT_LOG_FILE_FLAG)
-			{
-				printf("\nCould not Open File \n");
-				json_push_back(masterJson, json_new_a("Parsing Error", "Could not Open File"));
-			}
+            {
+                exitCode = UTIL_EXIT_CANNOT_OPEN_FILE;
+                if (OUTPUT_LOG_FILE_FLAG)
+                {
+                    printf("\nCould not Open File \n");
+                    json_push_back(masterJson, json_new_a("Parsing Error", "Could not Open File"));
+                }
+            }
 			break;
         case VALIDATION_FAILURE:
-            exitCode = UTIL_EXIT_VALIDATION_FAILURE;
-            if (OUTPUT_LOG_FILE_FLAG)
             {
-                printf("\nBinary File has Failed Validation \n");
-                json_push_back(masterJson, json_new_a("Parsing Error", "Validation Failure"));
+                exitCode = UTIL_EXIT_VALIDATION_FAILURE;
+                if (OUTPUT_LOG_FILE_FLAG)
+                {
+                    printf("\nBinary File has Failed Validation \n");
+                    json_push_back(masterJson, json_new_a("Parsing Error", "Validation Failure"));
+                }
             }
             break;
 		case INVALID_LENGTH:
-			exitCode = UTIL_EXIT_OPERATION_INVALID_LENGTH;
-			if (OUTPUT_LOG_FILE_FLAG)
-			{
-				printf("\nBinary File With Invalid Length \n");
-				json_push_back(masterJson, json_new_a("Parsing Error", "Invalid Length"));
-			}
+            {
+                exitCode = UTIL_EXIT_OPERATION_INVALID_LENGTH;
+                if (OUTPUT_LOG_FILE_FLAG)
+                {
+                    printf("\nBinary File With Invalid Length \n");
+                    json_push_back(masterJson, json_new_a("Parsing Error", "Invalid Length"));
+                }
+            }
 			break;
 		default:
-			printf("\n %d failure", retStatus);
+            {
+                printf("\n %d failure", retStatus);
+            }
 			break;
 		}
         if (OUTPUT_LOG_FILE_FLAG)
@@ -730,7 +750,7 @@ void utility_Usage(bool shortUsage)
 #else
     print_Log_Type_Help(shortUsage);
 #endif
-	print_FARM_Command_Line_Option_to_Show_Status_Bytes();
+    print_FARM_Command_Line_Option_to_Show_Status_Bytes();
     print_Parser_Output_Log_Help(shortUsage);
     print_Log_Print_Help(shortUsage);
     
