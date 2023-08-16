@@ -36,7 +36,7 @@ Page Code  |  Subpage Code Log  |  Page Name Reference                  |
 0Eh        |     01h            |     Utilization                       |
 14h        |     01h            |     Zoned Block Device Statistics     |
 
-
+[![C/C++ CI](https://github.com/Seagate/openSeaChest_LogParser/actions/workflows/c-cpp.yml/badge.svg)](https://github.com/Seagate/openSeaChest_LogParser/actions/workflows/c-cpp.yml)
 [![Build Status](https://travis-ci.org/Seagate/openSeaChest_LogParser.svg?branch=develop)](https://travis-ci.org/Seagate/openSeaChest_LogParser)
 
 BINARIES and SOURCE CODE files of the openSeaChest_LogParser open source project have
