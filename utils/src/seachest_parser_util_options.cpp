@@ -113,7 +113,7 @@ void utility_Full_Version_Info(const std::string & utilityName, const std::strin
 //-----------------------------------------------------------------------------
 void print_Final_newline(void)
 {
-    if (VERBOSITY_QUIET < g_verbosity)
+    if (opensea_parser::eVerbosityLevelClass::VERBOSITY_QUIET < g_verbosity)
     {
         printf("\n");
     }
@@ -359,6 +359,22 @@ void print_Seachest_logType_options()
 #else
 	std::cout << LOG_TYPE_STRING_FARM " (for FARM combined, FARM Factory, FARM Time Series, FARM, Saved, FARM Sticky logs), ";      // FARM log
 	std::cout << std::endl;
+    std::cout << "\t\t ";
+    #if defined (LOG_TYPE_STRING_CAPACITY_MODEL_LOG)
+        std::cout << LOG_TYPE_STRING_CAPACITY_MODEL_LOG;                       // capacity model number log
+    #endif
+    #if defined (INCLUDE_DEVICE_STATISTICS_LOG)
+           std::cout << ", " << LOG_TYPE_STRING_DEVICE_STATISTICS_LOG;             //"device Statistics Log"
+    #endif
+    #if defined (INCLUDE_EXT_COMPREHENSIVE_LOG)
+           std::cout << ", " << LOG_TYPE_STRING_EXT_COMPREHENSIVE_LOG;             //ExtCompErrorLog
+    #endif
+    #if defined (INCLUDE_COMMON_EXT_DST_LOG)
+           std::cout << ", " << LOG_TYPE_STRING_EXT_DST_LOG;                       // selfTestLog
+    #endif
+    std::cout << std::endl;
+
+
 	std::cout << "\t\t ";
 	#if defined (INCLUDE_IDENTIFY_LOG)
 		std::cout << LOG_TYPE_STRING_IDENTIFY_LOG;                       // identify
@@ -366,12 +382,12 @@ void print_Seachest_logType_options()
 	#if defined (INCLUDE_IDENTIFY_DEVICE_DATA_LOG)
 		std::cout << ", " << LOG_TYPE_STRING_IDENTIFY_DEVICE_DATA_LOG;          // "IDDataLog" 
 	#endif
-	#if defined (INCLUDE_DEVICE_STATISTICS_LOG)
-		std::cout << ", " << LOG_TYPE_STRING_DEVICE_STATISTICS_LOG;             //"deviceStatisticsLog"
-	#endif
-	#if defined (INCLUDE_EXT_COMPREHENSIVE_LOG)
-		std::cout << ", " << LOG_TYPE_STRING_EXT_COMPREHENSIVE_LOG;             //ExtCompErrorLog
-	#endif
+    #if defined (INCLUDE_LBA_STATUS_LOG)
+        std::cout << LOG_TYPE_STRING_LBA_STATUS_LOG;                       // LBA Status Log
+    #endif
+    #if defined (INCLUDE_NCQ_CMD_ERROR_LOG)
+        std::cout << ", " << LOG_TYPE_STRING_NCQ_COMMAND_ERROR_LOG;             // ncqErrorLog
+    #endif
 
 		std::cout << std::endl;
 
@@ -379,15 +395,13 @@ void print_Seachest_logType_options()
 	#if defined (INCLUDE_SCT_TEMP_LOG)    
 		std::cout << LOG_TYPE_STRING_SCT_TEMP_LOG;                              //sctTempLog
 	#endif 
-	#if defined (INCLUDE_NCQ_CMD_ERROR_LOG)
-		std::cout << ", " << LOG_TYPE_STRING_NCQ_COMMAND_ERROR_LOG;             // ncqErrorLog
-	#endif
+
 	#if defined (INCLUDE_POWER_CONDITION_LOG)
 		std::cout << ", " << LOG_TYPE_STRING_POWER_CONDITION_LOG;                // PowerConditionLog
 	#endif
-	#if defined (INCLUDE_COMMON_EXT_DST_LOG)
-		std::cout << ", " << LOG_TYPE_STRING_EXT_DST_LOG;                       // selfTestLog
-	#endif
+    #if defined (LOG_TYPE_STRING_SMART_LOG_DIR)
+        std::cout << ", " << LOG_TYPE_STRING_SMART_LOG_DIR;                     // SMART Dir Log
+    #endif
 		std::cout << std::endl;
 
 		std::cout << "\t\t ";

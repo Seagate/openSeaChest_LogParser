@@ -82,7 +82,7 @@ CPrintJSON::CPrintJSON(JSONNODE *masterData)
 {
     json_char *jc = json_write_formatted(masterData);
     m_jsonMessage.assign( jc);
-    if (VERBOSITY_DEFAULT < g_verbosity)
+    if (eVerbosityLevelClass::VERBOSITY_DEFAULT < g_verbosity)
     {
         printf("\n%s", m_jsonMessage.c_str());
     }
@@ -225,7 +225,7 @@ bool CPrintCSV::parse_Json_Flat(JSONNODE *nData)
             createLineData(main_name, "");
             json_free(main_name);
             parse_Json_Flat(*i);
-            if (VERBOSITY_COMMAND_VERBOSE <= g_verbosity)
+            if (eVerbosityLevelClass::VERBOSITY_COMMAND_VERBOSE <= g_verbosity)
             {
                 printf("return from a new parse");
             }
@@ -1508,7 +1508,7 @@ int CMessage::WriteBuffer()
     }
 
 
-    if (VERBOSITY_DEFAULT < g_verbosity)
+    if (eVerbosityLevelClass::VERBOSITY_DEFAULT < g_verbosity)
     {
         printf("\nWrite Buffer wrote %zu bytes to file. \n", message.length());
     }

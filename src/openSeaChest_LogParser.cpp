@@ -28,10 +28,10 @@
 #endif
 #include "common.h"
 #include "EULA.h"
+#include "Opensea_Parser_Helper.h"
 #include "seachest_parser_util_options.h"
 #include "parser_print_util_options.h"
 #include "Opensea_Parser_Version.h"
-#include "Opensea_Parser_Helper.h"
 #include "libjson.h"
 #include <inttypes.h>
 #include <string>
@@ -39,12 +39,15 @@
 #include <iomanip>
 
 #include "CFARM_Log.h"
+#include "CAta_Capacity_Model_Log.h"
 #include "CAta_Device_Stat_Log.h"
 #include "CAta_Ext_Comprehensive_Log.h"
 #include "CAta_Ext_DST_Log.h"
 #include "CAta_Identify_Log.h"
-#include "CAta_Power_Conditions_Log.h"
+#include "CAta_LBA_Status_Log.h"
 #include "CAta_NCQ_Command_Error_Log.h"
+#include "CAta_Power_Conditions_Log.h"
+#include "CAta_SMART_Log_Dir.h"
 #include "CScsi_Log.h"
 
 using namespace opensea_parser;
@@ -58,7 +61,7 @@ using namespace opensea_parser;
     std::string util_name = "openSeaChest_LogParser";
 #endif
 
-std::string buildVersion = "1.5.2";
+std::string buildVersion = "1.6.0";
 std::string buildDate = __DATE__;
 
 ////////////////////////////
@@ -126,7 +129,7 @@ int32_t main(int argc, char *argv[])
         LONG_OPT_TERMINATOR
     };
 
-    g_verbosity = VERBOSITY_DEFAULT;
+    g_verbosity = eVerbosityLevelClass::VERBOSITY_DEFAULT;
 
     atexit(print_Final_newline);
 
@@ -194,6 +197,12 @@ int32_t main(int argc, char *argv[])
                     INPUT_LOG_TYPE_FLAG = SEAGATE_LOG_TYPE_FARM;
                 }
 #endif
+#if defined (INCLUDE_CAPACITY_MODEL_LOG)
+                if (strcmp(optarg, LOG_TYPE_STRING_CAPACITY_MODEL_LOG) == 0)
+                {
+                    INPUT_LOG_TYPE_FLAG = SEAGATE_LOG_TYPE_CAPACITY_MODEL_LOG;
+                }
+#endif
 #if defined (INCLUDE_DEVICE_STATISTICS_LOG)
                 if (strcmp(optarg, LOG_TYPE_STRING_DEVICE_STATISTICS_LOG) == 0)
                 {
@@ -225,6 +234,12 @@ int32_t main(int argc, char *argv[])
 					INPUT_LOG_TYPE_FLAG = SEAGATE_LOG_TYPE_IDENTIFY_DEVICE_DATA;
 				}
 #endif
+#if defined (INCLUDE_LBA_STATUS_LOG)
+                if (strcmp(optarg, LOG_TYPE_STRING_LBA_STATUS_LOG) == 0)
+                {
+                    INPUT_LOG_TYPE_FLAG = SEAGATE_LOG_TYPE_LBA_STATUS_LOG;
+                }
+#endif
 #if defined (INCLUDE_SCT_TEMP_LOG)
                 if (strcmp(optarg, LOG_TYPE_STRING_SCT_TEMP_LOG) == 0)
                 {
@@ -242,6 +257,12 @@ int32_t main(int argc, char *argv[])
                 if (strcmp(optarg, LOG_TYPE_STRING_NCQ_COMMAND_ERROR_LOG) == 0)
                 {
                     INPUT_LOG_TYPE_FLAG = SEAGATE_LOG_TYPE_NCQ_CMD_ERROR_LOG;
+                }
+#endif
+#if defined (INCLUDE_SMART_DIR_LOG)
+                if (strcmp(optarg, LOG_TYPE_STRING_SMART_LOG_DIR) == 0)
+                {
+                    INPUT_LOG_TYPE_FLAG = SEAGATE_LOG_TYPE_SMART_LOG_DIR;
                 }
 #endif
 #if defined (INCLUDE_SCSI_LOG_PAGES)
@@ -310,13 +331,13 @@ int32_t main(int argc, char *argv[])
                 //check long options for missing arguments
                 break;
             case VERBOSE_SHORT_OPT:
-                if (VERBOSITY_QUIET < g_verbosity)
+                if (eVerbosityLevelClass::VERBOSITY_QUIET < g_verbosity)
                 {
                     printf("You must specify a verbosity level. 0 - 4 are the valid levels\n");
                 }
                 break;
             default:
-                if (VERBOSITY_QUIET < g_verbosity)
+                if (eVerbosityLevelClass::VERBOSITY_QUIET < g_verbosity)
                 {
                     printf("Option %c requires an argument\n", optopt);
                 }
@@ -330,7 +351,8 @@ int32_t main(int argc, char *argv[])
         case VERBOSE_SHORT_OPT: //verbose
             if (optarg != NULL)
             {
-                g_verbosity = static_cast<eVerbosityLevels>(atoi(optarg));
+                //g_verbosity = static_cast<eVerbosityLevels>(atoi(optarg));
+                g_verbosity = static_cast<eVerbosityLevelClass>(atoi(optarg));
             }
             break;
         case '?': //unknown option
@@ -358,7 +380,7 @@ int32_t main(int argc, char *argv[])
         printf("\n");
     }
 
-    if (VERBOSITY_QUIET < g_verbosity)
+    if (eVerbosityLevelClass::VERBOSITY_QUIET < g_verbosity)
     {
         seachest_utility_Info( util_name,  buildVersion,  OPENSEA_PARSER_VERSION);//TODO: We should change the version to a SeaParser version!
     }
@@ -394,7 +416,7 @@ int32_t main(int argc, char *argv[])
     //print out errors for unknown arguments for remaining args that haven't been processed yet
     for (argIndex = static_cast<uint8_t>(optind); argIndex < argc; argIndex++)
     {
-        if (VERBOSITY_QUIET < g_verbosity)
+        if (eVerbosityLevelClass::VERBOSITY_QUIET < g_verbosity)
         {
             printf("Invalid argument: %s\n", argv[argIndex]);
         }
@@ -407,125 +429,159 @@ int32_t main(int argc, char *argv[])
         switch (INPUT_LOG_TYPE_FLAG) 
         {
         case SEAGATE_LOG_TYPE_FARM:
+        {
+            if (INPUT_LOG_FROM_PIPE_FLAG)
             {
-                if (INPUT_LOG_FROM_PIPE_FLAG)
+                uint8_t* plineInputData;
+                plineInputData = lineInputData.data();
+                CFARMLog* CFarm;
+                CFarm = new CFARMLog(plineInputData, lineInputData.size(), SHOW_STATUS_BIT_FLAG);
+                retStatus = CFarm->get_FARM_Status();								// check to make sure we read in the file form the construtor.
+                if (retStatus == IN_PROGRESS)										// if IN_PROGRESS we can continue to parse, else retStatus holds the error information
                 {
-                    uint8_t* plineInputData;
-                    plineInputData = lineInputData.data();
-                    CFARMLog* CFarm;
-                    CFarm = new CFARMLog(plineInputData, lineInputData.size(), SHOW_STATUS_BIT_FLAG);
-                    retStatus = CFarm->get_FARM_Status();								// check to make sure we read in the file form the construtor.
-                    if (retStatus == IN_PROGRESS)										// if IN_PROGRESS we can continue to parse, else retStatus holds the error information
-                    {
-                        retStatus = CFarm->parse_Device_Farm_Log(masterJson);            
-                    }
-                    delete(CFarm);
+                    retStatus = CFarm->parse_Device_Farm_Log(masterJson);            
                 }
-                else
-                {
-                    CFARMLog* CFarm;
-                    CFarm = new CFARMLog(INPUT_LOG_FILE_NAME, SHOW_STATUS_BIT_FLAG);
-                    retStatus = CFarm->get_FARM_Status();								// check to make sure we read in the file form the construtor.
-                    if (retStatus == IN_PROGRESS)										// if IN_PROGRESS we can continue to parse, else retStatus holds the error information
-                    {
-                        retStatus = CFarm->parse_Device_Farm_Log(masterJson);
-                    }
-                    delete(CFarm);
-                }
+                delete(CFarm);
             }
-            break;
+            else
+            {
+                CFARMLog* CFarm = nullptr;
+                CFarm = new CFARMLog(INPUT_LOG_FILE_NAME, SHOW_STATUS_BIT_FLAG);
+                retStatus = CFarm->get_FARM_Status();								// check to make sure we read in the file form the construtor.
+                if (retStatus == IN_PROGRESS)										// if IN_PROGRESS we can continue to parse, else retStatus holds the error information
+                {
+                    retStatus = CFarm->parse_Device_Farm_Log(masterJson);
+                }
+                delete(CFarm);
+            }
+        }
+        break;
+        case SEAGATE_LOG_TYPE_CAPACITY_MODEL_LOG:
+        {
+            CAta_Cap_Model_Number* cCap = nullptr;
+            cCap = new CAta_Cap_Model_Number(INPUT_LOG_FILE_NAME);
+            if (cCap->get_Cap_Model_Status() == SUCCESS)
+            {
+                retStatus = cCap->print_Capacity_Model_Log(masterJson);
+            }
+            delete(cCap);
+        }
+        break;
         case   SEAGATE_LOG_TYPE_DEVICE_STATISTICS_LOG:
-            {
-                CAtaDeviceStatisticsLogs *cDevicStat;
-                cDevicStat = new CAtaDeviceStatisticsLogs(INPUT_LOG_FILE_NAME, masterJson);
-                retStatus = cDevicStat->get_Device_Stat_Status();					// All checks and parseing are done in the construtor
-                delete(cDevicStat);
-            }
-            break;
+        {
+            CAtaDeviceStatisticsLogs *cDevicStat = nullptr;
+            cDevicStat = new CAtaDeviceStatisticsLogs(INPUT_LOG_FILE_NAME, masterJson);
+            retStatus = cDevicStat->get_Device_Stat_Status();					// All checks and parseing are done in the construtor
+            delete(cDevicStat);
+        }
+        break;
         case    SEAGATE_LOG_TYPE_EXT_COMPREHENSIVE_LOG:
-            {
-                CExtComp *cEC;
-                cEC = new CExtComp(INPUT_LOG_FILE_NAME, masterJson);
-                retStatus = cEC->get_EC_Status();									// All checks and parseing are done in the construtor
-                delete(cEC);
-            }
-            break;
+        {
+            CExtComp *cEC = nullptr;
+            cEC = new CExtComp(INPUT_LOG_FILE_NAME, masterJson);
+            retStatus = cEC->get_EC_Status();									// All checks and parseing are done in the construtor
+            delete(cEC);
+        }
+        break;
         case    SEAGATE_LOG_TYPE_EXT_DST_LOG:
-            {
-                CAta_Ext_DST_Log *cDST;
-                cDST = new CAta_Ext_DST_Log(INPUT_LOG_FILE_NAME, masterJson);
-                retStatus = cDST->get_Status();
-                delete(cDST);
-            }
-            break;
+        {
+            CAta_Ext_DST_Log *cDST = nullptr;
+            cDST = new CAta_Ext_DST_Log(INPUT_LOG_FILE_NAME, masterJson);
+            retStatus = cDST->get_Status();
+            delete(cDST);
+        }
+        break;
         case   SEAGATE_LOG_TYPE_IDENTIFY_LOG:
-            {
-                CAta_Identify_log * cIdent;
-                cIdent = new CAta_Identify_log(INPUT_LOG_FILE_NAME);			// constructor will make sure we read in the file and start the parseing of the binary
-				retStatus = cIdent->get_Identify_Information_Status();			// if IN_PROGRESS we can continue to print out the data
-				if (retStatus == IN_PROGRESS)
-				{
-					retStatus = cIdent->print_Identify_Information(masterJson);
-				}
-                delete (cIdent);
-            }
-			break;
-        case SEAGATE_LOG_TYPE_IDENTIFY_DEVICE_DATA:
-            {
-                CAta_Identify_Log_30 *cIdData = NULL;
-                cIdData = new CAta_Identify_Log_30( INPUT_LOG_FILE_NAME);		// constructor will make sure we read in the file and start the parseing of the binary
-				retStatus = cIdData->get_identify_Status();						// if IN_PROGRESS we can continue to print out the data
-				if (retStatus == IN_PROGRESS)
-				{
-					retStatus = cIdData->parse_Identify_Log_30(masterJson);
-				}
-                delete (cIdData);
-            }
-            break;
-        case    SEAGATE_LOG_TYPE_SCT_TEMP_LOG:
-            {
-                CSAtaDevicStatisticsTempLogs *cSCTTemp;
-                cSCTTemp = new CSAtaDevicStatisticsTempLogs(INPUT_LOG_FILE_NAME, masterJson);	// constructor will make sure we read in the file and start the parseing of the binary
-				retStatus = cSCTTemp->get_Status();										// if IN_PROGRESS we can continue to print out the data
-				if (retStatus == IN_PROGRESS)
-				{
-					retStatus = cSCTTemp->parse_SCT_Temp_Log();
-				}
-                delete (cSCTTemp);
-            }
-            break;
-        case SEAGATE_LOG_TYPE_POWER_CONDITION_LOG:
-            {
-                CAtaPowerConditionsLog * cPowerCon;
-                cPowerCon = new CAtaPowerConditionsLog(INPUT_LOG_FILE_NAME);			// constructor will make sure we read in the file and start the parseing of the binary
-				retStatus = cPowerCon->get_Power_Status();								// if IN_PROGRESS we can continue to print out the data
-				if (retStatus == IN_PROGRESS)
-				{
-					retStatus = cPowerCon->printPowerConditionLog(masterJson);
-				}
-				delete (cPowerCon);
-            }
-			break;
-        case SEAGATE_LOG_TYPE_NCQ_CMD_ERROR_LOG:
-            {
-                CAta_NCQ_Command_Error_Log * cNCQ;
-                cNCQ = new CAta_NCQ_Command_Error_Log(INPUT_LOG_FILE_NAME);				// constructor will make sure we read in the file and start the parseing of the binary
-				retStatus = cNCQ->get_NCQ_Command_Error_Log_Status();					// if IN_PROGRESS we can continue to print out the data
-				if (retStatus == IN_PROGRESS)
-				{
-					retStatus = cNCQ->get_NCQ_Command_Error_Log(masterJson);
-				}
-				delete (cNCQ);
-            }
-			break;
-		case SEAGATE_LOG_TYPE_SCSI_LOG_PAGES:
+        {
+            CAta_Identify_log * cIdent = nullptr;
+            cIdent = new CAta_Identify_log(INPUT_LOG_FILE_NAME);			// constructor will make sure we read in the file and start the parseing of the binary
+			retStatus = cIdent->get_Identify_Information_Status();			// if IN_PROGRESS we can continue to print out the data
+			if (retStatus == IN_PROGRESS)
 			{
-				CScsiLog * cLogPages;
-				cLogPages = new CScsiLog(INPUT_LOG_FILE_NAME, masterJson);				// All checks and parseing are done in the construtor
-				retStatus = cLogPages->get_Log_Status();
-				delete (cLogPages);
+				retStatus = cIdent->print_Identify_Information(masterJson);
 			}
-			break;
+            delete (cIdent);
+        }
+		break;
+        case SEAGATE_LOG_TYPE_IDENTIFY_DEVICE_DATA:
+        {
+            CAta_Identify_Log_30 *cIdData = NULL;
+            cIdData = new CAta_Identify_Log_30( INPUT_LOG_FILE_NAME);		// constructor will make sure we read in the file and start the parseing of the binary
+			retStatus = cIdData->get_identify_Status();						// if IN_PROGRESS we can continue to print out the data
+			if (retStatus == IN_PROGRESS)
+			{
+				retStatus = cIdData->parse_Identify_Log_30(masterJson);
+			}
+            delete (cIdData);
+        }
+        break;
+        case SEAGATE_LOG_TYPE_LBA_STATUS_LOG:
+        {
+            CAta_LBA_Status* cLBAStatus = nullptr;
+            cLBAStatus = new CAta_LBA_Status(INPUT_LOG_FILE_NAME);
+            retStatus = cLBAStatus->get_LBA_Status();
+            if (retStatus == SUCCESS)
+            {
+                retStatus = cLBAStatus->print_LBA_Status_Log(masterJson);
+            }
+            delete (cLBAStatus);
+        }
+        break;
+        case    SEAGATE_LOG_TYPE_SCT_TEMP_LOG:
+        {
+            CSAtaDevicStatisticsTempLogs *cSCTTemp;
+            cSCTTemp = new CSAtaDevicStatisticsTempLogs(INPUT_LOG_FILE_NAME, masterJson);	// constructor will make sure we read in the file and start the parseing of the binary
+			retStatus = cSCTTemp->get_Status();										// if IN_PROGRESS we can continue to print out the data
+			if (retStatus == IN_PROGRESS)
+			{
+				retStatus = cSCTTemp->parse_SCT_Temp_Log();
+			}
+            delete (cSCTTemp);
+        }
+        break;
+        case SEAGATE_LOG_TYPE_POWER_CONDITION_LOG:
+        {
+            CAtaPowerConditionsLog * cPowerCon;
+            cPowerCon = new CAtaPowerConditionsLog(INPUT_LOG_FILE_NAME);			// constructor will make sure we read in the file and start the parseing of the binary
+			retStatus = cPowerCon->get_Power_Status();								// if IN_PROGRESS we can continue to print out the data
+			if (retStatus == IN_PROGRESS)
+			{
+				retStatus = cPowerCon->printPowerConditionLog(masterJson);
+			}
+			delete (cPowerCon);
+        }
+		break;
+        case SEAGATE_LOG_TYPE_NCQ_CMD_ERROR_LOG:
+        {
+            CAta_NCQ_Command_Error_Log *cNCQ;
+            cNCQ = new CAta_NCQ_Command_Error_Log(INPUT_LOG_FILE_NAME);				// constructor will make sure we read in the file and start the parseing of the binary
+			retStatus = cNCQ->get_NCQ_Command_Error_Log_Status();					// if IN_PROGRESS we can continue to print out the data
+			if (retStatus == IN_PROGRESS)
+			{
+				retStatus = cNCQ->get_NCQ_Command_Error_Log(masterJson);
+			}
+			delete (cNCQ);
+        }
+		break;
+        case SEAGATE_LOG_TYPE_SMART_LOG_DIR:
+        {
+            CAta_SMART_Log_Dir *cSMART = nullptr;
+            cSMART = new CAta_SMART_Log_Dir(INPUT_LOG_FILE_NAME);
+            retStatus = cSMART->get_SMART_Log_Dir_Status();
+            if (retStatus == SUCCESS)
+            {
+                retStatus = cSMART->print_SMART_Log_Dir(masterJson);
+            }
+        }
+        break;
+		case SEAGATE_LOG_TYPE_SCSI_LOG_PAGES:
+		{
+			CScsiLog *cLogPages;
+			cLogPages = new CScsiLog(INPUT_LOG_FILE_NAME, masterJson);				// All checks and parseing are done in the construtor
+			retStatus = cLogPages->get_Log_Status();
+			delete (cLogPages);
+		}
+		break;
         default:
             {
                 // set to unknown to pass through the case statement below no type set was given or didn't match
