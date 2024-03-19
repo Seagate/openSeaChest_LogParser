@@ -170,7 +170,7 @@ int32_t main(int argc, char *argv[])
                 {
                     while (std::cin >> lineinput)
                     {
-                        lineInputData.push_back(std::strtoul(lineinput.c_str(), NULL, 16));
+                        lineInputData.push_back(static_cast<uint8_t>(std::strtoul(lineinput.c_str(), NULL, 16)));
                         //std::cout << std::hex << std::setw(2) << std::setfill('0') << std::uppercase << static_cast<uint16_t>(lineInputData.at(lineInputData.size() - 1));
                     }
                     INPUT_LOG_FROM_PIPE_FLAG = true;
@@ -489,7 +489,7 @@ int32_t main(int argc, char *argv[])
 				retStatus = cSCTTemp->get_Status();										// if IN_PROGRESS we can continue to print out the data
 				if (retStatus == IN_PROGRESS)
 				{
-					retStatus = cSCTTemp->parse_SCT_Temp_Log();
+					retStatus = cSCTTemp->print_SCT_Temp_Log();
 				}
                 delete (cSCTTemp);
             }
