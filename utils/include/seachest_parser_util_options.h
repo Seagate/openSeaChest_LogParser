@@ -1,7 +1,7 @@
 //
 // Do NOT modify or remove this copyright and license
 //
-// Copyright (c) 2012 - 2023 Seagate Technology LLC and/or its Affiliates, All Rights Reserved
+// Copyright (c) 2012 - 2024 Seagate Technology LLC and/or its Affiliates, All Rights Reserved
 //
 // This software is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -93,18 +93,40 @@ typedef enum _ePrintTypes
 #define OUTPUT_LOG_LONG_OPT_STRING "outputLog"
 #define OUTPUT_LOG_LONG_OPT { OUTPUT_LOG_LONG_OPT_STRING, required_argument, NULL, 0 }
 
+#define INPUT_LOG_FILE_FOUND_FLAG eUtilExitCodes
+#define INPUT_LOG_FILE_FOUND_VAR eUtilExitCodes INPUT_LOG_FILE_FOUND_FLAG = UTIL_EXIT_NO_ERROR;
+#define INPUT_LOG_FILE_FOUND_LONG_OPT_STRING "logFound"
+#define INPUT_LOG_FILE_FOUND_LONG_OPT { INPUT_LOG_FILE_FOUND_LONG_OPT_STRING, required_argument, NULL, 0}
 
-#define LOG_TYPE_STRING_FARM						"farmLog"
-#define LOG_TYPE_STRING_DEVICE_STATISTICS_LOG		"deviceStatisticsLog"
-#define LOG_TYPE_STRING_EXT_COMPREHENSIVE_LOG		"extCompErrorLog"
-#define LOG_TYPE_STRING_COMMON_ERROR_LOG			"commonErrorLog"
-#define LOG_TYPE_STRING_EXT_DST_LOG					"extSelfTestLog"
-#define LOG_TYPE_STRING_IDENTIFY_LOG				"identify"
-#define	LOG_TYPE_STRING_IDENTIFY_DEVICE_DATA_LOG	"IDDataLog"
-#define LOG_TYPE_STRING_SCT_TEMP_LOG				"sctTempLog"
-#define LOG_TYPE_STRING_POWER_CONDITION_LOG			"powerConditionLog"
-#define LOG_TYPE_STRING_NCQ_COMMAND_ERROR_LOG		"ncqErrorLog"
-#define LOG_TYPE_STRING_SCSI_LOG_PAGES				"scsiLogPages"
+
+#define LOG_TYPE_STRING_FARM_LOG                                "FARMLOG"
+#define LOG_TYPE_STRING_FARM						            "FARM"                      // nickname for the farm log
+#define LOG_TYPE_STRING_DEVICE_STATISTICS_LOG					"DEVICESTATISTICSLOG"  
+#define LOG_TYPE_STRING_DEVICE_STATISTICS						"DEVICESTATISTICS"  
+#define LOG_TYPE_STRING_EXT_COMPREHENSIVE_LOG					"EXTCOMPERRORLOG"
+#define LOG_TYPE_STRING_EXT_COMPREHENSIVE						"EXTCOMPERROR"
+#define LOG_TYPE_STRING_COMMON_ERROR_LOG						"COMMONERRORLOG"
+#define LOG_TYPE_STRING_COMMON_ERROR							"COMMONERROR"
+#define LOG_TYPE_STRING_EXT_DST_LOG								"EXTSELFTESTLOG"
+#define LOG_TYPE_STRING_EXT_DST									"EXTSELFTEST"
+#define LOG_TYPE_STRING_DST_LOG									"DSTLOG"
+#define LOG_TYPE_STRING_DST										"DST"
+#define LOG_TYPE_STRING_IDENTIFY								"IDENTIFY"
+#define LOG_TYPE_STRING_IDENTIFY_LOG							"IDENTIFYLOG"
+#define LOG_TYPE_STRING_IDENT									"IDENT"
+#define LOG_TYPE_STRING_IDENT_LOG								"IDENTLOG"
+#define	LOG_TYPE_STRING_IDENTIFY_DEVICE_DATA_LOG				"IDDATALOG"
+#define LOG_TYPE_STRING_SCT_TEMP_LOG							"SCTTEMPLOG"
+#define LOG_TYPE_STRING_SCT_TEMP								"SCTTEMP"
+#define LOG_TYPE_STRING_POWER_CONDITION_LOG						"POWERCONDITIONLOG"
+#define LOG_TYPE_STRING_POWER_CONDITION							"POWERCONDITION"
+#define LOG_TYPE_STRING_NCQ_COMMAND_ERROR_LOG					"NCQERRORLOG"
+#define LOG_TYPE_STRING_NCQ_COMMAND_ERROR						"NCQERROR"
+#define LOG_TYPE_STRING_SCSI_LOG_PAGES							"SCSILOGPAGES"
+#define LOG_TYPE_STRING_LOG_PAGES								"LOGPAGES"
+#define LOG_TYPE_STRING_SAS_LOG_PAGES							"SASLOGPAGES"
+#define LOG_TYPE_STRING_SAS										"SAS"
+#define LOG_TYPE_STRING_SCSI									"SCSI"
 
 
 #define INPUT_LOG_TYPE_FLAG logType
@@ -121,6 +143,7 @@ typedef enum _ePrintTypes
 #define LOG_PRINT_STRING_PROM "prom"
 #define LOG_PRINT_STRING_TELEMETRY "TELEMETRY"
 
+// print type
 #define OUTPUT_LOG_PRINT_FLAG printType
 #define OUTPUT_LOG_PRINT_VAR printTypes OUTPUT_LOG_PRINT_FLAG = SEAGATE_LOG_PRINT_JSON;
 #define OUTPUT_LOG_PRINT_LONG_OPT_STRING "printType"
@@ -192,10 +215,26 @@ uint32_t SECONDS_TIME_FLAG = 0;
 #define SECONDS_TIME_LONG_OPT_STRING "seconds"
 #define SECONDS_TIME_LONG_OPT { SECONDS_TIME_LONG_OPT_STRING, required_argument, NULL, 0 }
 
+// show the status bits from the FARM log only
 #define SHOW_STATUS_BIT_FLAG showStatusBits
 #define SHOW_STATUS_BIT_VAR bool SHOW_STATUS_BIT_FLAG = false;
 #define SHOW_STATUS_BITS_OPT_STRING "showStatusBits"
 #define SHOW_STATUS_BITS_OPT { SHOW_STATUS_BITS_OPT_STRING , no_argument, NULL, goTrue }
+
+// show full head info in the FARM log only if not populated show NULL 
+#define SHOW_ALL_HEAD_DATA_FLAG showAllHeadData
+#define SHOW_ALL_HEAD_DATA_VAR getOptBool SHOW_ALL_HEAD_DATA_FLAG = goFalse;
+#define SHOW_ALL_HEAD_DATA_OPT_STRING "showAllHeadData"
+#define SHOW_ALL_HEAD_DATA_PRINT_STRING "showAllHeadData"
+#define SHOW_ALL_HEAD_DATA_OPT { SHOW_ALL_HEAD_DATA_OPT_STRING , no_argument, NULL, goTrue }
+
+// force the parser to be static and print out the same information all the time. aka no arrays and no data created arrays
+#define SHOW_STATIC_DATA_FLAG showStatic
+#define SHOW_STATIC_DATA_VAR getOptBool SHOW_STATIC_DATA_FLAG = goFalse;
+#define SHOW_STATIC_DATA_OPT_STRING "showStatic"
+#define SHOW_STATIC_DATA_PRINT_STRING "showStatic"
+#define SHOW_STATIC_DATA_OPT { SHOW_STATIC_DATA_OPT_STRING , no_argument, NULL, goTrue }
+
 
 #define LONG_OPT_TERMINATOR { NULL, 0, NULL, 0 }
 
@@ -233,6 +272,7 @@ uint32_t SECONDS_TIME_FLAG = 0;
 #define SCSI_LOG_PAGES_ZONED_DEVICE_STAT						"Zoned Device Statistics"
 
 void seachest_utility_Info(const std::string & utilityName, const std::string & buildVersion, const std::string & seaCPublicVersion);
+void Short_Utility_Failure_Usage(const std::string util_name);
 void utility_Full_Version_Info(const std::string & utilityName, const std::string & buildVersion, const std::string & openseaVersion);
 void print_Final_newline(void);
 void print_SeaChest_Util_Exit_Codes(void);

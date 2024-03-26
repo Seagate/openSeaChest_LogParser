@@ -45,7 +45,7 @@ void seachest_utility_Info(const std::string & utilityName, const std::string & 
 
     printf("===============================================================================\n");
     printf(" %s - Seagate drive utilities\n", utilityName.c_str());
-    printf(" Copyright (c) 2018-2022 Seagate Technology LLC and/or its Affiliates\n");
+    printf(" Copyright (c) 2018-2024 Seagate Technology LLC and/or its Affiliates\n");
     printf(" %s Version: %s-%s ", utilityName.c_str(), buildVersion.c_str(), openseaVersion.c_str());
     print_Architecture(architecture);
     printf("\n");
@@ -53,6 +53,47 @@ void seachest_utility_Info(const std::string & utilityName, const std::string & 
     printf(" Today: %s\n", get_Current_Time_String(&g_curTime, timeBuffer, CURRENT_TIME_STRING_LENGTH));
     printf("===============================================================================\n");
     strftime(timeCString, 64, " %Y-%m-%d__%H_%M_%S", get_Localtime(&g_curTime, &timeStruct));
+}
+//-----------------------------------------------------------------------------
+//
+//  Short_Utility_Failure_Usage()
+//
+//! \brief   Description:  short information help for a failure
+//
+//  Entry:
+//!   \param util_name - name of the utility
+//!
+//  Exit:
+//!   \return VOID
+//
+//-----------------------------------------------------------------------------
+void Short_Utility_Failure_Usage(const std::string util_name)
+{
+    //everything needs a help option right?
+    printf("Usage\n");
+    printf("=====\n");
+    printf("\t %s {arguments} {options}\n\n", util_name.c_str());
+
+    printf("Examples\n");
+    printf("========\n");
+    //example usage
+#if defined BUILD_FARM_ONLY || defined BUILD_SM2_ONLY || defined BUILD_UDS_ONLY || defined BUILD_TELEMETRY_NVME_ONLY
+    printf("\t%s --inputLog <filename> --printType json --outputLog <filename>\n", util_name.c_str());
+    printf("\t%s --inputLog <filename> --printType json --outputLog <filename> --showStatic\n", util_name.c_str());
+    printf("\t%s --inputLog <filename> --printType json --outputLog <filename> --showAllHeadData\n", util_name.c_str());
+    printf("\t%s --inputLog <filename> --printType json --outputLog <filename> --showStatic --showAllHeadData\n", util_name.c_str());
+#else
+    printf("\t%s --inputLog <filename> --logType %s --printType json --outputLog <filename>\n", util_name.c_str(), LOG_TYPE_STRING_FARM);
+    printf("\t%s --inputLog <filename> --logType %s --printType csv --outputLog <filename>\n", util_name.c_str(), LOG_TYPE_STRING_FARM);
+    printf("\t%s --inputLog <filename> --logType %s --printType flatcsv --outputLog <filename>\n", util_name.c_str(), LOG_TYPE_STRING_FARM);
+    printf("\t%s --inputLog <filename> --logType deviceStatisticsLog --printType csv --outputLog <filename>\n", util_name.c_str());
+    printf("\t%s --inputLog <filename> --logType identifyLog --printType json --outputLog <filename>\n", util_name.c_str());
+#endif
+    printf("\n");
+    //return codes
+    printf("Return Codes\n");
+    printf("============\n");
+    print_SeaChest_Util_Exit_Codes();
 }
 //-----------------------------------------------------------------------------
 //
@@ -113,7 +154,7 @@ void utility_Full_Version_Info(const std::string & utilityName, const std::strin
 //-----------------------------------------------------------------------------
 void print_Final_newline(void)
 {
-    if (VERBOSITY_QUIET < g_verbosity)
+    if (eVerbosity_open::VERBOSITY_QUIET < g_verbosity)
     {
         printf("\n");
     }
