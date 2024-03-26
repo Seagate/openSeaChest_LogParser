@@ -1,5 +1,5 @@
 //
-// Do NOT modify or remove this copyright and license
+// EULA.h
 //
 // Copyright (c) 2014-2020 Seagate Technology LLC and/or its Affiliates, All Rights Reserved
 //
@@ -18,7 +18,7 @@ extern "C"
 {
 #endif
 
-    #include <stdio.h>
+#include <stdio.h>
 
     //-----------------------------------------------------------------------------
     //
