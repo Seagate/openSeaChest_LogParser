@@ -87,7 +87,7 @@ namespace opensea_parser {
         virtual ~CPrintTXT();
         bool parse_Json_to_Text(JSONNODE *nData, uint16_t numberOfTabs);
         bool Create_Tabs(std::string &title, const std::string &data, uint16_t numberOfTabs);    //!< creates the Data for the text tabs
-        std::string get_Msg_Text_Format();                              //!< returns the json data as a text string
+        std::string get_Msg_Text_Format(const std::string message);                              //!< returns the json data as a text string
     };
 
     class CPrintProm {
