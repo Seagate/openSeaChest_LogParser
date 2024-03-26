@@ -3,7 +3,7 @@
 //
 // Do NOT modify or remove this copyright and license
 //
-// Copyright (c) 2023 Seagate Technology LLC and/or its Affiliates, All Rights Reserved
+// Copyright (c) 2024 Seagate Technology LLC and/or its Affiliates, All Rights Reserved
 //
 // This software is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -26,6 +26,12 @@
 #else
 #error "OS Not Defined or known"
 #endif
+#include <inttypes.h>
+#include <string>
+#include <cstdlib>
+#include <iomanip>
+#include <fstream>
+
 #include "common.h"
 #include "EULA.h"
 #include "seachest_parser_util_options.h"
@@ -33,10 +39,7 @@
 #include "Opensea_Parser_Version.h"
 #include "Opensea_Parser_Helper.h"
 #include "libjson.h"
-#include <inttypes.h>
-#include <string>
-#include <cstdlib>
-#include <iomanip>
+
 
 #include "CFARM_Log.h"
 #include "CAta_Device_Stat_Log.h"
@@ -58,7 +61,7 @@ using namespace opensea_parser;
     std::string util_name = "openSeaChest_LogParser";
 #endif
 
-std::string buildVersion = "1.5.2";
+std::string buildVersion = "1.5.4";
 std::string buildDate = __DATE__;
 
 ////////////////////////////
@@ -66,6 +69,7 @@ std::string buildDate = __DATE__;
 ////////////////////////////
 static void utility_Usage(bool shortUsage); 
 static void UtilityHeader(JSONNODE *masterData);
+inline void Echo_Command_Line(int argc, char* argv[]);
 //-----------------------------------------------------------------------------
 //
 //  main()
@@ -91,13 +95,16 @@ int32_t main(int argc, char *argv[])
     eReturnValues       retStatus = IN_PROGRESS;
     eUtilExitCodes      exitCode = UTIL_EXIT_NO_ERROR;
     LICENSE_VAR
-    ECHO_COMMAND_LINE_VAR
-    SHOW_STATUS_BIT_VAR
+    ECHO_COMMAND_LINE_VAR                           // show or echo the command line back out 
+    SHOW_STATUS_BIT_VAR                             // show the status bits from the FARM log only
+    SHOW_ALL_HEAD_DATA_VAR                          // show full head info in the FARM log only if not populated show NULL 
+    SHOW_STATIC_DATA_VAR                            // force the parser to be static and print out the same information all the time. aka no arrays and no data created arrays
     SHOW_VERSION_VAR
     SHOW_HELP_VAR
     //Tool specific
     INPUT_LOG_FILE_VAR
     OUTPUT_LOG_FILE_VAR
+    INPUT_LOG_FILE_FOUND_VAR
     INPUT_LOG_TYPE_VAR
     OUTPUT_LOG_PRINT_VAR
     //OUTPUTPATH_VAR
@@ -123,10 +130,13 @@ int32_t main(int argc, char *argv[])
         OUTPUT_LOG_PRINT_LONG_OPT,
         OUTPUTPATH_LONG_OPT,
         OUTPUTLOG_LONG_OPT,
+        SHOW_STATUS_BITS_OPT,                               // option for FARM only
+        SHOW_ALL_HEAD_DATA_OPT,                             // option for FARM only to show all the head data and Filling with NULL
+        SHOW_STATIC_DATA_OPT,                               // option for FARM only to print all data statically 
         LONG_OPT_TERMINATOR
     };
 
-    g_verbosity = VERBOSITY_DEFAULT;
+    g_verbosity = eVerbosity_open::VERBOSITY_DEFAULT;
 
     atexit(print_Final_newline);
 
@@ -154,7 +164,7 @@ int32_t main(int argc, char *argv[])
     //get options we know we need
     while (1) //changed to while 1 in order to parse multiple options when longs options are involved
     {
-        args = getopt_long(argc, argv, "d:hisF:Vv:q%:", longopts, &optionIndex);
+        args = getopt_long(argc, argv, "d:hfisF:Vv:q%:", longopts, &optionIndex);
         if (args == -1)
         {
             break;
@@ -175,9 +185,18 @@ int32_t main(int argc, char *argv[])
                     }
                     INPUT_LOG_FROM_PIPE_FLAG = true;
                 }
-                INPUT_LOG_FILE_FLAG = true;
-                INPUT_LOG_FILE_NAME.resize(sizeof(optarg));
-                INPUT_LOG_FILE_NAME.assign(optarg);
+                else
+                {
+                    INPUT_LOG_FILE_FLAG = true;
+                    INPUT_LOG_FILE_NAME.resize(sizeof(optarg));
+                    INPUT_LOG_FILE_NAME.assign(optarg);
+                    std::ifstream myFile(optarg);
+                    if (!myFile.good())
+                    {
+                        INPUT_LOG_FILE_FOUND_FLAG = UTIL_EXIT_CANNOT_OPEN_FILE;
+                    }
+                    myFile.close();
+                }
             }
 
 #if defined BUILD_FARM_ONLY 
@@ -188,64 +207,81 @@ int32_t main(int argc, char *argv[])
 #else
             else if (strncmp(longopts[optionIndex].name, INPUT_LOG_TYPE_LONG_OPT_STRING, strlen(longopts[optionIndex].name)) == 0)
             {
+                convert_String_To_Upper_Case(optarg);
 #if defined (INCLUDE_FARM_LOG)
-                if (strcmp(optarg, LOG_TYPE_STRING_FARM) == 0)
+                if (strncmp(optarg, LOG_TYPE_STRING_FARM_LOG, strnlen(optarg, sizeof(LOG_TYPE_STRING_FARM_LOG))) == 0 || 
+                    strncmp(optarg, LOG_TYPE_STRING_FARM,strnlen(optarg,sizeof(LOG_TYPE_STRING_FARM))) == 0)
                 {
                     INPUT_LOG_TYPE_FLAG = SEAGATE_LOG_TYPE_FARM;
                 }
 #endif
 #if defined (INCLUDE_DEVICE_STATISTICS_LOG)
-                if (strcmp(optarg, LOG_TYPE_STRING_DEVICE_STATISTICS_LOG) == 0)
+                if (strncmp(optarg, LOG_TYPE_STRING_DEVICE_STATISTICS_LOG, strnlen(optarg, sizeof(LOG_TYPE_STRING_DEVICE_STATISTICS_LOG))) == 0 ||
+                    strncmp(optarg, LOG_TYPE_STRING_DEVICE_STATISTICS, strnlen(optarg, sizeof(LOG_TYPE_STRING_DEVICE_STATISTICS))) == 0)
                 {
                     INPUT_LOG_TYPE_FLAG = SEAGATE_LOG_TYPE_DEVICE_STATISTICS_LOG;
                 }
 #endif
 #if defined (INCLUDE_EXT_COMPREHENSIVE_LOG)
-                if (strcmp(optarg, LOG_TYPE_STRING_EXT_COMPREHENSIVE_LOG) == 0)
+                if (strncmp(optarg, LOG_TYPE_STRING_EXT_COMPREHENSIVE_LOG, strnlen(optarg, sizeof(LOG_TYPE_STRING_EXT_COMPREHENSIVE_LOG))) == 0 ||
+                    strncmp(optarg, LOG_TYPE_STRING_EXT_COMPREHENSIVE,strnlen(optarg,sizeof(LOG_TYPE_STRING_EXT_COMPREHENSIVE))) == 0)
                 {
                     INPUT_LOG_TYPE_FLAG = SEAGATE_LOG_TYPE_EXT_COMPREHENSIVE_LOG;
                 }
 #endif
 #if defined (INCLUDE_COMMON_EXT_DST_LOG)
-                if (strcmp(optarg, LOG_TYPE_STRING_EXT_DST_LOG) == 0)
+                if (strncmp(optarg, LOG_TYPE_STRING_EXT_DST_LOG, strnlen(optarg, sizeof(LOG_TYPE_STRING_EXT_DST_LOG))) == 0 ||
+                    strncmp(optarg, LOG_TYPE_STRING_EXT_DST, strnlen(optarg, sizeof(LOG_TYPE_STRING_EXT_DST))) == 0 ||
+                    strncmp(optarg, LOG_TYPE_STRING_DST_LOG, strnlen(optarg, sizeof(LOG_TYPE_STRING_DST_LOG))) == 0 ||
+                    strncmp(optarg, LOG_TYPE_STRING_DST, strnlen(optarg, sizeof(LOG_TYPE_STRING_DST))) == 0 )
                 {
                     INPUT_LOG_TYPE_FLAG = SEAGATE_LOG_TYPE_EXT_DST_LOG;
                 }
 #endif
 
 #if defined (INCLUDE_IDENTIFY_LOG)
-                if (strcmp(optarg, LOG_TYPE_STRING_IDENTIFY_LOG) == 0)
+                if (strncmp(optarg, LOG_TYPE_STRING_IDENTIFY_LOG, strnlen(optarg, sizeof(LOG_TYPE_STRING_IDENTIFY_LOG))) == 0 ||
+                    strncmp(optarg, LOG_TYPE_STRING_IDENTIFY, strnlen(optarg, sizeof(LOG_TYPE_STRING_IDENTIFY))) == 0 ||
+                    strncmp(optarg, LOG_TYPE_STRING_IDENT, strnlen(optarg, sizeof(LOG_TYPE_STRING_IDENT))) == 0 ||
+                    strncmp(optarg, LOG_TYPE_STRING_IDENT_LOG, strnlen(optarg, sizeof(LOG_TYPE_STRING_IDENT_LOG))) == 0 )
                 {
                     INPUT_LOG_TYPE_FLAG = SEAGATE_LOG_TYPE_IDENTIFY_LOG;
                 }
 #endif
 #if defined (INCLUDE_IDENTIFY_DEVICE_DATA_LOG)
-				if (strcmp(optarg, LOG_TYPE_STRING_IDENTIFY_DEVICE_DATA_LOG) == 0)
+				if (strncmp(optarg, LOG_TYPE_STRING_IDENTIFY_DEVICE_DATA_LOG, strnlen(optarg, sizeof(LOG_TYPE_STRING_IDENTIFY_DEVICE_DATA_LOG))) == 0)
 				{
 					INPUT_LOG_TYPE_FLAG = SEAGATE_LOG_TYPE_IDENTIFY_DEVICE_DATA;
 				}
 #endif
 #if defined (INCLUDE_SCT_TEMP_LOG)
-                if (strcmp(optarg, LOG_TYPE_STRING_SCT_TEMP_LOG) == 0)
+                if (strncmp(optarg, LOG_TYPE_STRING_SCT_TEMP_LOG, strnlen(optarg, sizeof(LOG_TYPE_STRING_SCT_TEMP_LOG))) == 0 ||
+                    strncmp(optarg, LOG_TYPE_STRING_SCT_TEMP, strnlen(optarg, sizeof(LOG_TYPE_STRING_SCT_TEMP))) == 0 )
                 {
                     INPUT_LOG_TYPE_FLAG = SEAGATE_LOG_TYPE_SCT_TEMP_LOG;
                 }
 #endif
 
 #if defined (INCLUDE_POWER_CONDITION_LOG)
-				if (strcmp(optarg, LOG_TYPE_STRING_POWER_CONDITION_LOG) == 0)
+				if (strncmp(optarg, LOG_TYPE_STRING_POWER_CONDITION_LOG, strnlen(optarg, sizeof(LOG_TYPE_STRING_POWER_CONDITION_LOG))) == 0 ||
+                    strncmp(optarg, LOG_TYPE_STRING_POWER_CONDITION, strnlen(optarg, sizeof(LOG_TYPE_STRING_POWER_CONDITION))) == 0 )
 				{
 					INPUT_LOG_TYPE_FLAG = SEAGATE_LOG_TYPE_POWER_CONDITION_LOG;
 				}
 #endif
 #if defined (INCLUDE_NCQ_CMD_ERROR_LOG)
-                if (strcmp(optarg, LOG_TYPE_STRING_NCQ_COMMAND_ERROR_LOG) == 0)
+                if (strncmp(optarg, LOG_TYPE_STRING_NCQ_COMMAND_ERROR_LOG, strnlen(optarg, sizeof(LOG_TYPE_STRING_NCQ_COMMAND_ERROR_LOG))) == 0 ||
+                    strncmp(optarg, LOG_TYPE_STRING_NCQ_COMMAND_ERROR, strnlen(optarg, sizeof(LOG_TYPE_STRING_NCQ_COMMAND_ERROR))) == 0 )
                 {
                     INPUT_LOG_TYPE_FLAG = SEAGATE_LOG_TYPE_NCQ_CMD_ERROR_LOG;
                 }
 #endif
 #if defined (INCLUDE_SCSI_LOG_PAGES)
-				if (strcmp(optarg, LOG_TYPE_STRING_SCSI_LOG_PAGES) == 0)
+				if (strncmp(optarg, LOG_TYPE_STRING_SCSI_LOG_PAGES, strnlen(optarg, sizeof(LOG_TYPE_STRING_SCSI_LOG_PAGES))) == 0 ||
+                    strncmp(optarg, LOG_TYPE_STRING_LOG_PAGES, strnlen(optarg, sizeof(LOG_TYPE_STRING_LOG_PAGES))) == 0 ||
+                    strncmp(optarg, LOG_TYPE_STRING_SAS_LOG_PAGES, strnlen(optarg, sizeof(LOG_TYPE_STRING_SAS_LOG_PAGES))) == 0 ||
+                    strncmp(optarg, LOG_TYPE_STRING_SAS, strnlen(optarg, sizeof(LOG_TYPE_STRING_SAS))) == 0 ||
+                    strncmp(optarg, LOG_TYPE_STRING_SCSI, strnlen(optarg, sizeof(LOG_TYPE_STRING_SCSI))) == 0 )
 				{
 					INPUT_LOG_TYPE_FLAG = SEAGATE_LOG_TYPE_SCSI_LOG_PAGES;
 				}
@@ -301,6 +337,16 @@ int32_t main(int argc, char *argv[])
             {
                 SHOW_STATUS_BIT_FLAG = true;
             }
+            if (strncmp(longopts[optionIndex].name, SHOW_ALL_HEAD_DATA_OPT_STRING, strlen(longopts[optionIndex].name)) == 0)
+            {
+                SHOW_ALL_HEAD_DATA_FLAG = true;
+                g_parseNULL = true;
+            }
+            // setting the flag for static print information for the FARM
+            if (strncmp(longopts[optionIndex].name, SHOW_STATIC_DATA_OPT_STRING, strlen(longopts[optionIndex].name)) == 0)
+            {
+                SHOW_STATIC_DATA_FLAG = true;
+            }
             break;
         case ':'://missing required argument
             exitCode = UTIL_EXIT_ERROR_IN_COMMAND_LINE;
@@ -310,13 +356,13 @@ int32_t main(int argc, char *argv[])
                 //check long options for missing arguments
                 break;
             case VERBOSE_SHORT_OPT:
-                if (VERBOSITY_QUIET < g_verbosity)
+                if (eVerbosity_open::VERBOSITY_QUIET < g_verbosity)
                 {
                     printf("You must specify a verbosity level. 0 - 4 are the valid levels\n");
                 }
                 break;
             default:
-                if (VERBOSITY_QUIET < g_verbosity)
+                if (eVerbosity_open::VERBOSITY_QUIET < g_verbosity)
                 {
                     printf("Option %c requires an argument\n", optopt);
                 }
@@ -330,7 +376,7 @@ int32_t main(int argc, char *argv[])
         case VERBOSE_SHORT_OPT: //verbose
             if (optarg != NULL)
             {
-                g_verbosity = static_cast<eVerbosityLevels>(atoi(optarg));
+                g_verbosity = static_cast<eVerbosity_open>(atoi(optarg));
             }
             break;
         case '?': //unknown option
@@ -346,19 +392,12 @@ int32_t main(int argc, char *argv[])
 
     if (ECHO_COMMAND_LINE_FLAG)
     {
-        uint64_t commandLineIter = 1;//start at 1 as starting at 0 means printing the directory info+ SeaChest.exe (or ./SeaChest)
-        for (commandLineIter = 1; commandLineIter < static_cast<uint64_t>(argc); commandLineIter++)
-        {
-            if (strncmp(argv[commandLineIter], "--echoCommandLine", strlen(argv[commandLineIter])) == 0)
-            {
-                continue;
-            }
-            printf("%s ", argv[commandLineIter]);
-        }
+        //Echo the command line back to the customer
+        Echo_Command_Line(argc, argv);
         printf("\n");
     }
 
-    if (VERBOSITY_QUIET < g_verbosity)
+    if (eVerbosity_open::VERBOSITY_QUIET < g_verbosity)
     {
         seachest_utility_Info( util_name,  buildVersion,  OPENSEA_PARSER_VERSION);//TODO: We should change the version to a SeaParser version!
     }
@@ -382,23 +421,56 @@ int32_t main(int argc, char *argv[])
     }
 #if defined BUILD_FARM_ONLY 
 #else
-	if (INPUT_LOG_TYPE_FLAG == SEAGATE_LOG_TYPE_UNKNOWN )
+	if (INPUT_LOG_TYPE_FLAG == SEAGATE_LOG_TYPE_UNKNOWN && INPUT_LOG_FILE_FLAG
+        || INPUT_LOG_FILE_FOUND_FLAG != UTIL_EXIT_NO_ERROR)
 	{
-		std::cout << "\t ******   Missing Input Log Type ****** " << std::endl << std::endl;
-		print_Log_Type_Help(false);
-		utility_Usage(false);
-		exitCode = UTIL_EXIT_ERROR_IN_COMMAND_LINE;
-		return exitCode;
+        std::cout << std::endl;
+        std::cout << "\t ******   Missing or unable to find the Input Log ****** " << std::endl;
+        std::cout << "\t" << INPUT_LOG_FILE_NAME << std::endl << std::endl;
+        //Echo the command line back to the customer
+        Echo_Command_Line(argc, argv);
+        std::cout << std::endl;
+        Short_Utility_Failure_Usage(util_name);
+        exitCode = UTIL_EXIT_ERROR_IN_COMMAND_LINE;
+        return exitCode;
 	}
+    if (!OUTPUT_LOG_FILE_FLAG || !INPUT_LOG_FILE_FLAG)
+    {
+        std::string outputPrefix = INPUT_LOG_FILE_NAME.substr(0, INPUT_LOG_FILE_NAME.rfind('.'));
+        
+            switch (OUTPUT_LOG_PRINT_FLAG)
+            {
+            case SEAGATE_LOG_PRINT_JSON:
+                outputPrefix.append(".json");
+                break;
+            case SEAGATE_LOG_PRINT_TEXT:
+                outputPrefix.append(".txt");
+                break;
+            case SEAGATE_LOG_PRINT_CSV:
+            case SEAGATE_LOG_PRINT_FLAT_CSV:
+                outputPrefix.append(".csv");
+                break;
+            case SEAGATE_LOG_PRINT_PROM:
+                outputPrefix.append(".prm");
+                break;
+            default:
+                outputPrefix.append(".json");
+                break;
+            }
+
+        OUTPUT_LOG_FILE_NAME.resize(sizeof(outputPrefix));
+        OUTPUT_LOG_FILE_NAME.assign(outputPrefix);
+    }
 #endif
     //print out errors for unknown arguments for remaining args that haven't been processed yet
     for (argIndex = static_cast<uint8_t>(optind); argIndex < argc; argIndex++)
     {
-        if (VERBOSITY_QUIET < g_verbosity)
+        if (eVerbosity_open::VERBOSITY_QUIET < g_verbosity)
         {
             printf("Invalid argument: %s\n", argv[argIndex]);
         }
     }
+ 
 
     if (INPUT_LOG_FILE_FLAG)
     {
@@ -408,30 +480,24 @@ int32_t main(int argc, char *argv[])
         {
         case SEAGATE_LOG_TYPE_FARM:
             {
+            CFARMLog* CFarm;
                 if (INPUT_LOG_FROM_PIPE_FLAG)
                 {
                     uint8_t* plineInputData;
                     plineInputData = lineInputData.data();
-                    CFARMLog* CFarm;
-                    CFarm = new CFARMLog(plineInputData, lineInputData.size(), SHOW_STATUS_BIT_FLAG);
-                    retStatus = CFarm->get_FARM_Status();								// check to make sure we read in the file form the construtor.
-                    if (retStatus == IN_PROGRESS)										// if IN_PROGRESS we can continue to parse, else retStatus holds the error information
-                    {
-                        retStatus = CFarm->parse_Device_Farm_Log(masterJson);            
-                    }
-                    delete(CFarm);
+                    CFarm = new CFARMLog(plineInputData, lineInputData.size(), SHOW_STATUS_BIT_FLAG, SHOW_STATIC_DATA_FLAG);
+                    
                 }
                 else
                 {
-                    CFARMLog* CFarm;
-                    CFarm = new CFARMLog(INPUT_LOG_FILE_NAME, SHOW_STATUS_BIT_FLAG);
-                    retStatus = CFarm->get_FARM_Status();								// check to make sure we read in the file form the construtor.
-                    if (retStatus == IN_PROGRESS)										// if IN_PROGRESS we can continue to parse, else retStatus holds the error information
-                    {
-                        retStatus = CFarm->parse_Device_Farm_Log(masterJson);
-                    }
-                    delete(CFarm);
+                    CFarm = new CFARMLog(INPUT_LOG_FILE_NAME, SHOW_STATUS_BIT_FLAG, SHOW_STATIC_DATA_FLAG);
                 }
+                retStatus = CFarm->get_FARM_Status();								// check to make sure we read in the file form the construtor.
+                if (retStatus == IN_PROGRESS)										// if IN_PROGRESS we can continue to parse, else retStatus holds the error information
+                {
+                    retStatus = CFarm->parse_Device_Farm_Log(masterJson);
+                }
+                delete(CFarm);
             }
             break;
         case   SEAGATE_LOG_TYPE_DEVICE_STATISTICS_LOG:
@@ -666,7 +732,7 @@ int32_t main(int argc, char *argv[])
                 myFile.append(".txt");
                 printMessage = new CMessage(masterJson, myFile, OUTPUT_LOG_PRINT_FLAG); // Get text output
                 printMessage->parse_Json_to_Text(masterJson, 0);
-                std::cout << printMessage->get_Msg_Text_Format().c_str();	// Print to the screen
+                //std::cout << printMessage->get_Msg_Text_Format().c_str();	// Print to the screen
             }
             else if (OUTPUT_LOG_PRINT_FLAG == SEAGATE_LOG_PRINT_CSV)
             {
@@ -794,4 +860,31 @@ static void UtilityHeader(JSONNODE *masterData)
 	json_push_back(toolHeader, json_new_a("Build Date", buildDate.c_str()));
 	json_push_back(toolHeader, json_new_a("Run as Date", constTimeCString));
 	json_push_back(masterData, toolHeader);
+}
+//-----------------------------------------------------------------------------
+//
+//! \fn Echo_Command_Line()
+//
+//! \brief
+//!   Description:  parses out the inpult file name for the Telemetry data. 
+//! this will create the formated file name for the TRD file produced for Telemetry from the FARM log
+//
+//  Entry:
+//
+//  Exit:
+//!   \return SUCCESS
+//
+//---------------------------------------------------------------------------
+inline void Echo_Command_Line(int argc, char *argv[])
+{
+
+    for (int commandLineIter = 1; commandLineIter < static_cast<uint64_t>(argc); commandLineIter++)
+    {
+        if (strncmp(argv[commandLineIter], "--echoCommandLine", strlen(argv[commandLineIter])) == 0)
+        {
+            continue;
+        }
+        printf("%s ", argv[commandLineIter]);
+    }
+    printf("\n");
 }
