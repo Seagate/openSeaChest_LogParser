@@ -817,6 +817,8 @@ void utility_Usage(bool shortUsage)
     print_Log_Type_Help(shortUsage);
 #endif
     print_FARM_Command_Line_Option_to_Show_Status_Bytes();
+    print_FARM_Command_Line_Option_to_Show_All_Head_Data();
+    print_FARM_Command_Line_Option_to_Show_Static();
     print_Parser_Output_Log_Help(shortUsage);
     print_Log_Print_Help(shortUsage);
     

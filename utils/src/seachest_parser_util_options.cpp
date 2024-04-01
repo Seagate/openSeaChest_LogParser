@@ -396,44 +396,44 @@ void print_Input_Log_Help(bool shortHelp)
 void print_Seachest_logType_options()
 {
 #if defined BUILD_FARM_ONLY 
-	std::cout << LOG_TYPE_STRING_FARM" (for FARM combined, FARM Factory, FARM Time Series, FARM, Saved, FARM Sticky logs), ";       // FarmLog
+    std::cout << LOG_NAME_PRINT_STRING_FARM_LOG;       // FarmLog
 #else
-	std::cout << LOG_TYPE_STRING_FARM " (for FARM combined, FARM Factory, FARM Time Series, FARM, Saved, FARM Sticky logs), ";      // FARM log
-	std::cout << std::endl;
-	std::cout << "\t\t ";
+    std::cout << LOG_NAME_PRINT_STRING_FARM_LOG;     // FARM log
+
 	#if defined (INCLUDE_IDENTIFY_LOG)
-		std::cout << LOG_TYPE_STRING_IDENTIFY_LOG;                       // identify
+        std::cout << ", " << LOG_NAME_PRINT_STRING_IDENTIFY_LOG;                       // identify
 	#endif
 	#if defined (INCLUDE_IDENTIFY_DEVICE_DATA_LOG)
-		std::cout << ", " << LOG_TYPE_STRING_IDENTIFY_DEVICE_DATA_LOG;          // "IDDataLog" 
+		std::cout << ", " << LOG_NAME_PRINT_STRING_IDENTIFY_DEVICE_DATA_LOG;          // "IDDataLog" 
 	#endif
 	#if defined (INCLUDE_DEVICE_STATISTICS_LOG)
-		std::cout << ", " << LOG_TYPE_STRING_DEVICE_STATISTICS_LOG;             //"deviceStatisticsLog"
+		std::cout << ", " << LOG_NAME_PRINT_STRING_DEVICE_STATISTICS_LOG;             //"deviceStatisticsLog"
 	#endif
 	#if defined (INCLUDE_EXT_COMPREHENSIVE_LOG)
-		std::cout << ", " << LOG_TYPE_STRING_EXT_COMPREHENSIVE_LOG;             //ExtCompErrorLog
+		std::cout << ", " << LOG_NAME_PRINT_STRING_EXT_COMPREHENSIVE_LOG;             //ExtCompErrorLog
 	#endif
 
 		std::cout << std::endl;
 
 		std::cout << "\t\t ";
 	#if defined (INCLUDE_SCT_TEMP_LOG)    
-		std::cout << LOG_TYPE_STRING_SCT_TEMP_LOG;                              //sctTempLog
+		std::cout << LOG_NAME_PRINT_STRING_SCT_TEMP_LOG;                               //sctTempLog
 	#endif 
 	#if defined (INCLUDE_NCQ_CMD_ERROR_LOG)
-		std::cout << ", " << LOG_TYPE_STRING_NCQ_COMMAND_ERROR_LOG;             // ncqErrorLog
+		std::cout << ", " << LOG_NAME_PRINT_STRING_NCQ_COMMAND_ERROR_LOG;              // ncqErrorLog
 	#endif
 	#if defined (INCLUDE_POWER_CONDITION_LOG)
-		std::cout << ", " << LOG_TYPE_STRING_POWER_CONDITION_LOG;                // PowerConditionLog
+		std::cout << ", " << LOG_NAME_PRINT_STRING_POWER_CONDITION_LOG;                // PowerConditionLog
 	#endif
 	#if defined (INCLUDE_COMMON_EXT_DST_LOG)
-		std::cout << ", " << LOG_TYPE_STRING_EXT_DST_LOG;                       // selfTestLog
+		std::cout << ", " << LOG_NAME_PRINT_STRING_EXT_SELF_TEST_LOG;                  // selfTestLog
+        std::cout << ", " << LOG_NAME_PRINT_STRING_DST;                                // DST Log
 	#endif
 		std::cout << std::endl;
 
 		std::cout << "\t\t ";
 	#if defined (INCLUDE_SCSI_LOG_PAGES)  
-		std::cout << LOG_TYPE_STRING_SCSI_LOG_PAGES;                              //scsiLogPages
+		std::cout << LOG_NAME_PRINT_STRING_SCSI_LOG_PAGES;                              //scsiLogPages
 	#endif 
 #endif
 }
@@ -589,4 +589,45 @@ void print_FARM_Command_Line_Option_to_Show_Status_Bytes()
 
     std::cout << std::endl;
 }
+//-----------------------------------------------------------------------------
+//
+//  print_FARM_Command_Line_Option_to_Show_All_Head_Data()
+//
+//! \brief   Description:  This function prints out help information for ShowAllHeadData option
+//
+//
+//  Exit:
+//!   \return VOID
+//
+//-----------------------------------------------------------------------------
+void print_FARM_Command_Line_Option_to_Show_All_Head_Data()
+{
+    std::cout << "\t--" << SHOW_ALL_HEAD_DATA_PRINT_STRING << std::endl;
+    std::cout << "\t\t" << "Command Line Option for the FARM Log ONLY " << std::endl;
+    std::cout << "\t\t" << "Use this option to set the Max Head number to 20 heads." << std::endl;
+    std::cout << "\t\t" << "All Head Data will then show all 20 heads for each attribute." << std::endl;
+    std::cout << "\t\t" << "If the Head is not supported and not valid a NULL will be place in the value." << std::endl;
 
+    std::cout << std::endl;
+}
+//-----------------------------------------------------------------------------
+//
+//  print_FARM_Command_Line_Option_to_Show_Static()
+//
+//! \brief   Description:  This function prints out help information for ShowStatic option
+//
+//
+//  Exit:
+//!   \return VOID
+//
+//-----------------------------------------------------------------------------
+void print_FARM_Command_Line_Option_to_Show_Static()
+{
+    std::cout << "\t--" << SHOW_STATIC_DATA_PRINT_STRING << std::endl;
+    std::cout << "\t\t" << "Command Line Option for the FARM Log ONLY " << std::endl;
+    std::cout << "\t\t" << "Use this option to set will show all data of the FARM Log" << std::endl;
+    std::cout << "\t\t" << "This will remove all dynamic building and version controll for the data." << std::endl;
+    std::cout << "\t\t" << "No JSON array data will be used and Head numbers will be printed out." << std::endl;
+
+    std::cout << std::endl;
+}

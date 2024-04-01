@@ -98,6 +98,20 @@ typedef enum _ePrintTypes
 #define INPUT_LOG_FILE_FOUND_LONG_OPT_STRING "logFound"
 #define INPUT_LOG_FILE_FOUND_LONG_OPT { INPUT_LOG_FILE_FOUND_LONG_OPT_STRING, required_argument, NULL, 0}
 
+	// defines for the printing of the logs in the help file
+#define LOG_NAME_PRINT_STRING_FARM_LOG                          "farmLog"
+#define LOG_NAME_PRINT_STRING_DEVICE_STATISTICS_LOG	            "deviceStatisticsLog"   
+#define LOG_NAME_PRINT_STRING_EXT_COMPREHENSIVE_LOG	            "extCompErrorLog"
+#define LOG_NAME_PRINT_STRING_COMMON_ERROR_LOG		            "commonErrorLog"
+#define LOG_NAME_PRINT_STRING_EXT_SELF_TEST_LOG		            "extSelfTestLog"
+#define LOG_NAME_PRINT_STRING_DST								"dstLog"
+#define LOG_NAME_PRINT_STRING_IDENTIFY_DEVICE_DATA_LOG	        "identifyDeviceDataLog" 
+#define LOG_NAME_PRINT_STRING_IDENTIFY_LOG                      "identify"
+#define LOG_NAME_PRINT_STRING_SCT_TEMP_LOG	 	                "sctTempLog"
+#define LOG_NAME_PRINT_STRING_POWER_CONDITION_LOG	            "powerConditionLog"
+#define LOG_NAME_PRINT_STRING_NCQ_COMMAND_ERROR_LOG	            "ncqErrorLog"
+#define LOG_NAME_PRINT_STRING_SCSI_LOG_PAGES		            "scsiLogPages"
+
 
 #define LOG_TYPE_STRING_FARM_LOG                                "FARMLOG"
 #define LOG_TYPE_STRING_FARM						            "FARM"                      // nickname for the farm log
@@ -291,6 +305,8 @@ void print_Parser_Output_Log_Help(bool shortHelp);
 void print_Log_Type_Help(bool shortHelp);
 void print_Log_Print_Help(bool shortHelp);
 void print_FARM_Command_Line_Option_to_Show_Status_Bytes();
+void print_FARM_Command_Line_Option_to_Show_All_Head_Data();
+void print_FARM_Command_Line_Option_to_Show_Static();
 
 
 #define OUTPUTPATH_PARSE outputPathPtr = optarg; 
