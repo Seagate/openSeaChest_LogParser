@@ -120,12 +120,12 @@ namespace opensea_parser {
         JSONNODE *msgData;
         std::fstream logFile;
         int printStatus;
-        int printType;
+        ePrintTypes printType;
         std::string m_fileName;
         std::string message;
     public:
 		explicit CMessage(JSONNODE *masterData);
-        CMessage(JSONNODE *masterData, std::string fileName, int toolPrintType);
+        CMessage(JSONNODE *masterData, std::string fileName, ePrintTypes toolPrintType);
         virtual ~CMessage();
         void Msg(char *message);
         int WriteBuffer();

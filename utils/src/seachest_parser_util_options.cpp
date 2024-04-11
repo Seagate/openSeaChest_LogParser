@@ -67,7 +67,7 @@ void seachest_utility_Info(const std::string & utilityName, const std::string & 
 //!   \return VOID
 //
 //-----------------------------------------------------------------------------
-void Short_Utility_Failure_Usage(const std::string util_name)
+void Short_Utility_Failure_Usage(const std::string & util_name)
 {
     //everything needs a help option right?
     printf("Usage\n");
@@ -114,7 +114,7 @@ void utility_Full_Version_Info(const std::string & utilityName, const std::strin
 {
     char osNameCstring[OS_NAME_SIZE] = { 0 };
     OSVersionNumber osversionnumber;
-    eCompiler compilerUsed = OPENSEA_COMPILER_UNKNOWN;
+    eCompiler compilerUsed = eCompiler::OPENSEA_COMPILER_UNKNOWN;
     compilerVersion compilerVersionInfo;
     memset(&osversionnumber, 0, sizeof(OSVersionNumber));
     memset(&compilerVersionInfo, 0, sizeof(compilerVersion));
@@ -154,7 +154,7 @@ void utility_Full_Version_Info(const std::string & utilityName, const std::strin
 //-----------------------------------------------------------------------------
 void print_Final_newline(void)
 {
-    if (eVerbosity_open::VERBOSITY_QUIET < g_verbosity)
+    if (eVerbosityLevels::VERBOSITY_QUIET < g_verbosity)
     {
         printf("\n");
     }
@@ -174,23 +174,23 @@ void print_Final_newline(void)
 void print_SeaChest_Util_Exit_Codes(void)
 {
     printf("\tGeneric/Common error codes\n");
-    printf("\t%d = No Error Found\n", UTIL_EXIT_NO_ERROR);
-    printf("\t%d = Error in command line options\n", UTIL_EXIT_ERROR_IN_COMMAND_LINE);
-    printf("\t%d = Invalid Device Handle or Missing Device Handle\n", UTIL_EXIT_INVALID_DEVICE_HANDLE);
-    printf("\t%d = Operation Failure\n", UTIL_EXIT_OPERATION_FAILURE);
-    printf("\t%d = Operation not supported\n", UTIL_EXIT_OPERATION_NOT_SUPPORTED);
-    printf("\t%d = Operation Failed and was still in progress \n", UTIL_EXIT_OPERATION_STILL_IN_PROGRESS);
-    printf("\t%d = Operation Aborted\n", UTIL_EXIT_OPERATION_ABORTED);
-    printf("\t%d = Operation Failed for Bad Parameter in the log \n", UTIL_EXIT_OPERATION_BAD_PARAMETER);
-    printf("\t%d = Operation had Memory Failures\n", UTIL_EXIT_OPERATION_MEMORY_FAILURE);
-    printf("\t%d = Operation Failed for Invaild Lengths in the log\n", UTIL_EXIT_OPERATION_INVALID_LENGTH);
-    printf("\t%d = File Path Not Found\n", UTIL_EXIT_PATH_NOT_FOUND);
-    printf("\t%d = Cannot Open File\n", UTIL_EXIT_CANNOT_OPEN_FILE);
-    printf("\t%d = File Already Exists\n", UTIL_EXIT_FILE_ALREADY_EXISTS);
-    printf("\t%d = Not Valid for this parser\n", UTIL_EXIT_FILE_NOT_VALID);
-    printf("\t%d = Validation Failed\n", UTIL_EXIT_VALIDATION_FAILURE);
-    printf("\t%d = Error in Header and Footer validation\n", UTIL_EXIT_STRIP_HDR_FOOTER_FAILURE);
-    printf("\t%d = Parsing Failure\n", UTIL_EXIT_PARSE_FAILURE);    
+    printf("\t%d = No Error Found\n", eUtilExitCodes::UTIL_EXIT_NO_ERROR);
+    printf("\t%d = Error in command line options\n", eUtilExitCodes::UTIL_EXIT_ERROR_IN_COMMAND_LINE);
+    printf("\t%d = Invalid Device Handle or Missing Device Handle\n", eUtilExitCodes::UTIL_EXIT_INVALID_DEVICE_HANDLE);
+    printf("\t%d = Operation Failure\n", eUtilExitCodes::UTIL_EXIT_OPERATION_FAILURE);
+    printf("\t%d = Operation not supported\n", eUtilExitCodes::UTIL_EXIT_OPERATION_NOT_SUPPORTED);
+    printf("\t%d = Operation Failed and was still in progress \n", eUtilExitCodes::UTIL_EXIT_OPERATION_STILL_IN_PROGRESS);
+    printf("\t%d = Operation Aborted\n", eUtilExitCodes::UTIL_EXIT_OPERATION_ABORTED);
+    printf("\t%d = Operation Failed for Bad Parameter in the log \n", eUtilExitCodes::UTIL_EXIT_OPERATION_BAD_PARAMETER);
+    printf("\t%d = Operation had Memory Failures\n", eUtilExitCodes::UTIL_EXIT_OPERATION_MEMORY_FAILURE);
+    printf("\t%d = Operation Failed for Invaild Lengths in the log\n", eUtilExitCodes::UTIL_EXIT_OPERATION_INVALID_LENGTH);
+    printf("\t%d = File Path Not Found\n", eUtilExitCodes::UTIL_EXIT_PATH_NOT_FOUND);
+    printf("\t%d = Cannot Open File\n", eUtilExitCodes::UTIL_EXIT_CANNOT_OPEN_FILE);
+    printf("\t%d = File Already Exists\n", eUtilExitCodes::UTIL_EXIT_FILE_ALREADY_EXISTS);
+    printf("\t%d = Not Valid for this parser\n", eUtilExitCodes::UTIL_EXIT_FILE_NOT_VALID);
+    printf("\t%d = Validation Failed\n", eUtilExitCodes::UTIL_EXIT_VALIDATION_FAILURE);
+    printf("\t%d = Error in Header and Footer validation\n", eUtilExitCodes::UTIL_EXIT_STRIP_HDR_FOOTER_FAILURE);
+    printf("\t%d = Parsing Failure\n", eUtilExitCodes::UTIL_EXIT_PARSE_FAILURE);
     printf("\tAnything else = unknown error\n\n");
 
 }

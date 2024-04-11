@@ -82,7 +82,7 @@ CPrintJSON::CPrintJSON(JSONNODE *masterData)
 {
     json_char *jc = json_write_formatted(masterData);
     m_jsonMessage.assign( jc);
-    if (eVerbosity_open::VERBOSITY_BUFFERS < g_verbosity)
+    if (eVerbosityLevels::VERBOSITY_BUFFERS < g_verbosity)
     {
         printf("\n%s", m_jsonMessage.c_str());
     }
@@ -229,7 +229,7 @@ bool CPrintCSV::parse_Json_Flat(JSONNODE *nData)
             createLineData(main_name, "");
             json_free(main_name);
             parse_Json_Flat(*i);
-            if (eVerbosity_open::VERBOSITY_COMMAND_VERBOSE <= g_verbosity)
+            if (eVerbosityLevels::VERBOSITY_COMMAND_VERBOSE <= g_verbosity)
             {
                 printf("return from a new parse");
             }
@@ -1418,7 +1418,7 @@ CPrintProm::metric CPrintProm::zoneToLabel(metric currentMetric) {
 CMessage::CMessage(JSONNODE *masterData)
 	:CPrintJSON(masterData), CPrintTXT(), CPrintCSV(), CPrintProm()
     , msgData(masterData)
-    , printStatus(NOT_SUPPORTED)
+    , printStatus(0)
     , printType()
     , m_fileName()
 {
@@ -1441,10 +1441,10 @@ CMessage::CMessage(JSONNODE *masterData)
 //
 //---------------------------------------------------------------------------
 
-CMessage::CMessage(JSONNODE *masterData, std::string fileName, int toolPrintType)
+CMessage::CMessage(JSONNODE *masterData, std::string fileName, ePrintTypes toolPrintType)
     :CPrintJSON(masterData), CPrintTXT(), CPrintCSV(), CPrintProm()
     , msgData(masterData)
-    , printStatus(NOT_SUPPORTED)
+    , printStatus(0)
     , printType(toolPrintType)
     , m_fileName(fileName)
     , message()
@@ -1478,27 +1478,27 @@ CMessage::~CMessage()
 //  Entry:
 //
 //  Exit:
-//!   \return SUCCESS or FILE_OPEN_ERROR                   /// do we need any more ??????
+//!   \return eReturnValues::SUCCESS or FILE_OPEN_ERROR                   /// do we need any more ??????
 //
 //---------------------------------------------------------------------------
 int CMessage::WriteBuffer()
 {
     switch (printType)                                      // for now it will only do json
     {
-    case OPENSEA_LOG_PRINT_JSON:
+    case ePrintTypes::LOG_PRINT_JSON:
         message = get_Msg_JSON_Data();                      // get the string message for printable json data
         break;
-    case OPENSEA_LOG_PRINT_TEXT:
+    case ePrintTypes::LOG_PRINT_TEXT:
         parse_Json_to_Text(msgData,0);                        // parse the json data into a vector 
         message = get_Msg_Text_Format(message);             // get the string message for printable test format data
         break;
-    case OPENSEA_LOG_PRINT_CSV:
+    case ePrintTypes::LOG_PRINT_CSV:
         message = get_Msg_CSV(msgData);                     // get the string message normal CSV format data
         break;
-    case OPENSEA_LOG_PRINT_FLAT_CSV:
+    case ePrintTypes::LOG_PRINT_FLAT_CSV:
         message = get_Msg_Flat_csv(msgData);                // get the json data to create a flat csv 
         break;
-    case OPENSEA_LOG_PRINT_PROM:
+    case ePrintTypes::LOG_PRINT_PROM:
         // If the "prom" printType is specified, parse the JSON and convert it to PromQL
         // First get the drive serial number
         setSerialNumber(msgData);
@@ -1520,15 +1520,15 @@ int CMessage::WriteBuffer()
     }
     else
     {
-        printStatus = FILE_OPEN_ERROR;
-        return FILE_OPEN_ERROR;
+        printStatus = static_cast<int>(eReturnValues::FILE_OPEN_ERROR);
+        return static_cast<int>(eReturnValues::FILE_OPEN_ERROR);
     }
 
 
-    if (eVerbosity_open::VERBOSITY_DEFAULT < g_verbosity)
+    if (eVerbosityLevels::VERBOSITY_DEFAULT < g_verbosity)
     {
         printf("\nWrite Buffer wrote %zu bytes to file. \n", message.length());
     }
 
-    return SUCCESS;
+    return static_cast<int>(eReturnValues::SUCCESS);
 }
