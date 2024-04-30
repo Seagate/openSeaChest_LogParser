@@ -15,7 +15,7 @@ NAME=openSeaChest_LogParser
 #Change the Major version when major interface changes are made.
 MAJOR=0
 #Change the Minor version when new features are added. 
-MINOR=1
+MINOR=2
 #Change the patch version when only bug fixes are made.
 PATCH=4
 
@@ -27,7 +27,7 @@ STRIP ?= strip
 TOOL_CHAIN=gcc
 LIB_FILE_OUTPUT_DIR=lib
 CXXFLAGS = -Wall -Wextra -Werror=old-style-cast -Wshadow -Wmaybe-uninitialized -Wvla -Wfloat-equal \
-    -Wlogical-op -Wdouble-promotion -Wformat-security -std=c++98
+    -Wlogical-op -Wdouble-promotion -Wformat-security -std=c++11
 CFLAGS ?= -Wall -Wextra
 ARCHIVE ?= ar
 ARCH=x86_$(shell getconf LONG_BIT)

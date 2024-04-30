@@ -1,11 +1,16 @@
 //
-// Do NOT modify or remove this copyright and license
+// EULA.c
 //
-// Copyright (c) 2014-2023 Seagate Technology LLC and/or its Affiliates, All Rights Reserved
+// Do NOT modify or remove this copyright and confidentiality notice.
 //
-// This software is subject to the terms of the Mozilla Public
-// License, v. 2.0. If a copy of the MPL was not distributed with this
-// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+// Copyright 2012 - 2024 Seagate Technology LLC and/or its Affiliates, All Rights Reserved
+//
+// The code contained herein is CONFIDENTIAL to Seagate Technology LLC
+// and may be covered under one or more Non-Disclosure Agreements.
+// All or portions are also trade secret.
+// Any use, modification, duplication, derivation, distribution or disclosure
+// of this code, for any reason, not expressly authorized is prohibited.
+// All other rights are expressly reserved by Seagate Technology LLC.
 //
 // ******************************************************************************************
 // 

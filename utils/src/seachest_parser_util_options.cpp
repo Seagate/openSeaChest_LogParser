@@ -45,7 +45,7 @@ void seachest_utility_Info(const std::string & utilityName, const std::string & 
 
     printf("===============================================================================\n");
     printf(" %s - Seagate drive utilities\n", utilityName.c_str());
-    printf(" Copyright (c) 2018-2022 Seagate Technology LLC and/or its Affiliates\n");
+    printf(" Copyright (c) 2018-2024 Seagate Technology LLC and/or its Affiliates\n");
     printf(" %s Version: %s-%s ", utilityName.c_str(), buildVersion.c_str(), openseaVersion.c_str());
     print_Architecture(architecture);
     printf("\n");
@@ -53,6 +53,47 @@ void seachest_utility_Info(const std::string & utilityName, const std::string & 
     printf(" Today: %s\n", get_Current_Time_String(&g_curTime, timeBuffer, CURRENT_TIME_STRING_LENGTH));
     printf("===============================================================================\n");
     strftime(timeCString, 64, " %Y-%m-%d__%H_%M_%S", get_Localtime(&g_curTime, &timeStruct));
+}
+//-----------------------------------------------------------------------------
+//
+//  Short_Utility_Failure_Usage()
+//
+//! \brief   Description:  short information help for a failure
+//
+//  Entry:
+//!   \param util_name - name of the utility
+//!
+//  Exit:
+//!   \return VOID
+//
+//-----------------------------------------------------------------------------
+void Short_Utility_Failure_Usage(const std::string & util_name)
+{
+    //everything needs a help option right?
+    printf("Usage\n");
+    printf("=====\n");
+    printf("\t %s {arguments} {options}\n\n", util_name.c_str());
+
+    printf("Examples\n");
+    printf("========\n");
+    //example usage
+#if defined BUILD_FARM_ONLY || defined BUILD_SM2_ONLY || defined BUILD_UDS_ONLY || defined BUILD_TELEMETRY_NVME_ONLY
+    printf("\t%s --inputLog <filename> --printType json --outputLog <filename>\n", util_name.c_str());
+    printf("\t%s --inputLog <filename> --printType json --outputLog <filename> --showStatic\n", util_name.c_str());
+    printf("\t%s --inputLog <filename> --printType json --outputLog <filename> --showAllHeadData\n", util_name.c_str());
+    printf("\t%s --inputLog <filename> --printType json --outputLog <filename> --showStatic --showAllHeadData\n", util_name.c_str());
+#else
+    printf("\t%s --inputLog <filename> --logType %s --printType json --outputLog <filename>\n", util_name.c_str(), LOG_TYPE_STRING_FARM);
+    printf("\t%s --inputLog <filename> --logType %s --printType csv --outputLog <filename>\n", util_name.c_str(), LOG_TYPE_STRING_FARM);
+    printf("\t%s --inputLog <filename> --logType %s --printType flatcsv --outputLog <filename>\n", util_name.c_str(), LOG_TYPE_STRING_FARM);
+    printf("\t%s --inputLog <filename> --logType deviceStatisticsLog --printType csv --outputLog <filename>\n", util_name.c_str());
+    printf("\t%s --inputLog <filename> --logType identifyLog --printType json --outputLog <filename>\n", util_name.c_str());
+#endif
+    printf("\n");
+    //return codes
+    printf("Return Codes\n");
+    printf("============\n");
+    print_SeaChest_Util_Exit_Codes();
 }
 //-----------------------------------------------------------------------------
 //
@@ -73,7 +114,7 @@ void utility_Full_Version_Info(const std::string & utilityName, const std::strin
 {
     char osNameCstring[OS_NAME_SIZE] = { 0 };
     OSVersionNumber osversionnumber;
-    eCompiler compilerUsed = OPENSEA_COMPILER_UNKNOWN;
+    eCompiler compilerUsed = eCompiler::OPENSEA_COMPILER_UNKNOWN;
     compilerVersion compilerVersionInfo;
     memset(&osversionnumber, 0, sizeof(OSVersionNumber));
     memset(&compilerVersionInfo, 0, sizeof(compilerVersion));
@@ -113,7 +154,7 @@ void utility_Full_Version_Info(const std::string & utilityName, const std::strin
 //-----------------------------------------------------------------------------
 void print_Final_newline(void)
 {
-    if (VERBOSITY_QUIET < g_verbosity)
+    if (eVerbosityLevels::VERBOSITY_QUIET < g_verbosity)
     {
         printf("\n");
     }
@@ -133,23 +174,23 @@ void print_Final_newline(void)
 void print_SeaChest_Util_Exit_Codes(void)
 {
     printf("\tGeneric/Common error codes\n");
-    printf("\t%d = No Error Found\n", UTIL_EXIT_NO_ERROR);
-    printf("\t%d = Error in command line options\n", UTIL_EXIT_ERROR_IN_COMMAND_LINE);
-    printf("\t%d = Invalid Device Handle or Missing Device Handle\n", UTIL_EXIT_INVALID_DEVICE_HANDLE);
-    printf("\t%d = Operation Failure\n", UTIL_EXIT_OPERATION_FAILURE);
-    printf("\t%d = Operation not supported\n", UTIL_EXIT_OPERATION_NOT_SUPPORTED);
-    printf("\t%d = Operation Failed and was still in progress \n", UTIL_EXIT_OPERATION_STILL_IN_PROGRESS);
-    printf("\t%d = Operation Aborted\n", UTIL_EXIT_OPERATION_ABORTED);
-    printf("\t%d = Operation Failed for Bad Parameter in the log \n", UTIL_EXIT_OPERATION_BAD_PARAMETER);
-    printf("\t%d = Operation had Memory Failures\n", UTIL_EXIT_OPERATION_MEMORY_FAILURE);
-    printf("\t%d = Operation Failed for Invaild Lengths in the log\n", UTIL_EXIT_OPERATION_INVALID_LENGTH);
-    printf("\t%d = File Path Not Found\n", UTIL_EXIT_PATH_NOT_FOUND);
-    printf("\t%d = Cannot Open File\n", UTIL_EXIT_CANNOT_OPEN_FILE);
-    printf("\t%d = File Already Exists\n", UTIL_EXIT_FILE_ALREADY_EXISTS);
-    printf("\t%d = Not Valid for this parser\n", UTIL_EXIT_FILE_NOT_VALID);
-    printf("\t%d = Validation Failed\n", UTIL_EXIT_VALIDATION_FAILURE);
-    printf("\t%d = Error in Header and Footer validation\n", UTIL_EXIT_STRIP_HDR_FOOTER_FAILURE);
-    printf("\t%d = Parsing Failure\n", UTIL_EXIT_PARSE_FAILURE);    
+    printf("\t%d = No Error Found\n", eUtilExitCodes::UTIL_EXIT_NO_ERROR);
+    printf("\t%d = Error in command line options\n", eUtilExitCodes::UTIL_EXIT_ERROR_IN_COMMAND_LINE);
+    printf("\t%d = Invalid Device Handle or Missing Device Handle\n", eUtilExitCodes::UTIL_EXIT_INVALID_DEVICE_HANDLE);
+    printf("\t%d = Operation Failure\n", eUtilExitCodes::UTIL_EXIT_OPERATION_FAILURE);
+    printf("\t%d = Operation not supported\n", eUtilExitCodes::UTIL_EXIT_OPERATION_NOT_SUPPORTED);
+    printf("\t%d = Operation Failed and was still in progress \n", eUtilExitCodes::UTIL_EXIT_OPERATION_STILL_IN_PROGRESS);
+    printf("\t%d = Operation Aborted\n", eUtilExitCodes::UTIL_EXIT_OPERATION_ABORTED);
+    printf("\t%d = Operation Failed for Bad Parameter in the log \n", eUtilExitCodes::UTIL_EXIT_OPERATION_BAD_PARAMETER);
+    printf("\t%d = Operation had Memory Failures\n", eUtilExitCodes::UTIL_EXIT_OPERATION_MEMORY_FAILURE);
+    printf("\t%d = Operation Failed for Invaild Lengths in the log\n", eUtilExitCodes::UTIL_EXIT_OPERATION_INVALID_LENGTH);
+    printf("\t%d = File Path Not Found\n", eUtilExitCodes::UTIL_EXIT_PATH_NOT_FOUND);
+    printf("\t%d = Cannot Open File\n", eUtilExitCodes::UTIL_EXIT_CANNOT_OPEN_FILE);
+    printf("\t%d = File Already Exists\n", eUtilExitCodes::UTIL_EXIT_FILE_ALREADY_EXISTS);
+    printf("\t%d = Not Valid for this parser\n", eUtilExitCodes::UTIL_EXIT_FILE_NOT_VALID);
+    printf("\t%d = Validation Failed\n", eUtilExitCodes::UTIL_EXIT_VALIDATION_FAILURE);
+    printf("\t%d = Error in Header and Footer validation\n", eUtilExitCodes::UTIL_EXIT_STRIP_HDR_FOOTER_FAILURE);
+    printf("\t%d = Parsing Failure\n", eUtilExitCodes::UTIL_EXIT_PARSE_FAILURE);
     printf("\tAnything else = unknown error\n\n");
 
 }
@@ -355,44 +396,44 @@ void print_Input_Log_Help(bool shortHelp)
 void print_Seachest_logType_options()
 {
 #if defined BUILD_FARM_ONLY 
-	std::cout << LOG_TYPE_STRING_FARM" (for FARM combined, FARM Factory, FARM Time Series, FARM, Saved, FARM Sticky logs), ";       // FarmLog
+    std::cout << LOG_NAME_PRINT_STRING_FARM_LOG;       // FarmLog
 #else
-	std::cout << LOG_TYPE_STRING_FARM " (for FARM combined, FARM Factory, FARM Time Series, FARM, Saved, FARM Sticky logs), ";      // FARM log
-	std::cout << std::endl;
-	std::cout << "\t\t ";
+    std::cout << LOG_NAME_PRINT_STRING_FARM_LOG;     // FARM log
+
 	#if defined (INCLUDE_IDENTIFY_LOG)
-		std::cout << LOG_TYPE_STRING_IDENTIFY_LOG;                       // identify
+        std::cout << ", " << LOG_NAME_PRINT_STRING_IDENTIFY_LOG;                       // identify
 	#endif
 	#if defined (INCLUDE_IDENTIFY_DEVICE_DATA_LOG)
-		std::cout << ", " << LOG_TYPE_STRING_IDENTIFY_DEVICE_DATA_LOG;          // "IDDataLog" 
+		std::cout << ", " << LOG_NAME_PRINT_STRING_IDENTIFY_DEVICE_DATA_LOG;          // "IDDataLog" 
 	#endif
 	#if defined (INCLUDE_DEVICE_STATISTICS_LOG)
-		std::cout << ", " << LOG_TYPE_STRING_DEVICE_STATISTICS_LOG;             //"deviceStatisticsLog"
+		std::cout << ", " << LOG_NAME_PRINT_STRING_DEVICE_STATISTICS_LOG;             //"deviceStatisticsLog"
 	#endif
 	#if defined (INCLUDE_EXT_COMPREHENSIVE_LOG)
-		std::cout << ", " << LOG_TYPE_STRING_EXT_COMPREHENSIVE_LOG;             //ExtCompErrorLog
+		std::cout << ", " << LOG_NAME_PRINT_STRING_EXT_COMPREHENSIVE_LOG;             //ExtCompErrorLog
 	#endif
 
 		std::cout << std::endl;
 
 		std::cout << "\t\t ";
 	#if defined (INCLUDE_SCT_TEMP_LOG)    
-		std::cout << LOG_TYPE_STRING_SCT_TEMP_LOG;                              //sctTempLog
+		std::cout << LOG_NAME_PRINT_STRING_SCT_TEMP_LOG;                               //sctTempLog
 	#endif 
 	#if defined (INCLUDE_NCQ_CMD_ERROR_LOG)
-		std::cout << ", " << LOG_TYPE_STRING_NCQ_COMMAND_ERROR_LOG;             // ncqErrorLog
+		std::cout << ", " << LOG_NAME_PRINT_STRING_NCQ_COMMAND_ERROR_LOG;              // ncqErrorLog
 	#endif
 	#if defined (INCLUDE_POWER_CONDITION_LOG)
-		std::cout << ", " << LOG_TYPE_STRING_POWER_CONDITION_LOG;                // PowerConditionLog
+		std::cout << ", " << LOG_NAME_PRINT_STRING_POWER_CONDITION_LOG;                // PowerConditionLog
 	#endif
 	#if defined (INCLUDE_COMMON_EXT_DST_LOG)
-		std::cout << ", " << LOG_TYPE_STRING_EXT_DST_LOG;                       // selfTestLog
+		std::cout << ", " << LOG_NAME_PRINT_STRING_EXT_SELF_TEST_LOG;                  // selfTestLog
+        std::cout << ", " << LOG_NAME_PRINT_STRING_DST;                                // DST Log
 	#endif
 		std::cout << std::endl;
 
 		std::cout << "\t\t ";
 	#if defined (INCLUDE_SCSI_LOG_PAGES)  
-		std::cout << LOG_TYPE_STRING_SCSI_LOG_PAGES;                              //scsiLogPages
+		std::cout << LOG_NAME_PRINT_STRING_SCSI_LOG_PAGES;                              //scsiLogPages
 	#endif 
 #endif
 }
@@ -548,37 +589,45 @@ void print_FARM_Command_Line_Option_to_Show_Status_Bytes()
 
     std::cout << std::endl;
 }
-
 //-----------------------------------------------------------------------------
 //
-//  print_FARM_Analyze_Command_Line_Option()
+//  print_FARM_Command_Line_Option_to_Show_All_Head_Data()
 //
-//! \brief   Description:  This function prints out the analyze command
+//! \brief   Description:  This function prints out help information for ShowAllHeadData option
 //
 //
 //  Exit:
 //!   \return VOID
 //
 //-----------------------------------------------------------------------------
-void print_FARM_Analyze_Command_Line_Option()
+void print_FARM_Command_Line_Option_to_Show_All_Head_Data()
 {
-    std::cout << "\t--" << ANALYZE_LONG_OPT_STRING << std::endl;
+    std::cout << "\t--" << SHOW_ALL_HEAD_DATA_PRINT_STRING << std::endl;
     std::cout << "\t\t" << "Command Line Option for the FARM Log ONLY " << std::endl;
-    std::cout << "\t\t" << "Use this option to analyze the FARM Log and state the Drive Health." << std::endl;
-
-    /*
-    std::cout << "\t\t" << "Following are the possable Drive Health status " << std::endl;
-    std::cout << "\t\t" << "    NTF " << std::endl;
-    std::cout << "\t\t" << "    PRESSURE " << std::endl;
-    std::cout << "\t\t" << "    FW_ASSERTION " << std::endl;
-    std::cout << "\t\t" << "    DATA_PATH " << std::endl;
-    std::cout << "\t\t" << "    SEEK_HARD_ERROR " << std::endl;
-    std::cout << "\t\t" << "    UNRECOVERABLE_SERVO " << std::endl;
-    std::cout << "\t\t" << "    UNRECOVERABLE_WRITE " << std::endl;
-    std::cout << "\t\t" << "    UNRECOVERABLE_READ_GLIST " << std::endl;
-    std::cout << "\t\t" << "    UNDEFINED " << std::endl;
-    */
+    std::cout << "\t\t" << "Use this option to set the Max Head number to 20 heads." << std::endl;
+    std::cout << "\t\t" << "All Head Data will then show all 20 heads for each attribute." << std::endl;
+    std::cout << "\t\t" << "If the Head is not supported and not valid a NULL will be place in the value." << std::endl;
 
     std::cout << std::endl;
 }
+//-----------------------------------------------------------------------------
+//
+//  print_FARM_Command_Line_Option_to_Show_Static()
+//
+//! \brief   Description:  This function prints out help information for ShowStatic option
+//
+//
+//  Exit:
+//!   \return VOID
+//
+//-----------------------------------------------------------------------------
+void print_FARM_Command_Line_Option_to_Show_Static()
+{
+    std::cout << "\t--" << SHOW_STATIC_DATA_PRINT_STRING << std::endl;
+    std::cout << "\t\t" << "Command Line Option for the FARM Log ONLY " << std::endl;
+    std::cout << "\t\t" << "Use this option to set will show all data of the FARM Log" << std::endl;
+    std::cout << "\t\t" << "This will remove all dynamic building and version controll for the data." << std::endl;
+    std::cout << "\t\t" << "No JSON array data will be used and Head numbers will be printed out." << std::endl;
 
+    std::cout << std::endl;
+}
