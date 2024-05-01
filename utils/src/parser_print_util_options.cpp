@@ -794,22 +794,11 @@ bool CPrintTXT::parse_Json_to_Text(JSONNODE *nData, uint16_t numberOfTabs)
             else if (json_type(*q) == JSON_NODE)
             {  
                 JSONNODE_ITERATOR k = json_begin(*q);
-                
+                json_char *node_name = json_name(*k);
                 // need to parse out the NULLS
-                if (k != NULL)
+                if (k == NULL)
                 {
-                    // set the string data for the array of data
-                    json_char* node_name = json_name(*k);
-                    title.assign(main_name);
-                    title.append("\n");
-                    frame.title = title;
-                    m_vData.push_back(frame);
-                    frame.title = "";
-                    frame.data = "";
-
-                    parse_Json_to_Text(*q, (numberOfTabs + 1));
                     json_free(node_name);
-                }
                     json_free(main_name);
                     break;
                 }
@@ -985,20 +974,18 @@ void CPrintProm::parseJSONToProm(JSONNODE* nData, std::string inserialNumber, js
             // If the values in the array are nodes, run this method recursively on the JSON array
             } else if (json_type(*it_jsonArray) == JSON_NODE) {
                 JSONNODE_ITERATOR it_jsonArrayNode = json_begin(*it_jsonArray);
-                if (it_jsonArrayNode != NULL)
-                {
-                    json_char* jsonArrayNodeName = json_name(*it_jsonArrayNode);
-                    // Run this method recursively
-                    parseJSONToProm(*it_jsonArray, inserialNumber, jsonArrayNodeName);
-                    // Clear pointers
+                json_char *jsonArrayNodeName = json_name(*it_jsonArrayNode);
+                // Do nothing if the node is NULL
+                if (it_jsonArrayNode == NULL) {
                     json_free(jsonArrayNodeName);
+                    json_free(jsonArrayName);
+                    break;
                 }
                 // Run this method recursively
                 parseJSONToProm(*it_jsonArray, inserialNumber, jsonArrayNodeName);
                 // Clear pointers
                 json_free(jsonArrayNodeName);
                 json_free(jsonArrayName);
- 
             // Otherwise, simply free the data as it cannot be made into a Prometheus metric
             } else {
                 json_free(jsonArrayName);
@@ -1503,7 +1490,7 @@ int CMessage::WriteBuffer()
         break;
     case ePrintTypes::LOG_PRINT_TEXT:
         parse_Json_to_Text(msgData,0);                        // parse the json data into a vector 
-        message = get_Msg_Text_Format();             // get the string message for printable test format data
+        message = get_Msg_Text_Format(message);             // get the string message for printable test format data
         break;
     case ePrintTypes::LOG_PRINT_CSV:
         message = get_Msg_CSV(msgData);                     // get the string message normal CSV format data

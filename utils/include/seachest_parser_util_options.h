@@ -169,11 +169,6 @@ enum class eUtilExitCodes
 #define OUTPUTLOG_LONG_OPT_STRING "outputLog"
 #define OUTPUTLOG_LONG_OPT { OUTPUTLOG_LONG_OPT_STRING, required_argument, NULL, 0}
 
-#define ANALYZE_LOG_FLAG analyzeLog
-#define ANALYZE_LOG_VAR bool ANALYZE_LOG_FLAG = goFalse;
-#define ANALYZE_LONG_OPT_STRING "analyzeLog"
-#define ANALYZE_LONG_OPT { ANALYZE_LONG_OPT_STRING, no_argument, NULL, goTrue }
-
 #define LICENSE_FLAG showLicense
 #define LICENSE_VAR getOptBool LICENSE_FLAG = goFalse;
 #define LICENSE_LONG_OPT_STRING "license"

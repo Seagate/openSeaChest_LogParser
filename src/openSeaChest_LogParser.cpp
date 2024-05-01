@@ -107,7 +107,6 @@ int32_t main(int argc, char *argv[])
     INPUT_LOG_FILE_FOUND_VAR
     INPUT_LOG_TYPE_VAR
     OUTPUT_LOG_PRINT_VAR
-    ANALYZE_LOG_VAR
     //OUTPUTPATH_VAR
     //OUTPUTFILE_VAR
 
@@ -472,86 +471,6 @@ int32_t main(int argc, char *argv[])
         }
     }
  
-
-    if (ANALYZE_LOG_FLAG == true)
-    {
-        eAnalyzeStatus  analyzeStatus;
-
-        CFARMLog *CFarm;
-        CFarm = new CFARMLog(INPUT_LOG_FILE_NAME, SHOW_STATUS_BIT_FLAG);
-
-        retStatus = CFarm->get_FARM_Status();                               // check to make sure we read in the file form the construtor.
-        if (retStatus == IN_PROGRESS)                                       // if IN_PROGRESS we can continue to parse, else retStatus holds the error information
-        {
-            analyzeStatus = CFarm->parse_Device_Farm_Log_And_Analyze();
-        }
-
-
-        /*
-         * Print Drive health status.
-         */
-        
-        printf("\nDrive Health - ");
-
-
-        switch (analyzeStatus)
-        {
-        case NTF:
-        {
-            printf("NTF \n");
-        }
-        break;
-        case PRESSURE:
-        {
-            printf("PRESSURE \n");
-        }
-        break;
-        case FW_ASSERTION:
-        {
-            printf("FW_ASSERTION \n");
-        }
-        break;
-        case DATA_PATH:
-        {
-            printf("DATA_PATH \n");
-        }
-        break;
-        case SEEK_HARD_ERROR:
-        {
-            printf("SEEK_HARD_ERROR \n");
-        }
-        break;
-        case UNRECOVERABLE_SERVO:
-        {
-            printf("UNRECOVERABLE_SERVO \n");
-        }
-        break;
-        case UNRECOVERABLE_WRITE:
-        {
-            printf("UNRECOVERABLE_WRITE \n");
-        }
-        break;
-        case UNRECOVERABLE_READ_GLIST:
-        {
-            printf("UNRECOVERABLE_READ_GLIST \n");
-        }
-        break;
-        case UNDEFINED:
-        {
-            printf("UNDEFINED Error \n");
-        }
-        break;
-        default:
-        {
-            printf("UNDEFINED Error \n");
-        }
-        break;
-        }
-
-        delete(CFarm);
-
-        printf("\n");
-    }
 
     if (INPUT_LOG_FILE_FLAG)
     {
