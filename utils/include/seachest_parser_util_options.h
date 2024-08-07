@@ -16,7 +16,8 @@
 
 
 #include <string>
-#include "common.h"
+#include "common_types.h"
+#include "time_utils.h"
 #include <iostream>
 #include "Opensea_Parser_Helper.h"
 

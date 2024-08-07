@@ -17,7 +17,7 @@
 #pragma once
 
 #include <string>
-#include "common.h"
+#include "common_types.h"
 #include <iostream>
 #include <fstream>
 #include <vector>

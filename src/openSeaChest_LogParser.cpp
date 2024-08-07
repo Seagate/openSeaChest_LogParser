@@ -32,7 +32,9 @@
 #include <iomanip>
 #include <fstream>
 
-#include "common.h"
+#include "common_types.h"
+#include "string_utils.h"
+#include "time_utils.h"
 #include "EULA.h"
 #include "seachest_parser_util_options.h"
 #include "parser_print_util_options.h"
