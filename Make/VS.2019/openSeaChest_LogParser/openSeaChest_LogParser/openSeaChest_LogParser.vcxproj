@@ -275,7 +275,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
       <AdditionalLibraryDirectories>..\..\..\..\wingetopt\VS.2019\$(Platform)\$(Configuration);..\..\..\..\opensea-common\Make\VS.2019\opensea-common\$(Platform)\$(Configuration);..\..\..\..\opensea-parser\Make\VS.2019\opensea-parser\$(Platform)\$(Configuration)\LIB\;..\..\..\..\libjson\VS.2019\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opensea-common.lib;opensea-parser.lib;getopt.lib;statLibJson.lib;</AdditionalDependencies>
+      <AdditionalDependencies>opensea-common.lib;opensea-parser.lib;getopt.lib;statLibJson.lib;Version.lib;Advapi32.lib;</AdditionalDependencies>
       <FullProgramDatabaseFile>true</FullProgramDatabaseFile>
     </Link>
   </ItemDefinitionGroup>
@@ -307,7 +307,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>..\..\..\..\wingetopt\VS.2019\$(Platform)\$(Configuration);..\..\..\..\opensea-common\Make\VS.2019\opensea-common\$(Platform)\$(Configuration);..\..\..\..\opensea-parser\Make\VS.2019\opensea-parser\$(Platform)\$(Configuration)\LIB\;..\..\..\..\libjson\VS.2019\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opensea-common.lib;opensea-parser.lib;getopt.lib;statLibJson.lib;</AdditionalDependencies>
+      <AdditionalDependencies>opensea-common.lib;opensea-parser.lib;getopt.lib;statLibJson.lib;Version.lib;Advapi32.lib;</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -332,7 +332,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>..\..\..\..\wingetopt\VS.2019\$(Platform)\$(Configuration);..\..\..\..\opensea-common\Make\VS.2019\opensea-common\$(Platform)\$(Configuration);..\..\..\..\opensea-parser\Make\VS.2019\opensea-parser\$(Platform)\$(Configuration)\LIB\;..\..\..\..\libjson\VS.2019\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opensea-common.lib;opensea-parser.lib;getopt.lib;statLibJson.lib;</AdditionalDependencies>
+      <AdditionalDependencies>opensea-common.lib;opensea-parser.lib;getopt.lib;statLibJson.lib;Version.lib;Advapi32.lib;</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -363,7 +363,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>..\..\..\..\wingetopt\VS.2019\$(Platform)\$(Configuration);..\..\..\..\opensea-common\Make\VS.2019\opensea-common\$(Platform)\$(Configuration);..\..\..\..\opensea-parser\Make\VS.2019\opensea-parser\$(Platform)\$(Configuration)\LIB\;..\..\..\..\libjson\VS.2019\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opensea-common.lib;opensea-parser.lib;getopt.lib;statLibJson.lib;</AdditionalDependencies>
+      <AdditionalDependencies>opensea-common.lib;opensea-parser.lib;getopt.lib;statLibJson.lib;Version.lib;Advapi32.lib;</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
@@ -398,7 +398,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>..\..\..\..\wingetopt\VS.2019\$(Platform)\$(Configuration);..\..\..\..\opensea-common\Make\VS.2019\opensea-common\$(Platform)\$(Configuration);..\..\..\..\opensea-parser\Make\VS.2019\opensea-parser\$(Platform)\$(Configuration)\LIB\;..\..\..\..\libjson\VS.2019\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opensea-common.lib;opensea-parser.lib;getopt.lib;statLibJson.lib;</AdditionalDependencies>
+      <AdditionalDependencies>opensea-common.lib;opensea-parser.lib;getopt.lib;statLibJson.lib;Version.lib;Advapi32.lib;</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static-Release|Win32'">
@@ -429,7 +429,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>..\..\..\..\wingetopt\VS.2019\$(Platform)\$(Configuration);..\..\..\..\opensea-common\Make\VS.2019\opensea-common\$(Platform)\$(Configuration);..\..\..\..\opensea-parser\Make\VS.2019\opensea-parser\$(Platform)\$(Configuration)\LIB\;..\..\..\..\libjson\VS.2019\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opensea-common.lib;opensea-parser.lib;getopt.lib;statLibJson.lib;</AdditionalDependencies>
+      <AdditionalDependencies>opensea-common.lib;opensea-parser.lib;getopt.lib;statLibJson.lib;Version.lib;Advapi32.lib;</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static-Release|ARM'">
@@ -464,7 +464,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>..\..\..\..\wingetopt\VS.2019\$(Platform)\$(Configuration);..\..\..\..\opensea-common\Make\VS.2019\opensea-common\$(Platform)\$(Configuration);..\..\..\..\opensea-parser\Make\VS.2019\opensea-parser\$(Platform)\$(Configuration)\LIB\;..\..\..\..\libjson\VS.2019\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opensea-common.lib;opensea-parser.lib;getopt.lib;statLibJson.lib;</AdditionalDependencies>
+      <AdditionalDependencies>opensea-common.lib;opensea-parser.lib;getopt.lib;statLibJson.lib;Version.lib;Advapi32.lib;</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -494,7 +494,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>..\..\..\..\wingetopt\VS.2019\$(Platform)\$(Configuration);..\..\..\..\opensea-common\Make\VS.2019\opensea-common\$(Platform)\$(Configuration);..\..\..\..\opensea-parser\Make\VS.2019\opensea-parser\$(Platform)\$(Configuration)\LIB\;..\..\..\..\libjson\VS.2019\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opensea-common.lib;opensea-parser.lib;getopt.lib;statLibJson.lib;</AdditionalDependencies>
+      <AdditionalDependencies>opensea-common.lib;opensea-parser.lib;getopt.lib;statLibJson.lib;Version.lib;Advapi32.lib;</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static-Release|x64'">
@@ -524,13 +524,13 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>..\..\..\..\wingetopt\VS.2019\$(Platform)\$(Configuration);..\..\..\..\opensea-common\Make\VS.2019\opensea-common\$(Platform)\$(Configuration);..\..\..\..\opensea-parser\Make\VS.2019\opensea-parser\$(Platform)\$(Configuration)\LIB\;..\..\..\..\libjson\VS.2019\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opensea-common.lib;opensea-parser.lib;getopt.lib;statLibJson.lib;</AdditionalDependencies>
+      <AdditionalDependencies>opensea-common.lib;opensea-parser.lib;getopt.lib;statLibJson.lib;Version.lib;Advapi32.lib;</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static-Debug|Win32'">
     <Link>
       <AdditionalLibraryDirectories>..\..\..\..\wingetopt\VS.2019\$(Platform)\$(Configuration);..\..\..\..\opensea-common\Make\VS.2019\opensea-common\$(Platform)\$(Configuration);..\..\..\..\opensea-parser\Make\VS.2019\opensea-parser\$(Platform)\$(Configuration)\LIB\;..\..\..\..\libjson\VS.2019\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opensea-common.lib;opensea-parser.lib;getopt.lib;statLibJson.lib;</AdditionalDependencies>
+      <AdditionalDependencies>opensea-common.lib;opensea-parser.lib;getopt.lib;statLibJson.lib;Version.lib;Advapi32.lib;</AdditionalDependencies>
     </Link>
     <ClCompile>
       <AdditionalIncludeDirectories>..\..\..\..\wingetopt\src;..\..\..\..\include;..\..\..\..\opensea-common\include;..\..\..\..\libjson;..\..\..\..\opensea-parser\include;..\..\..\..\opensea-parser\include\Seagate;..\..\..\..\utils\include</AdditionalIncludeDirectories>
@@ -551,7 +551,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static-Debug|ARM'">
     <Link>
       <AdditionalLibraryDirectories>..\..\..\..\wingetopt\VS.2019\$(Platform)\$(Configuration);..\..\..\..\opensea-common\Make\VS.2019\opensea-common\$(Platform)\$(Configuration);..\..\..\..\opensea-parser\Make\VS.2019\opensea-parser\$(Platform)\$(Configuration)\LIB\;..\..\..\..\libjson\VS.2019\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opensea-common.lib;opensea-parser.lib;getopt.lib;statLibJson.lib;</AdditionalDependencies>
+      <AdditionalDependencies>opensea-common.lib;opensea-parser.lib;getopt.lib;statLibJson.lib;Version.lib;Advapi32.lib;</AdditionalDependencies>
     </Link>
     <ClCompile>
       <AdditionalIncludeDirectories>..\..\..\..\wingetopt\src;..\..\..\..\include;..\..\..\..\opensea-common\include;..\..\..\..\libjson;..\..\..\..\opensea-parser\include;..\..\..\..\opensea-parser\include\Seagate;..\..\..\..\utils\include</AdditionalIncludeDirectories>
@@ -578,7 +578,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static-Debug|x64'">
     <Link>
       <AdditionalLibraryDirectories>..\..\..\..\wingetopt\VS.2019\$(Platform)\$(Configuration);..\..\..\..\opensea-common\Make\VS.2019\opensea-common\$(Platform)\$(Configuration);..\..\..\..\opensea-parser\Make\VS.2019\opensea-parser\$(Platform)\$(Configuration)\LIB\;..\..\..\..\libjson\VS.2019\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opensea-common.lib;opensea-parser.lib;getopt.lib;statLibJson.lib;</AdditionalDependencies>
+      <AdditionalDependencies>opensea-common.lib;opensea-parser.lib;getopt.lib;statLibJson.lib;Version.lib;Advapi32.lib;</AdditionalDependencies>
     </Link>
     <ClCompile>
       <AdditionalIncludeDirectories>..\..\..\..\wingetopt\src;..\..\..\..\include;..\..\..\..\opensea-common\include;..\..\..\..\libjson;..\..\..\..\opensea-parser\include;..\..\..\..\opensea-parser\include\Seagate;..\..\..\..\utils\include</AdditionalIncludeDirectories>
