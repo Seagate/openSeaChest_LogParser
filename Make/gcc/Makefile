@@ -34,8 +34,9 @@ ARCH=x86_$(shell getconf LONG_BIT)
 
 LFLAGS = \
 	../../libjson/libjson.a \
+	../../opensea-parser/Make/$(TOOL_CHAIN)/$(LIB_FILE_OUTPUT_DIR)/libopensea-parser.a \
 	../../opensea-common/Make/$(TOOL_CHAIN)/$(LIB_FILE_OUTPUT_DIR)/libopensea-common.a \
-	../../opensea-parser/Make/$(TOOL_CHAIN)/$(LIB_FILE_OUTPUT_DIR)/libopensea-parser.a
+	
 
 INC_DIR= \
 	-I../../utils/include \
