@@ -707,7 +707,7 @@ int32_t main(int argc, char *argv[])
 			break;
 		default:
             {
-                printf("\n %d failure", retStatus);
+                printf("\n %d failure", static_cast<int>(retStatus));
             }
 			break;
 		}
@@ -882,7 +882,7 @@ static void UtilityHeader(JSONNODE *masterData)
 inline void Echo_Command_Line(int argc, char *argv[])
 {
 
-    for (int commandLineIter = 1; commandLineIter < static_cast<uint64_t>(argc); commandLineIter++)
+    for (int commandLineIter = 1; commandLineIter < static_cast<int>(argc); commandLineIter++)
     {
         if (strncmp(argv[commandLineIter], "--echoCommandLine", strlen(argv[commandLineIter])) == 0)
         {
