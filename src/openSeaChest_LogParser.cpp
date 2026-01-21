@@ -3,7 +3,7 @@
 //
 // Do NOT modify or remove this copyright and license
 //
-// Copyright (c) 2024 Seagate Technology LLC and/or its Affiliates, All Rights Reserved
+// Copyright (c) 2026 Seagate Technology LLC and/or its Affiliates, All Rights Reserved
 //
 // This software is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -166,7 +166,7 @@ int32_t main(int argc, char *argv[])
     //get options we know we need
     while (1) //changed to while 1 in order to parse multiple options when longs options are involved
     {
-        args = getopt_long(argc, argv, "d:hfisF:Vv:q%:", longopts, &optionIndex);
+        args = static_cast<int8_t>(getopt_long(argc, argv, "d:hfisF:Vv:q%:", longopts, &optionIndex));
         if (args == -1)
         {
             break;
@@ -192,12 +192,10 @@ int32_t main(int argc, char *argv[])
                     INPUT_LOG_FILE_FLAG = true;
                     INPUT_LOG_FILE_NAME.resize(sizeof(optarg));
                     INPUT_LOG_FILE_NAME.assign(optarg);
-                    std::ifstream myFile(optarg);
-                    if (!myFile.good())
+                    if (!os_File_Exists(optarg))
                     {
                         INPUT_LOG_FILE_FOUND_FLAG = eUtilExitCodes::UTIL_EXIT_CANNOT_OPEN_FILE;
                     }
-                    myFile.close();
                 }
             }
 
