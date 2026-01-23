@@ -63,7 +63,7 @@ using namespace opensea_parser;
     std::string util_name = "openSeaChest_LogParser";
 #endif
 
-std::string buildVersion = "1.5.4";
+std::string buildVersion = "1.5.5";
 std::string buildDate = __DATE__;
 
 ////////////////////////////
