@@ -414,6 +414,7 @@ void print_Seachest_logType_options()
 	#endif
 
 		std::cout << std::endl;
+        std::cout << LOG_NAME_PRINT_STRING_SMART_DIR_LOG;
 
 		std::cout << "\t\t ";
 	#if defined (INCLUDE_SCT_TEMP_LOG)    

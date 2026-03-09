@@ -87,6 +87,7 @@ enum class eUtilExitCodes
 #define LOG_NAME_PRINT_STRING_POWER_CONDITION_LOG	            "powerConditionLog"
 #define LOG_NAME_PRINT_STRING_NCQ_COMMAND_ERROR_LOG	            "ncqErrorLog"
 #define LOG_NAME_PRINT_STRING_SCSI_LOG_PAGES		            "scsiLogPages"
+#define LOG_NAME_PRINT_STRING_SMART_DIR_LOG			            "smartDirLog"
 
 
 #define LOG_TYPE_STRING_FARM_LOG                                "FARMLOG"
