@@ -51,6 +51,7 @@
 #include "CAta_Power_Conditions_Log.h"
 #include "CAta_NCQ_Command_Error_Log.h"
 #include "CScsi_Log.h"
+#include "CAta_SMART_Log_Dir.h"
 
 using namespace opensea_parser;
 
@@ -116,7 +117,6 @@ int32_t main(int argc, char *argv[])
     uint8_t argIndex = 0;
     int32_t optionIndex = 0;
 
-    //add -- options to this structure DO NOT ADD OPTIONAL ARGUMENTS! Optional arguments are a GNU extension and are not supported in Unix or some compilers- TJE
     struct option longopts[] = {
         //common command line options
         HELP_LONG_OPT,
@@ -286,7 +286,13 @@ int32_t main(int argc, char *argv[])
 					INPUT_LOG_TYPE_FLAG = eLogTypes::LOG_TYPE_SCSI_LOG_PAGES;
 				}
 #endif
-
+                if (strncmp(optarg, LOG_TYPE_STRING_LOG_DIRECTORY, strnlen(optarg, sizeof(LOG_TYPE_STRING_LOG_DIRECTORY))) == 0 ||
+                    strncmp(optarg, LOG_TYPE_STRING_SMART_DIRECTORY, strnlen(optarg, sizeof(LOG_TYPE_STRING_SMART_DIRECTORY))) == 0 ||
+                    strncmp(optarg, LOG_TYPE_STRING_SMART_DIR, strnlen(optarg, sizeof(LOG_TYPE_STRING_SMART_DIR))) == 0 ||
+                    strncmp(optarg, LOG_TYPE_STRING_SMART_DIR_LOG, strnlen(optarg, sizeof(LOG_TYPE_STRING_SMART_DIR_LOG))) == 0 )
+                {
+                    INPUT_LOG_TYPE_FLAG = eLogTypes::LOG_TYPE_SMART_DIRECTORY;
+                }
             }
 #endif
             else if (strcmp(longopts[optionIndex].name, PATH_LONG_OPT_STRING) == 0)
@@ -592,6 +598,25 @@ int32_t main(int argc, char *argv[])
 				delete (cLogPages);
 			}
 			break;
+        case eLogTypes::LOG_TYPE_SMART_DIRECTORY:
+            {
+                CAta_SMART_Log_Dir* cSmartDir;
+                cSmartDir = new CAta_SMART_Log_Dir(INPUT_LOG_FILE_NAME);				// constructor will make sure we read in the file and start the parseing of the binary
+                retStatus = cSmartDir->get_SMART_Log_Dir_Status();
+                if (retStatus == eReturnValues::SUCCESS)
+                {
+                    try
+                    {
+                        retStatus = cSmartDir->print_SMART_Log_Dir(masterJson);
+                    }
+                    catch(...)
+                    {
+                        retStatus = eReturnValues::FAILURE;
+                    }
+                }
+                delete (cSmartDir);
+            }
+            break;
         default:
             {
                 // set to unknown to pass through the case statement below no type set was given or didn't match
