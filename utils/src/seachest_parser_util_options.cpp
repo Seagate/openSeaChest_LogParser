@@ -45,7 +45,7 @@ void seachest_utility_Info(const std::string & utilityName, const std::string & 
 
     printf("===============================================================================\n");
     printf(" %s - Seagate drive utilities\n", utilityName.c_str());
-    printf(" Copyright (c) 2018-2024 Seagate Technology LLC and/or its Affiliates\n");
+    printf(" Copyright (c) 2018-2026 Seagate Technology LLC and/or its Affiliates\n");
     printf(" %s Version: %s-%s ", utilityName.c_str(), buildVersion.c_str(), openseaVersion.c_str());
     print_Architecture(architecture);
     printf("\n");
