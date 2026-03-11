@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MPL-2.0
 name: MSBuild
 
 on: 
@@ -12,6 +13,9 @@ on:
     branches:
       - develop
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 env:
   # Path to the solution file relative to the root of the project.
   SOLUTION_FILE_PATH: Make/VS.2019/openSeaChest_LogParser/openSeaChest_LogParser
@@ -24,6 +28,9 @@ env:
 jobs:
   build:
     runs-on: windows-latest
+    timeout-minutes: 60
+    permissions:
+      contents: read
     strategy:
       matrix:
         platform: [ x64, x86 ]
@@ -38,7 +45,7 @@ jobs:
       uses: nuget/setup-nuget@v1
       
     - name: Add MSBuild to PATH
-      uses: microsoft/setup-msbuild@v2
+      uses: microsoft/setup-msbuild@v2.0.0
 
     - name: Cache NuGet packages
       uses: actions/cache@v3

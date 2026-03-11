@@ -1,10 +1,15 @@
+# SPDX-License-Identifier: MPL-2.0
 name: C/C++ CI
 
 on:
   push:
-    branches: [ develop, master, release/* ]
+    branches: [ develop, master, release/*, feature/*, hotfix/* ]
   pull_request:
     branches: [ develop ]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
