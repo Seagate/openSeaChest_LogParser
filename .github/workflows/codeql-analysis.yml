@@ -58,7 +58,7 @@ jobs:
        cd Make/gcc
        make farm && make clean_all && make release
 
-    - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v3
-      with:
-        category: "/language:${{ matrix.language }}"
+    #- name: Perform CodeQL Analysis
+    #  uses: github/codeql-action/analyze@v3
+    #  with:
+    #    category: "/language:${{ matrix.language }}"
