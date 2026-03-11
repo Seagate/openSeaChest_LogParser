@@ -22,26 +22,7 @@
 #include <iterator>
 
 using namespace opensea_parser;
-// trim from beginning of string (left)
-inline std::string& ltrim(std::string& s, const char* t = " \t\r\f\v")
-{
-    s.erase(0, s.find_first_not_of(t));
-    return s;
-}
 
-inline bool replaceCharacter(std::string &s, char c, char r, size_t pos, bool backward)
-{
-    std::size_t found = backward ? s.rfind(c, pos) : s.find(c, pos);
-
-    if (found != std::string::npos)
-    {
-        s.replace(found, 1, 1, r);
-        return true;
-    }
-
-    return false;
-
-}
 //-----------------------------------------------------------------------------
 //
 //! \fn CPrintJSON::CPrintJSON()
@@ -170,7 +151,7 @@ bool CPrintCSV::parse_Json_Flat(JSONNODE *nData)
         {
             json_char *main_name = json_name(*i);
             JSONNODE_ITERATOR q = json_begin(*i);
-            if (q == NULL)
+            if (q == M_NULLPTR)
             {
                 json_free(main_name);
                 break;
@@ -262,7 +243,7 @@ bool CPrintCSV::parse_Json_Flat(JSONNODE *nData)
         {
             json_char *node_name = json_name(*i);
             json_char *node_value = json_as_string(*i);
-            if (node_name == NULL || node_value == NULL)
+            if (node_name == M_NULLPTR || node_value == M_NULLPTR)
             {
                 if (eVerbosityLevels::VERBOSITY_COMMAND_VERBOSE <= g_verbosity)
                 {
@@ -281,7 +262,7 @@ bool CPrintCSV::parse_Json_Flat(JSONNODE *nData)
         {
             json_char *node_name = json_name(*i);
             json_char *node_value = json_as_string(*i);
-            if (node_name == NULL || node_value == NULL)
+            if (node_name == M_NULLPTR || node_value == M_NULLPTR)
             {
                 if (eVerbosityLevels::VERBOSITY_COMMAND_VERBOSE <= g_verbosity)
                 {
@@ -329,7 +310,7 @@ bool CPrintCSV::parse_Json(JSONNODE *nData, uint16_t numberOfTabs)
         {
             json_char *main_name = json_name(*i);
             JSONNODE_ITERATOR q = json_begin(*i);
-            if (q == NULL)
+            if (q == M_NULLPTR)
             {
                 json_free(main_name);
                 break;
@@ -342,23 +323,17 @@ bool CPrintCSV::parse_Json(JSONNODE *nData, uint16_t numberOfTabs)
                 {
                     for (uint16_t j = 0; j < numberOfTabs; j++)
                     {
-                        //title.insert(j, ",");
                         titleStream << ",";
                     }
                     title = titleStream.str();
                 }
                 else    // for the flatcsv
                 {
-                    //title = ",";
                     titleStream << ",";
                 }
                 titleStream << main_name;
-                //title.append(main_name);
-                //title = title + ",";
                 titleStream << ",";
                 m_line.append(titleStream.str());
-                //m_line.append("\n");
-                //title = "";
                 titleStream.str("");
 
                 // go through all the nodes and get the data but don't change the title
@@ -369,8 +344,6 @@ bool CPrintCSV::parse_Json(JSONNODE *nData, uint16_t numberOfTabs)
                         data.assign(numberOfTabs + 1, ',');  
                         json_char* newData = json_as_string(*q);
                         data.append(newData);
-                        //data.append(",\n");
-                        //m_csvData.data.resize(data.size());
                         m_csvData.data.append(data.c_str());
                         json_free(newData);
                         data = "";
@@ -515,7 +488,7 @@ bool CPrintCSV::parse_Json(JSONNODE *nData, uint16_t numberOfTabs)
             json_char *main_name = json_name(*i);
             JSONNODE_ITERATOR q = json_begin(*i);
             // need to parse out the 64 bit data for the flat csv 
-            if (q == NULL)
+            if (q == M_NULLPTR)
             {
                 break;
             }
@@ -550,7 +523,7 @@ bool CPrintCSV::parse_Json(JSONNODE *nData, uint16_t numberOfTabs)
         {
             json_char *node_name = json_name(*i);
             json_char *node_value = json_as_string(*i);
-            if (node_name == nullptr || node_value == nullptr) {
+            if (node_name == M_NULLPTR || node_value == M_NULLPTR) {
                 json_free(node_name);
                 json_free(node_value);
                 if (eVerbosityLevels::VERBOSITY_COMMAND_VERBOSE <= g_verbosity)
@@ -569,7 +542,7 @@ bool CPrintCSV::parse_Json(JSONNODE *nData, uint16_t numberOfTabs)
         {
             json_char *node_name = json_name(*i);
             json_char *node_value = json_as_string(*i);
-            if (node_name == nullptr || node_value == nullptr) {
+            if (node_name == M_NULLPTR || node_value == M_NULLPTR) {
                 json_free(node_name);
                 json_free(node_value);
                 if (eVerbosityLevels::VERBOSITY_COMMAND_VERBOSE <= g_verbosity)
@@ -817,14 +790,6 @@ bool CPrintTXT::parse_Json_to_Text(JSONNODE *nData, uint16_t numberOfTabs)
 //---------------------------------------------------------------------------
 std::string CPrintTXT::get_Msg_Text_Format()
 {
-   // std::string r = "";
-   // for (std::vector<sFrameData>::iterator it = m_vData.begin(); it != m_vData.end(); ++it)
-   // {
-   //     r.append(it->title);
-   //     r.append(" : ");
-   //     r.append(it->data);
-   //     r.append("\n");
-   // }
     std::string r;
     r.reserve(m_vData.size() * 100);  // Estimate size
     for (const auto& frame : m_vData)
@@ -962,6 +927,11 @@ void CPrintTXT::get_String_Or_Bool(JSONNODE* node, std::string& title, std::stri
 {
     char* node_name = json_name(node);
     char* node_value = json_as_string(node);
+    if (node_value == M_NULLPTR || node_name == M_NULLPTR) {
+        json_free(node_name);
+        json_free(node_value);
+        return;
+    }
     title = node_name;
     data = node_value;
     create_Tabs(title, data, numberOfTabs);
@@ -985,6 +955,11 @@ void CPrintTXT::get_Number(JSONNODE* node, std::string& title, std::string& data
 {
     json_char* node_name = json_name(node);
     json_char* node_value = json_as_string(node);
+    if (node_value == M_NULLPTR || node_name == M_NULLPTR) {
+        json_free(node_name);
+        json_free(node_value);
+        return;
+    }
     title = node_name;
     data = node_value;
     create_Tabs(title, data, numberOfTabs);
@@ -1008,13 +983,13 @@ void CPrintTXT::get_Number(JSONNODE* node, std::string& title, std::string& data
 //
 //---------------------------------------------------------------------------
 
-/*
- *  Parses JSON and converts it to key-value pairs with labels, storing that in a struct
- *
- *  @param  Pointer to raw JSON data (*JSONNODE)
- *  @param  The drive's serial number (string)
- *  @param  The name of the JSON node superceding (one level above) the current one
- */
+//---------------------------------------------------------------------------
+//  Parses JSON and converts it to key-value pairs with labels, storing that in a struct
+//
+//! \param  Pointer to raw JSON data (*JSONNODE)
+//! \param  The drive's serial number (string)
+//! \param  The name of the JSON node superceding (one level above) the current one
+//---------------------------------------------------------------------------
 void CPrintProm::parseJSONToProm(JSONNODE* nData, std::string inserialNumber, json_char *json_nodeName) {
     // Declare a metric
     JSONNODE_ITERATOR it_json = json_begin(nData);
@@ -1078,7 +1053,8 @@ void CPrintProm::parseJSONToProm(JSONNODE* nData, std::string inserialNumber, js
                 JSONNODE_ITERATOR it_jsonArrayNode = json_begin(*it_jsonArray);
                 json_char *jsonArrayNodeName = json_name(*it_jsonArrayNode);
                 // Do nothing if the node is NULL
-                if (it_jsonArrayNode == NULL) {
+                if (it_jsonArrayNode == M_NULLPTR || jsonArrayNodeName == M_NULLPTR)
+                {
                     json_free(jsonArrayNodeName);
                     json_free(jsonArrayName);
                     break;
@@ -1107,7 +1083,7 @@ void CPrintProm::parseJSONToProm(JSONNODE* nData, std::string inserialNumber, js
                 }
             }
             // If the key is describing a test zone with a given number, convert that to a label
-            if (json_nodeName != NULL) {
+            if (json_nodeName != M_NULLPTR) {
                 if (std::string(json_nodeName).find("Test Zone ") != std::string::npos || currentMetric.key.find("Zone ") != std::string::npos) {
                     if (currentMetric.key.find_first_of("0123456789") != std::string::npos) {
                         currentMetric = zoneToLabel(currentMetric);
@@ -1167,7 +1143,7 @@ void CPrintProm::parseJSONToProm(JSONNODE* nData, std::string inserialNumber, js
             json_char *jsonNodeName = json_name(*it_json);
             JSONNODE_ITERATOR it_jsonNode = json_begin(*it_json);
             // Do nothing if the node is NULL
-            if (it_jsonNode == NULL) {
+            if (it_jsonNode == M_NULLPTR) {
                 json_free(jsonNodeName);
                 break;
             }
@@ -1180,11 +1156,11 @@ void CPrintProm::parseJSONToProm(JSONNODE* nData, std::string inserialNumber, js
     }
 }
 
-/*
- *  Takes values from struct and formats data into a PromQL string
- *
- *  @return Data in PromQL format (string)
- */
+//---------------------------------------------------------------------------
+//! \fn Takes values from struct and formats data into a PromQL string
+//
+//! \return Data in PromQL format (string)
+//---------------------------------------------------------------------------
 std::string CPrintProm::printProm() {
     std::string promOutput = "";
     // Iterate through the list of metrics and add it to the output string, formatted
@@ -1222,12 +1198,12 @@ std::string CPrintProm::printProm() {
     return promOutput;
 }
 
-/*
- *  Converts a string to a metric name in Prometheus' desired format
- *
- *  @param  A key to convert (string)
- *  @return The modified key in Prometheus' format (string)
- */
+//---------------------------------------------------------------------------
+//! \fn Converts a string to a metric name in Prometheus' desired format
+//
+//! \param  A key to convert (string)
+//! \return The modified key in Prometheus' format (string)
+//---------------------------------------------------------------------------
 std::string CPrintProm::toPrometheusKey(std::string key) {
     // Specifies the prefix to add to each metric and which character separates words
     const std::string PREFIX = "seachest";
@@ -1256,55 +1232,55 @@ std::string CPrintProm::toPrometheusKey(std::string key) {
     return PREFIX + REPLACE + trim(key, REPLACE);
 }
 
-/*
- *  Removes all leading instances of a given string
- *
- *  @param  The string that is being trimmed (string)
- *  @param  The given string to replace (const string)
- *  @return A string with all its leading instances of REPLACE removed
- */
+//---------------------------------------------------------------------------
+//! \fn  Removes all leading instances of a given string
+//
+//! \param  The string that is being trimmed (string)
+//! \param  The given string to replace (const string)
+//! \return A string with all its leading instances of REPLACE removed
+//---------------------------------------------------------------------------
 std::string CPrintProm::trimLeft(std::string s, const std::string &REPLACE) {
     size_t start = s.find_first_not_of(REPLACE);
     return (start == std::string::npos) ? "" : s.substr(start);
 }
 
-/*
- *  Removes all trailing instances of a given string
-  *
- *  @param  The string that is being trimmed (string)
- *  @param  The given string to replace (const string)
- *  @return A string with all its trailing instances of REPLACE removed
- */
+//---------------------------------------------------------------------------
+//! \fn Removes all trailing instances of a given string
+//
+//! \param  The string that is being trimmed (string)
+//! \param  The given string to replace (const string)
+//! \return A string with all its trailing instances of REPLACE removed
+//---------------------------------------------------------------------------
 std::string CPrintProm::trimRight(std::string s, const std::string &REPLACE) {
     size_t end = s.find_last_not_of(REPLACE);
     return (end == std::string::npos) ? "" : s.substr(0, end + 1);
 }
 
-/*
- *  Removes all leading and trailing instances of a given string
- *
- *  @param  The string that is being trimmed (string)
- *  @param  The given string to replace (const string)
- *  @return A string with all its leading and trailing instances of REPLACE removed
- */
+//---------------------------------------------------------------------------
+//! \fn Removes all leading and trailing instances of a given string
+//
+//! \param  The string that is being trimmed (string)
+//! \param  The given string to replace (const string)
+//! \return A string with all its leading and trailing instances of REPLACE removed
+//---------------------------------------------------------------------------
 std::string CPrintProm::trim(std::string s, const std::string &REPLACE) {
     return trimRight(trimLeft(s, REPLACE), REPLACE);
 }
 
-/*
- *  Getter for private serialNumber variable
- *
- *  @return The current drive's serial number (string)
- */
+//---------------------------------------------------------------------------
+//! \fn  Getter for private serialNumber variable
+//
+//! \return The current drive's serial number (string)
+//---------------------------------------------------------------------------
 std::string CPrintProm::getSerialNumber() {
     return serialNumber;
 }
 
-/*
- *  Gets drive serial number from JSON data
- *
- *  @param  Pointer to raw JSON data (*JSONNODE)
- */
+//---------------------------------------------------------------------------
+//! \fn Gets drive serial number from JSON data
+//
+//! \param  Pointer to raw JSON data (*JSONNODE)
+//---------------------------------------------------------------------------
 void CPrintProm::setSerialNumber(JSONNODE *nData) {
     JSONNODE_ITERATOR it_json = json_begin(nData);
     // Iterate through the JSON, and if the "Serial Number" field is found, set the serial number accordingly
@@ -1320,7 +1296,7 @@ void CPrintProm::setSerialNumber(JSONNODE *nData) {
         } else if (json_type(*it_json) == JSON_NODE) {
             JSONNODE_ITERATOR it_jsonNode = json_begin(*it_json);
             // Do nothing if the node is NULL
-            if (it_jsonNode == NULL) {
+            if (it_jsonNode == M_NULLPTR) {
                 break;
             }
             // Run this method recursively
@@ -1330,12 +1306,12 @@ void CPrintProm::setSerialNumber(JSONNODE *nData) {
     }
 }
 
-/*
- *  Determines if a given string can be parsed as a number
- *
- *  @param  The string to parse (string)
- *  @return True if the string is a number; false if the string is not a number
- */
+//---------------------------------------------------------------------------
+//! \fn Determines if a given string can be parsed as a number
+//
+//! \param  The string to parse (string)
+//! \return True if the string is a number; false if the string is not a number
+//---------------------------------------------------------------------------
 bool CPrintProm::isNumber(std::string s) {
     // Matches an optional sign (+ or -) followed by a floating point number (one decimal followed by integers) or an integer
     bool decimalPresent = false;
@@ -1360,12 +1336,12 @@ bool CPrintProm::isNumber(std::string s) {
     return true;
 }
 
-/*
- *  Modifies the metric so that its name is concise while the drive head's number is moved to a label
- *
- *  @param  A metric struct with head in the key (metric)
- *  @return A metric struct with head as a label (metric)
- */
+//---------------------------------------------------------------------------
+//! \fn  Modifies the metric so that its name is concise while the drive head's number is moved to a label
+//
+//! \param  A metric struct with head in the key (metric)
+//! \return A metric struct with head as a label (metric)
+//---------------------------------------------------------------------------
 CPrintProm::metric CPrintProm::headToLabel(metric currentMetric) {
     // Put string of the current metric's key into a stream
     std::stringstream currentKeyStream(currentMetric.key);
@@ -1448,12 +1424,12 @@ CPrintProm::metric CPrintProm::headToLabel(metric currentMetric) {
     return currentMetric;
 }
 
-/*
- *  Modifies the metric so that its name is concise while the drive head's number is moved to a label
- *
- *  @param  A metric struct with test zone in the key (metric)
- *  @return A metric struct with test zone as a label (metric)
- */
+//---------------------------------------------------------------------------
+//! \fn Modifies the metric so that its name is concise while the drive head's number is moved to a label
+//
+//! \param  A metric struct with test zone in the key (metric)
+//! \return A metric struct with test zone as a label (metric)
+//---------------------------------------------------------------------------
 CPrintProm::metric CPrintProm::zoneToLabel(metric currentMetric) {
     // Put string of the current metric's key into a stream
     std::stringstream currentKeyStream(currentMetric.key);
@@ -1516,7 +1492,20 @@ CPrintProm::metric CPrintProm::zoneToLabel(metric currentMetric) {
     }
     return currentMetric;
 }
-
+//-----------------------------------------------------------------------------
+//
+//! \fn CMessage::CMessage()
+//
+//! \brief
+//!   Description: Class constructor
+//
+//  Entry:
+//! \param masterData = all of the json information
+//
+//  Exit:
+//!   \return 
+//
+//---------------------------------------------------------------------------
 CMessage::CMessage(JSONNODE *masterData)
 	:CPrintJSON(masterData), CPrintTXT(), CPrintCSV(), CPrintProm()
     , msgData(masterData)
@@ -1605,7 +1594,7 @@ int CMessage::WriteBuffer()
         // First get the drive serial number
         setSerialNumber(msgData);
         // Then parse the JSON, storing it in a struct matching Promtheus' format
-        parseJSONToProm(msgData, getSerialNumber(), NULL);
+        parseJSONToProm(msgData, getSerialNumber(), M_NULLPTR);
         // Then scan through the structure and print the output to a .prom file
         message = printProm();
         break;
