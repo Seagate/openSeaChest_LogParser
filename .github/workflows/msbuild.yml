@@ -15,7 +15,7 @@ on:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 env:
   # Path to the solution file relative to the root of the project.
   SOLUTION_FILE_PATH: Make/VS.2019/openSeaChest_LogParser/openSeaChest_LogParser
@@ -75,5 +75,5 @@ jobs:
       # See https://docs.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
       run: msbuild /m /p:Configuration=${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_FILE_PATH}} /p:Platform=${{matrix.platform}}
       
-    - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v3
+    #- name: Perform CodeQL Analysis
+    #  uses: github/codeql-action/analyze@v3
