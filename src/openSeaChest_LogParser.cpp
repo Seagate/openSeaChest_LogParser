@@ -469,7 +469,7 @@ int32_t main(int argc, char *argv[])
     }
 #endif
     //print out errors for unknown arguments for remaining args that haven't been processed yet
-    for (argIndex = static_cast<uint8_t>(optind); argIndex < argc; argIndex++)
+    for (argIndex = static_cast<uint8_t>(optind); argIndex < static_cast<uint8_t>( argc); argIndex++)
     {
         if (eVerbosityLevels::VERBOSITY_QUIET < g_verbosity)
         {
