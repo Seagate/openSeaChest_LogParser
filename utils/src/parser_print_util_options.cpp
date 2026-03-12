@@ -1052,7 +1052,6 @@ void CPrintProm::parseJSONToProm(JSONNODE* nData, std::string inserialNumber, js
             } else if (json_type(*it_jsonArray) == JSON_NODE) {
                 JSONNODE_ITERATOR it_jsonArrayNode = json_begin(*it_jsonArray);
                 json_char *jsonArrayNodeName = json_name(*it_jsonArrayNode);
-                // Do nothing if the node is NULL
 
                 // Run this method recursively
                 parseJSONToProm(*it_jsonArray, inserialNumber, jsonArrayNodeName);

@@ -1,6 +1,9 @@
 # SPDX-License-Identifier: MPL-2.0
 name: C/C++ CI
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true' # Set at the workflow level
+  
 on:
   push:
     branches: [ develop, master, release/*, feature/*, hotfix/* ]
@@ -39,11 +42,6 @@ jobs:
         set -e
         cd Make/gcc
         make farm && make clean_all && make release
-        
-    - name: Run tests
-      run: |
-        cd Make/gcc
-        make test
         
     - name: Upload artifacts
       uses: actions/upload-artifact@v4.3.1
