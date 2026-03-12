@@ -37,15 +37,16 @@ jobs:
         language: ['cpp']
 
     steps:
-    #- uses: actions/checkout@v3
+    - name: Harden Runner
+      uses: step-security/harden-runner@a90bcbc6539c36a85cdfeb73f7e2f433735f215b # v2.14.1
+      with:
+        egress-policy: audit
+
     - uses: actions/checkout@v6.0.2
       continue-on-error: true  # rsync code 24: harmless cleanup-phase race during VM setup
       with:
         submodules: recursive
-    
-    #- name: Setup NuGet
-    #  uses: nuget/setup-nuget@v1
-      
+
     - name: Add MSBuild to PATH
       uses: microsoft/setup-msbuild@v2.0.0
 
