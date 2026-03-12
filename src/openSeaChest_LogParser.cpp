@@ -104,14 +104,11 @@ int32_t main(int argc, char *argv[])
     SHOW_STATIC_DATA_VAR                            // force the parser to be static and print out the same information all the time. aka no arrays and no data created arrays
     SHOW_VERSION_VAR
     SHOW_HELP_VAR
-    //Tool specific
     INPUT_LOG_FILE_VAR
     OUTPUT_LOG_FILE_VAR
     INPUT_LOG_FILE_FOUND_VAR
     INPUT_LOG_TYPE_VAR
     OUTPUT_LOG_PRINT_VAR
-    //OUTPUTPATH_VAR
-    //OUTPUTFILE_VAR
 
     int args = 0;
     uint8_t argIndex = 0;
@@ -171,7 +168,6 @@ int32_t main(int argc, char *argv[])
         {
             break;
         }
-        //printf("Parsing arg <%u>\n", args);
         switch (args)
         {
         case 0:
@@ -537,7 +533,14 @@ int32_t main(int argc, char *argv[])
 				retStatus = cIdent->get_Identify_Information_Status();			// if eReturnValues::eReturnValues::IN_PROGRESS we can continue to print out the data
 				if (retStatus == eReturnValues::IN_PROGRESS)
 				{
-					retStatus = cIdent->print_Identify_Information(masterJson);
+                    try
+                    {
+                        retStatus = cIdent->print_Identify_Information(masterJson);
+                    }
+                    catch (...)
+                    {
+                        retStatus = eReturnValues::FAILURE;
+                    }
 				}
                 delete (cIdent);
             }
@@ -549,7 +552,14 @@ int32_t main(int argc, char *argv[])
 				retStatus = cIdData->get_identify_Status();						// if eReturnValues::eReturnValues::IN_PROGRESS we can continue to print out the data
 				if (retStatus == eReturnValues::IN_PROGRESS)
 				{
-					retStatus = cIdData->parse_Identify_Log_30(masterJson);
+                    try
+                    {
+                        retStatus = cIdData->parse_Identify_Log_30(masterJson);
+                    }
+                    catch (...)
+                    {
+                        retStatus = eReturnValues::FAILURE;
+                    }
 				}
                 delete (cIdData);
             }
@@ -561,7 +571,14 @@ int32_t main(int argc, char *argv[])
 				retStatus = cSCTTemp->get_Status();										// if eReturnValues::IN_PROGRESS we can continue to print out the data
 				if (retStatus == eReturnValues::IN_PROGRESS)
 				{
-					retStatus = cSCTTemp->print_SCT_Temp_Log();
+                    try
+                    {
+                        retStatus = cSCTTemp->print_SCT_Temp_Log();
+                    }
+                    catch(...)
+                    {
+                        retStatus = eReturnValues::FAILURE;
+                    }
 				}
                 delete (cSCTTemp);
             }
@@ -573,7 +590,14 @@ int32_t main(int argc, char *argv[])
 				retStatus = cPowerCon->get_Power_Status();								// if eReturnValues::IN_PROGRESS we can continue to print out the data
 				if (retStatus == eReturnValues::IN_PROGRESS)
 				{
-					retStatus = cPowerCon->printPowerConditionLog(masterJson);
+                    try
+                    {
+                        retStatus = cPowerCon->printPowerConditionLog(masterJson);
+                    }
+                    catch(...)
+                    {
+                        retStatus = eReturnValues::FAILURE;
+                    }   
 				}
 				delete (cPowerCon);
             }
@@ -583,9 +607,16 @@ int32_t main(int argc, char *argv[])
                 CAta_NCQ_Command_Error_Log * cNCQ;
                 cNCQ = new CAta_NCQ_Command_Error_Log(INPUT_LOG_FILE_NAME);				// constructor will make sure we read in the file and start the parseing of the binary
 				retStatus = cNCQ->get_NCQ_Command_Error_Log_Status();					// if eReturnValues::IN_PROGRESS we can continue to print out the data
-				if (retStatus == eReturnValues::IN_PROGRESS)
-				{
-					retStatus = cNCQ->get_NCQ_Command_Error_Log(masterJson);
+                if (retStatus == eReturnValues::IN_PROGRESS)
+                {
+                    try
+                    {
+                        retStatus = cNCQ->get_NCQ_Command_Error_Log(masterJson);
+                    }
+                    catch(...)
+                    {
+                        retStatus = eReturnValues::FAILURE;
+                    }
 				}
 				delete (cNCQ);
             }

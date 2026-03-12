@@ -1584,7 +1584,7 @@ int CMessage::WriteBuffer()
         message = get_Msg_Flat_csv(msgData);                // get the json data to create a flat csv 
         break;
     case ePrintTypes::LOG_PRINT_PROM:
-        // If the "prom" printType is specified, parse the JSON and convert it to PromQL
+        // the "prom" printType is specified, parse the JSON and convert it to PromQL
         // First get the drive serial number
         setSerialNumber(msgData);
         // Then parse the JSON, storing it in a struct matching Promtheus' format
