@@ -14,13 +14,14 @@ on:
     branches: [develop]
   schedule:
     - cron: '0 12 * * 6'
+  pull_request_target:
+    branches: [develop]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: false
 
 env:
-  # Path to the solution file relative to the root of the project.
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true' # Set at the workflow level
 
 jobs:
@@ -52,25 +53,27 @@ jobs:
         # a pull request then we can checkout the head.
         fetch-depth: 2
         submodules: recursive
-
-    # If this run was triggered by a pull request event, then checkout
-    # the head of the pull request instead of the merge commit.
-    #- run: git checkout HEAD^2
-    #  if: ${{ github.event_name == 'pull_request' }}
-
+        
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v4
       with:
         languages: ${{ matrix.language }}
-        #queries: security-and-quality  # Optional: run both security + quality checks
-
-
+        queries: security-and-quality
+    
+    - name: Cache build
+      uses: actions/cache@v3
+      with:
+        path: Make/gcc/build
+        key: ${{ runner.os }}-gcc-${{ hashFiles('**/Makefile') }}
+        restore-keys: |
+          ${{ runner.os }}-gcc-
+          
     - run: |
        cd Make/gcc
        make farm && make clean_all && make release
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v4
-      #with:
-      #  category: "/language:${{ matrix.language }}"
+      with:
+        category: "/language:${{ matrix.language }}"
