@@ -331,7 +331,7 @@ int32_t main(int argc, char *argv[])
             }
             else
             {
-                printf("Ignoring option --%s\n",longopts[optionIndex].name);
+                std::cout << "Ignoring option--" << longopts[optionIndex].name << "\n" << std::endl;
             }
             break;
         case 1:
@@ -360,13 +360,13 @@ int32_t main(int argc, char *argv[])
             case VERBOSE_SHORT_OPT:
                 if (eVerbosityLevels::VERBOSITY_QUIET < g_verbosity)
                 {
-                    printf("You must specify a verbosity level. 0 - 4 are the valid levels\n");
+                    std::cout << "You must specify a verbosity level. 0 - 4 are the valid levels\n" << std::endl;
                 }
                 break;
             default:
                 if (eVerbosityLevels::VERBOSITY_QUIET < g_verbosity)
                 {
-                    printf("Option %c requires an argument\n", optopt);
+                    std::cout << "Option" << optopt << "requires an argument\n" << std::endl;
                 }
                 utility_Usage(true);
                 return static_cast<int>(exitCode);
@@ -396,7 +396,7 @@ int32_t main(int argc, char *argv[])
     {
         //Echo the command line back to the customer
         Echo_Command_Line(argc, argv);
-        printf("\n");
+        std::cout << "\n" << std::endl;
     }
 
     if (eVerbosityLevels::VERBOSITY_QUIET < g_verbosity)
@@ -469,7 +469,7 @@ int32_t main(int argc, char *argv[])
     {
         if (eVerbosityLevels::VERBOSITY_QUIET < g_verbosity)
         {
-            printf("Invalid argument: %s\n", argv[argIndex]);
+            std::cout << "Invalid argument : " << argv[argIndex] << "\n" << std::endl;
         }
     }
  
@@ -664,7 +664,7 @@ int32_t main(int argc, char *argv[])
                 exitCode = eUtilExitCodes::UTIL_EXIT_NO_ERROR;
                 if (OUTPUT_LOG_FILE_FLAG)
                 {
-                    printf("\nParsing completed with no issues \n");
+                    std::cout << "\nParsing completed with no issues \n" << std::endl;
                 }
             }
 		    break;
@@ -673,7 +673,7 @@ int32_t main(int argc, char *argv[])
                 exitCode = eUtilExitCodes::UTIL_EXIT_OPERATION_NOT_SUPPORTED;
                 if (OUTPUT_LOG_FILE_FLAG)
                 {
-                    printf("\nLog Not supported at this time \n");
+                    std::cout << "\nLog Not supported at this time \n" << std::endl;
                     json_push_back(masterJson, json_new_a("Not Supported", "Log Not Supported"));
                 }
             }
@@ -683,7 +683,7 @@ int32_t main(int argc, char *argv[])
                 exitCode = eUtilExitCodes::UTIL_EXIT_OPERATION_STILL_IN_PROGRESS;
                 if (OUTPUT_LOG_FILE_FLAG)
                 {
-                    printf("\nParsing incomplete Operation was still in progress \n");
+                    std::cout << "\nParsing incomplete Operation was still in progress \n" << std::endl;
                     json_push_back(masterJson, json_new_a("Parsing Error", "Incomplete Operation was still in progress"));
                 }
             }
@@ -693,7 +693,7 @@ int32_t main(int argc, char *argv[])
                 exitCode = eUtilExitCodes::UTIL_EXIT_OPERATION_FAILURE;
                 if (OUTPUT_LOG_FILE_FLAG)
                 {
-                    printf("\nOperation Failure \n");
+                    std::cout << "\nOperation Failure \n" << std::endl;
                     json_push_back(masterJson, json_new_a("Parsing Error", "Operation Failure"));
                 }
             }
@@ -703,7 +703,7 @@ int32_t main(int argc, char *argv[])
                 exitCode = eUtilExitCodes::UTIL_EXIT_OPERATION_ABORTED;
                 if (OUTPUT_LOG_FILE_FLAG)
                 {
-                    printf("\nAborted \n");
+                    std::cout << "\nAborted \n" << std::endl;
                     json_push_back(masterJson, json_new_a("Parsing Error", "Aborted"));
                 }
             }
@@ -713,8 +713,8 @@ int32_t main(int argc, char *argv[])
                 exitCode = eUtilExitCodes::UTIL_EXIT_OPERATION_BAD_PARAMETER;
                 if (OUTPUT_LOG_FILE_FLAG)
                 {
-                    printf("\nBad Parameter \n");
-                    printf("Check --logType\n");
+                    std::cout << "\nBad Parameter \n" << std::endl;
+                    std::cout << "Check --logType\n" << std::endl;
                     json_push_back(masterJson, json_new_a("Parsing Error", "Bad Parameter"));
                 }
             }
@@ -724,7 +724,7 @@ int32_t main(int argc, char *argv[])
                 exitCode = eUtilExitCodes::UTIL_EXIT_OPERATION_MEMORY_FAILURE;
                 if (OUTPUT_LOG_FILE_FLAG)
                 {
-                    printf("\nMemory Failure \n");
+                    std::cout << "\nMemory Failure \n" << std::endl;
                     json_push_back(masterJson, json_new_a("Parsing Error", "Memory Failure"));
                 }
             }
@@ -734,7 +734,7 @@ int32_t main(int argc, char *argv[])
                 exitCode = eUtilExitCodes::UTIL_EXIT_CANNOT_OPEN_FILE;
                 if (OUTPUT_LOG_FILE_FLAG)
                 {
-                    printf("\nCould not Open File \n");
+                    std::cout << "\nCould not Open File \n" << std::endl;
                     json_push_back(masterJson, json_new_a("Parsing Error", "Could not Open File"));
                 }
             }
@@ -744,7 +744,7 @@ int32_t main(int argc, char *argv[])
                 exitCode = eUtilExitCodes::UTIL_EXIT_VALIDATION_FAILURE;
                 if (OUTPUT_LOG_FILE_FLAG)
                 {
-                    printf("\nBinary File has Failed Validation \n");
+                    std::cout << "\nBinary File has Failed Validation \n" << std::endl;
                     json_push_back(masterJson, json_new_a("Parsing Error", "Validation Failure"));
                 }
             }
@@ -754,14 +754,14 @@ int32_t main(int argc, char *argv[])
                 exitCode = eUtilExitCodes::UTIL_EXIT_OPERATION_INVALID_LENGTH;
                 if (OUTPUT_LOG_FILE_FLAG)
                 {
-                    printf("\nBinary File With Invalid Length \n");
+                    std::cout << "\nBinary File With Invalid Length \n" << std::endl;
                     json_push_back(masterJson, json_new_a("Parsing Error", "Invalid Length"));
                 }
             }
 			break;
 		default:
             {
-                printf("\n %d failure", static_cast<int>(retStatus));
+                std::cout << "\n " << static_cast<int>(retStatus) << " failure" << std::endl;
             }
 			break;
 		}
@@ -844,28 +844,28 @@ int32_t main(int argc, char *argv[])
 void utility_Usage(bool shortUsage)
 {
     //everything needs a help option right?
-    printf("Usage\n");
-    printf("=====\n");
-    printf("\t %s {arguments} {options}\n\n", util_name.c_str());
+    std::cout << "Usage\n" << std::endl;
+    std::cout << "=====\n" << std::endl;
+    std::cout << "\t " << util_name.c_str() << "{arguments} { options }\n\n" << std::endl;
 
 
-    printf("Examples\n");
-    printf("========\n");
+    std::cout << "Examples\n" << std::endl;
+    std::cout << "========\n" << std::endl;
     //example usage
 #if defined BUILD_FARM_ONLY 
-    printf("\t%s --inputLog <filename> --printType json --outputLog <filename>\n", util_name.c_str());
+    std::cout << "\t" << util_name.c_str() << " --inputLog <filename> --printType json --outputLog <filename>\n" << std::endl;
 #else
-    printf("\t%s --inputLog <filename> --logType %s --printType json --outputLog <filename>\n", util_name.c_str(), LOG_TYPE_STRING_FARM);
+    std::cout << "\t" << util_name.c_str() << " --inputLog <filename> --logType " << LOG_TYPE_STRING_FARM <<" --printType json --outputLog <filename>\n" << std::endl;
 #endif
-	printf("\n");
+	std::cout << "\n" << std::endl;
     //return codes
-    printf("Return Codes\n");
-    printf("============\n");
+    std::cout << "Return Codes\n" << std::endl;
+    std::cout << "============\n" << std::endl;
     print_SeaChest_Util_Exit_Codes();
 
     //the test options
-    printf("Utility Arguments\n");
-    printf("=================\n");
+    std::cout << "Utility Arguments\n" << std::endl;
+    std::cout << "=================\n" << std::endl;
     //Common (across utilities) - alphabetized
     print_Input_Log_Help(shortUsage);
 #if defined BUILD_FARM_ONLY 
@@ -879,8 +879,8 @@ void utility_Usage(bool shortUsage)
     print_Log_Print_Help(shortUsage);
     
     //utility options - alphabetized
-    printf("Utility Options\n");
-    printf("===============\n");
+    std::cout << "Utility Options\n" << std::endl;
+    std::cout << "===============\n" << std::endl;
     print_Echo_Command_Line_Help(shortUsage);
     print_Help_Help(shortUsage);
     print_License_Help(shortUsage);
@@ -942,7 +942,7 @@ inline void Echo_Command_Line(int argc, char *argv[])
         {
             continue;
         }
-        printf("%s ", argv[commandLineIter]);
+        std::cout << argv[commandLineIter] << ' ';
     }
-    printf("\n");
+    std::cout << "\n" << std::endl;
 }
