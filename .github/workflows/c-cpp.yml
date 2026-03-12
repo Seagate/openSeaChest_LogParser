@@ -7,9 +7,9 @@ on:
   pull_request:
     branches: [ develop ]
     
-  permissions:
-    contents: read
-    actions: write
+permissions:
+  contents: read
+  actions: write
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
