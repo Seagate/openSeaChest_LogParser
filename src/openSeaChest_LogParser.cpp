@@ -494,7 +494,8 @@ int32_t main(int argc, char *argv[])
     }
 #endif
     //print out errors for unknown arguments for remaining args that haven't been processed yet
-    for (argIndex = static_cast<uint8_t>(optind); argIndex < static_cast<uint8_t>( argc); argIndex++)
+    //for (argIndex = static_cast<uint8_t>(optind); argIndex < static_cast<uint8_t>( argc); argIndex++)
+    for (int argIndex = optind; argIndex < argc; argIndex++)
     {
         if (eVerbosityLevels::VERBOSITY_QUIET < g_verbosity)
         {
@@ -853,7 +854,12 @@ int32_t main(int argc, char *argv[])
         else //print it to stdout. 
         {
 			std::string myFile = INPUT_LOG_FILE_NAME;				// myFile for the auto creation of the output file
-			myFile = myFile.substr(0, myFile.rfind("."));           // remove the extension from the file
+			//myFile = myFile.substr(0, myFile.rfind("."));           
+            size_t dotPos = myFile.rfind('.');
+            // remove the extension from the file
+            if (dotPos != std::string::npos) {
+                myFile = myFile.substr(0, dotPos);
+            }
             CMessage *printMessage = nullptr;
             if (OUTPUT_LOG_PRINT_FLAG == ePrintTypes::LOG_PRINT_JSON)         // Append output extension, .json by default
             {
@@ -984,6 +990,9 @@ void utility_Usage(bool shortUsage)
 //---------------------------------------------------------------------------
 static void UtilityHeader(JSONNODE *masterData)
 {
+    if (masterData == nullptr) {
+        return;
+    }
 	// get current Time and Date 
     char timeCString[64];
     const char * constTimeCString = &timeCString[0];
@@ -992,6 +1001,9 @@ static void UtilityHeader(JSONNODE *masterData)
     memset(&localTimeBuffer, 0, sizeof(struct tm));
 	strftime(timeCString, 64, "%m-%d-%Y__%H:%M:%S", get_Localtime(&pCurrentTime, &localTimeBuffer));
 	JSONNODE *toolHeader = json_new(JSON_NODE);
+    if (toolHeader == nullptr) {
+        return;  // Or log error
+    }
 	json_set_name(toolHeader, util_name.c_str());
 	json_push_back(toolHeader, json_new_a("Utility Build Version", buildVersion.c_str()));
     json_push_back(toolHeader, json_new_a("Library Build Version", OPENSEA_PARSER_VERSION));
