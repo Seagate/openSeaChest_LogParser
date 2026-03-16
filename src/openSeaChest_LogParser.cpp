@@ -177,6 +177,7 @@ int32_t main(int argc, char *argv[])
             {
                 if (strstr(optarg, "fromPipe"))
                 {
+                    lineInputData.reserve(MAX_INPUT_DATA_SIZE);  // Pre-allocate
                     while (std::cin >> lineinput)
                     {
                         //lineInputData.push_back(static_cast<uint8_t>(std::strtoul(lineinput.c_str(), NULL, 16)));
@@ -207,7 +208,7 @@ int32_t main(int argc, char *argv[])
                 else
                 {
                     INPUT_LOG_FILE_FLAG = true;
-                    INPUT_LOG_FILE_NAME.resize(strlen(optarg));
+                    //INPUT_LOG_FILE_NAME.resize(strlen(optarg));
                     INPUT_LOG_FILE_NAME.assign(optarg);
                     if (!os_File_Exists(optarg))
                     {
@@ -217,7 +218,7 @@ int32_t main(int argc, char *argv[])
             }
 
 #if defined BUILD_FARM_ONLY 
-			if (strcmp(optarg, LOG_TYPE_STRING_FARM) == 0)
+			if (optarg != nullptr && strcmp(optarg, LOG_TYPE_STRING_FARM) == 0)
 			{
 				INPUT_LOG_TYPE_FLAG = eLogTypes::LOG_TYPE_FARM;
 			}
@@ -319,13 +320,16 @@ int32_t main(int argc, char *argv[])
             else if (strcmp(longopts[optionIndex].name, OUTPUT_LOG_LONG_OPT_STRING) == 0)
             {
                 OUTPUT_LOG_FILE_FLAG = true;
-                OUTPUT_LOG_FILE_NAME.resize(sizeof(optarg));
+                //OUTPUT_LOG_FILE_NAME.resize(safe_strlen(optarg));
                 OUTPUT_LOG_FILE_NAME.assign(optarg);
 
             }
             else if (strcmp(longopts[optionIndex].name, OUTPUT_LOG_PRINT_LONG_OPT_STRING) == 0)
             {
-                if (strcmp(optarg, LOG_PRINT_STRING_JSON) == 0)
+                if (optarg == nullptr) {
+                    OUTPUT_LOG_PRINT_FLAG = ePrintTypes::LOG_PRINT_JSON;  // Default
+                }
+                else if (strcmp(optarg, LOG_PRINT_STRING_JSON) == 0)
                 {
                     OUTPUT_LOG_PRINT_FLAG = ePrintTypes::LOG_PRINT_JSON;
                 }
@@ -485,7 +489,7 @@ int32_t main(int argc, char *argv[])
                 break;
             }
 
-        OUTPUT_LOG_FILE_NAME.resize(sizeof(outputPrefix));
+        //OUTPUT_LOG_FILE_NAME.resize(sizeof(outputPrefix));
         OUTPUT_LOG_FILE_NAME.assign(outputPrefix);
     }
 #endif
@@ -502,6 +506,10 @@ int32_t main(int argc, char *argv[])
     if (INPUT_LOG_FILE_FLAG)
     {
         JSONNODE *masterJson = json_new(JSON_NODE);
+        if (masterJson == nullptr) {
+            std::cerr << "Failed to allocate JSON node\n";
+            return static_cast<int>(eUtilExitCodes::UTIL_EXIT_OPERATION_MEMORY_FAILURE);
+        }
 		UtilityHeader(masterJson);
         switch (INPUT_LOG_TYPE_FLAG) 
         {
