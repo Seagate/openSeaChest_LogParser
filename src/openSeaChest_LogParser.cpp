@@ -173,7 +173,7 @@ int32_t main(int argc, char *argv[])
         {
         case 0:
             //parse long options that have no short option and required arguments here
-            if (strncmp(longopts[optionIndex].name, INPUT_LOG_LONG_OPT_STRING, strlen(longopts[optionIndex].name)) == 0)
+            if (optarg != nullptr && strncmp(longopts[optionIndex].name, INPUT_LOG_LONG_OPT_STRING, strlen(longopts[optionIndex].name)) == 0)
             {
                 if (strstr(optarg, "fromPipe"))
                 {
@@ -207,7 +207,7 @@ int32_t main(int argc, char *argv[])
                 else
                 {
                     INPUT_LOG_FILE_FLAG = true;
-                    INPUT_LOG_FILE_NAME.resize(sizeof(optarg));
+                    INPUT_LOG_FILE_NAME.resize(strlen(optarg));
                     INPUT_LOG_FILE_NAME.assign(optarg);
                     if (!os_File_Exists(optarg))
                     {
@@ -222,7 +222,7 @@ int32_t main(int argc, char *argv[])
 				INPUT_LOG_TYPE_FLAG = eLogTypes::LOG_TYPE_FARM;
 			}
 #else
-            else if (strncmp(longopts[optionIndex].name, INPUT_LOG_TYPE_LONG_OPT_STRING, strlen(longopts[optionIndex].name)) == 0)
+            else if (optarg != nullptr && strncmp(longopts[optionIndex].name, INPUT_LOG_TYPE_LONG_OPT_STRING, strlen(longopts[optionIndex].name)) == 0)
             {
                 convert_String_To_Upper_Case(optarg);
 #if defined (INCLUDE_FARM_LOG)
@@ -459,8 +459,12 @@ int32_t main(int argc, char *argv[])
 	}
     if (!OUTPUT_LOG_FILE_FLAG || !INPUT_LOG_FILE_FLAG)
     {
-        std::string outputPrefix = INPUT_LOG_FILE_NAME.substr(0, INPUT_LOG_FILE_NAME.rfind('.'));
-        
+       // std::string outputPrefix = INPUT_LOG_FILE_NAME.substr(0, INPUT_LOG_FILE_NAME.rfind('.'));
+        size_t dotPos = INPUT_LOG_FILE_NAME.rfind('.');
+        std::string outputPrefix = (dotPos != std::string::npos)
+            ? INPUT_LOG_FILE_NAME.substr(0, dotPos)
+            : INPUT_LOG_FILE_NAME;
+
             switch (OUTPUT_LOG_PRINT_FLAG)
             {
             case ePrintTypes::LOG_PRINT_JSON:
@@ -528,6 +532,17 @@ int32_t main(int argc, char *argv[])
                 CAtaDeviceStatisticsLogs *cDevicStat;
                 cDevicStat = new CAtaDeviceStatisticsLogs(INPUT_LOG_FILE_NAME, masterJson);
                 retStatus = cDevicStat->get_Device_Stat_Status();					// All checks and parseing are done in the construtor
+                if (retStatus == eReturnValues::SUCCESS)
+                {
+                    try
+                    {
+                        retStatus = cDevicStat->ParseSCTDeviceStatLog(masterJson);
+                    }
+                    catch (...)
+                    {
+                        retStatus = eReturnValues::FAILURE;
+                    }
+                }
                 delete(cDevicStat);
             }
             break;
@@ -536,6 +551,18 @@ int32_t main(int argc, char *argv[])
                 CExtComp *cEC;
                 cEC = new CExtComp(INPUT_LOG_FILE_NAME, masterJson);
                 retStatus = cEC->get_EC_Status();									// All checks and parseing are done in the construtor
+                if (retStatus == eReturnValues::SUCCESS)
+                {
+                    try
+                    {
+                        retStatus = cEC->parse_Ext_Comp_Log(masterJson);
+                        retStatus = cEC->get_EC_Status();
+                    }
+                    catch (...)
+                    {
+                        retStatus = eReturnValues::FAILURE;
+                    }
+                }
                 delete(cEC);
             }
             break;
@@ -543,7 +570,18 @@ int32_t main(int argc, char *argv[])
             {
                 CAta_Ext_DST_Log *cDST;
                 cDST = new CAta_Ext_DST_Log(INPUT_LOG_FILE_NAME, masterJson);
-                retStatus = cDST->get_Status();
+                retStatus = cDST->get_Status();			// if eReturnValues::eReturnValues::IN_PROGRESS we can continue to print out the data
+                if (retStatus == eReturnValues::SUCCESS)
+                {
+                    try
+                    {
+                        retStatus = cDST->parse_Ext_Self_Test_Log(masterJson);
+                    }
+                    catch (...)
+                    {
+                        retStatus = eReturnValues::FAILURE;
+                    }
+                }
                 delete(cDST);
             }
             break;
@@ -647,6 +685,17 @@ int32_t main(int argc, char *argv[])
 				CScsiLog * cLogPages;
 				cLogPages = new CScsiLog(INPUT_LOG_FILE_NAME, masterJson);				// All checks and parseing are done in the construtor
 				retStatus = cLogPages->get_Log_Status();
+                if (retStatus == eReturnValues::SUCCESS)
+                {
+                    try
+                    {
+                        retStatus = cLogPages->get_Log_Parsed(masterJson);// init the data for getting the log
+                    }
+                    catch (...)
+                    {
+                        retStatus = eReturnValues::FAILURE;
+                    }
+                }						
 				delete (cLogPages);
 			}
 			break;
@@ -797,7 +846,7 @@ int32_t main(int argc, char *argv[])
         {
 			std::string myFile = INPUT_LOG_FILE_NAME;				// myFile for the auto creation of the output file
 			myFile = myFile.substr(0, myFile.rfind("."));           // remove the extension from the file
-            CMessage *printMessage;
+            CMessage *printMessage = nullptr;
             if (OUTPUT_LOG_PRINT_FLAG == ePrintTypes::LOG_PRINT_JSON)         // Append output extension, .json by default
             {
                 myFile.append(".json");
@@ -837,7 +886,9 @@ int32_t main(int argc, char *argv[])
                 printMessage = new CMessage(masterJson, myFile, OUTPUT_LOG_PRINT_FLAG); // Get JSON output by default
                 std::cout << printMessage->get_Msg_JSON_Data().c_str();	// Print to the screen
             }
-            delete(printMessage);
+            if (printMessage != nullptr) {
+                delete printMessage;
+            }
         }
         json_delete(masterJson);
     }
