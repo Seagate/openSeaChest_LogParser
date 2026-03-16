@@ -494,8 +494,7 @@ int32_t main(int argc, char *argv[])
     }
 #endif
     //print out errors for unknown arguments for remaining args that haven't been processed yet
-    //for (argIndex = static_cast<uint8_t>(optind); argIndex < static_cast<uint8_t>( argc); argIndex++)
-    for (int argIndex = optind; argIndex < argc; argIndex++)
+    for (argIndex = static_cast<uint8_t>(optind); argIndex < static_cast<uint8_t>( argc); argIndex++)
     {
         if (eVerbosityLevels::VERBOSITY_QUIET < g_verbosity)
         {
@@ -539,7 +538,7 @@ int32_t main(int argc, char *argv[])
         case   eLogTypes::LOG_TYPE_DEVICE_STATISTICS_LOG:
             {
                 CAtaDeviceStatisticsLogs *cDevicStat;
-                cDevicStat = new CAtaDeviceStatisticsLogs(INPUT_LOG_FILE_NAME, masterJson);
+                cDevicStat = new CAtaDeviceStatisticsLogs(INPUT_LOG_FILE_NAME);
                 retStatus = cDevicStat->get_Device_Stat_Status();					// All checks and parseing are done in the construtor
                 if (retStatus == eReturnValues::SUCCESS)
                 {
@@ -692,7 +691,7 @@ int32_t main(int argc, char *argv[])
 		case eLogTypes::LOG_TYPE_SCSI_LOG_PAGES:
 			{
 				CScsiLog * cLogPages;
-				cLogPages = new CScsiLog(INPUT_LOG_FILE_NAME, masterJson);				// All checks and parseing are done in the construtor
+				cLogPages = new CScsiLog(INPUT_LOG_FILE_NAME);				// All checks and parseing are done in the construtor
 				retStatus = cLogPages->get_Log_Status();
                 if (retStatus == eReturnValues::SUCCESS)
                 {
