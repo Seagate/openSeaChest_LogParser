@@ -557,7 +557,7 @@ int32_t main(int argc, char *argv[])
         case    eLogTypes::LOG_TYPE_EXT_COMPREHENSIVE_LOG:
             {
                 CExtComp *cEC;
-                cEC = new CExtComp(INPUT_LOG_FILE_NAME, masterJson);
+                cEC = new CExtComp(INPUT_LOG_FILE_NAME);
                 retStatus = cEC->get_EC_Status();									// All checks and parseing are done in the construtor
                 if (retStatus == eReturnValues::SUCCESS)
                 {
