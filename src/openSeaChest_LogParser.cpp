@@ -113,6 +113,7 @@ int32_t main(int argc, char *argv[])
     int args = 0;
     uint8_t argIndex = 0;
     int32_t optionIndex = 0;
+    constexpr size_t MAX_INPUT_DATA_SIZE = 99000; // Example bound
 
     struct option longopts[] = {
         //common command line options
@@ -178,8 +179,28 @@ int32_t main(int argc, char *argv[])
                 {
                     while (std::cin >> lineinput)
                     {
-                        lineInputData.push_back(static_cast<uint8_t>(std::strtoul(lineinput.c_str(), NULL, 16)));
+                        //lineInputData.push_back(static_cast<uint8_t>(std::strtoul(lineinput.c_str(), NULL, 16)));
                         //std::cout << std::hex << std::setw(2) << std::setfill('0') << std::uppercase << static_cast<uint16_t>(lineInputData.at(lineInputData.size() - 1));
+                        if (lineInputData.size() >= MAX_INPUT_DATA_SIZE) {
+                            std::cerr << "Error: Input data exceeds maximum allowed size ("
+                                << MAX_INPUT_DATA_SIZE << " bytes)\n";
+                            break;
+                        }
+
+                        char* endptr = nullptr;
+                        errno = 0;
+                        unsigned long value = std::strtoul(lineinput.c_str(), &endptr, 16);
+
+                        // Check for conversion errors
+                        if (errno == ERANGE || value > UCHAR_MAX) {
+                            std::cerr << "Error: Value out of range for uint8_t: " << lineinput << "\n";
+                            continue;
+                        }
+                        if (endptr == lineinput.c_str() || *endptr != '\0') {
+                            std::cerr << "Error: Invalid hex input: " << lineinput << "\n";
+                            continue;
+                        }
+                        lineInputData.push_back(static_cast<uint8_t>(value));
                     }
                     INPUT_LOG_FROM_PIPE_FLAG = true;
                 }
