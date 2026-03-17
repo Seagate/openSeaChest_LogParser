@@ -3,7 +3,7 @@
 //
 // Do NOT modify or remove this copyright and confidentiality notice.
 //
-// Copyright (c) 2015 - 2023 Seagate Technology LLC and/or its Affiliates, All Rights Reserved
+// Copyright (c) 2015 - 2026 Seagate Technology LLC and/or its Affiliates, All Rights Reserved
 //
 // The code contained herein is CONFIDENTIAL to Seagate Technology LLC
 // and may be covered under one or more Non-Disclosure Agreements.
@@ -45,7 +45,7 @@ void seachest_utility_Info(const std::string & utilityName, const std::string & 
 
     printf("===============================================================================\n");
     printf(" %s - Seagate drive utilities\n", utilityName.c_str());
-    printf(" Copyright (c) 2018-2024 Seagate Technology LLC and/or its Affiliates\n");
+    printf(" Copyright (c) 2018-2026 Seagate Technology LLC and/or its Affiliates\n");
     printf(" %s Version: %s-%s ", utilityName.c_str(), buildVersion.c_str(), openseaVersion.c_str());
     print_Architecture(architecture);
     printf("\n");
@@ -174,23 +174,23 @@ void print_Final_newline(void)
 void print_SeaChest_Util_Exit_Codes(void)
 {
     printf("\tGeneric/Common error codes\n");
-    printf("\t%d = No Error Found\n", eUtilExitCodes::UTIL_EXIT_NO_ERROR);
-    printf("\t%d = Error in command line options\n", eUtilExitCodes::UTIL_EXIT_ERROR_IN_COMMAND_LINE);
-    printf("\t%d = Invalid Device Handle or Missing Device Handle\n", eUtilExitCodes::UTIL_EXIT_INVALID_DEVICE_HANDLE);
-    printf("\t%d = Operation Failure\n", eUtilExitCodes::UTIL_EXIT_OPERATION_FAILURE);
-    printf("\t%d = Operation not supported\n", eUtilExitCodes::UTIL_EXIT_OPERATION_NOT_SUPPORTED);
-    printf("\t%d = Operation Failed and was still in progress \n", eUtilExitCodes::UTIL_EXIT_OPERATION_STILL_IN_PROGRESS);
-    printf("\t%d = Operation Aborted\n", eUtilExitCodes::UTIL_EXIT_OPERATION_ABORTED);
-    printf("\t%d = Operation Failed for Bad Parameter in the log \n", eUtilExitCodes::UTIL_EXIT_OPERATION_BAD_PARAMETER);
-    printf("\t%d = Operation had Memory Failures\n", eUtilExitCodes::UTIL_EXIT_OPERATION_MEMORY_FAILURE);
-    printf("\t%d = Operation Failed for Invaild Lengths in the log\n", eUtilExitCodes::UTIL_EXIT_OPERATION_INVALID_LENGTH);
-    printf("\t%d = File Path Not Found\n", eUtilExitCodes::UTIL_EXIT_PATH_NOT_FOUND);
-    printf("\t%d = Cannot Open File\n", eUtilExitCodes::UTIL_EXIT_CANNOT_OPEN_FILE);
-    printf("\t%d = File Already Exists\n", eUtilExitCodes::UTIL_EXIT_FILE_ALREADY_EXISTS);
-    printf("\t%d = Not Valid for this parser\n", eUtilExitCodes::UTIL_EXIT_FILE_NOT_VALID);
-    printf("\t%d = Validation Failed\n", eUtilExitCodes::UTIL_EXIT_VALIDATION_FAILURE);
-    printf("\t%d = Error in Header and Footer validation\n", eUtilExitCodes::UTIL_EXIT_STRIP_HDR_FOOTER_FAILURE);
-    printf("\t%d = Parsing Failure\n", eUtilExitCodes::UTIL_EXIT_PARSE_FAILURE);
+    printf("\t%d = No Error Found\n", static_cast<int>(eUtilExitCodes::UTIL_EXIT_NO_ERROR));
+    printf("\t%d = Error in command line options\n", static_cast<int>(eUtilExitCodes::UTIL_EXIT_ERROR_IN_COMMAND_LINE));
+    printf("\t%d = Invalid Device Handle or Missing Device Handle\n", static_cast<int>(eUtilExitCodes::UTIL_EXIT_INVALID_DEVICE_HANDLE));
+    printf("\t%d = Operation Failure\n", static_cast<int>(eUtilExitCodes::UTIL_EXIT_OPERATION_FAILURE));
+    printf("\t%d = Operation not supported\n", static_cast<int>(eUtilExitCodes::UTIL_EXIT_OPERATION_NOT_SUPPORTED));
+    printf("\t%d = Operation Failed and was still in progress \n", static_cast<int>(eUtilExitCodes::UTIL_EXIT_OPERATION_STILL_IN_PROGRESS));
+    printf("\t%d = Operation Aborted\n", static_cast<int>(eUtilExitCodes::UTIL_EXIT_OPERATION_ABORTED));
+    printf("\t%d = Operation Failed for Bad Parameter in the log \n", static_cast<int>(eUtilExitCodes::UTIL_EXIT_OPERATION_BAD_PARAMETER));
+    printf("\t%d = Operation had Memory Failures\n", static_cast<int>(eUtilExitCodes::UTIL_EXIT_OPERATION_MEMORY_FAILURE));
+    printf("\t%d = Operation Failed for Invaild Lengths in the log\n", static_cast<int>(eUtilExitCodes::UTIL_EXIT_OPERATION_INVALID_LENGTH));
+    printf("\t%d = File Path Not Found\n", static_cast<int>(eUtilExitCodes::UTIL_EXIT_PATH_NOT_FOUND));
+    printf("\t%d = Cannot Open File\n", static_cast<int>(eUtilExitCodes::UTIL_EXIT_CANNOT_OPEN_FILE));
+    printf("\t%d = File Already Exists\n", static_cast<int>(eUtilExitCodes::UTIL_EXIT_FILE_ALREADY_EXISTS));
+    printf("\t%d = Not Valid for this parser\n", static_cast<int>(eUtilExitCodes::UTIL_EXIT_FILE_NOT_VALID));
+    printf("\t%d = Validation Failed\n", static_cast<int>(eUtilExitCodes::UTIL_EXIT_VALIDATION_FAILURE));
+    printf("\t%d = Error in Header and Footer validation\n", static_cast<int>(eUtilExitCodes::UTIL_EXIT_STRIP_HDR_FOOTER_FAILURE));
+    printf("\t%d = Parsing Failure\n", static_cast<int>(eUtilExitCodes::UTIL_EXIT_PARSE_FAILURE));
     printf("\tAnything else = unknown error\n\n");
 
 }
@@ -414,6 +414,7 @@ void print_Seachest_logType_options()
 	#endif
 
 		std::cout << std::endl;
+        std::cout << LOG_NAME_PRINT_STRING_SMART_DIR_LOG;
 
 		std::cout << "\t\t ";
 	#if defined (INCLUDE_SCT_TEMP_LOG)    

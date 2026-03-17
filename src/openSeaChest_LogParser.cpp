@@ -3,7 +3,7 @@
 //
 // Do NOT modify or remove this copyright and license
 //
-// Copyright (c) 2024 Seagate Technology LLC and/or its Affiliates, All Rights Reserved
+// Copyright (c) 2026 Seagate Technology LLC and/or its Affiliates, All Rights Reserved
 //
 // This software is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -32,7 +32,9 @@
 #include <iomanip>
 #include <fstream>
 
-#include "common.h"
+#include "common_types.h"
+#include "string_utils.h"
+#include "time_utils.h"
 #include "EULA.h"
 #include "seachest_parser_util_options.h"
 #include "parser_print_util_options.h"
@@ -49,6 +51,7 @@
 #include "CAta_Power_Conditions_Log.h"
 #include "CAta_NCQ_Command_Error_Log.h"
 #include "CScsi_Log.h"
+#include "CAta_SMART_Log_Dir.h"
 
 using namespace opensea_parser;
 
@@ -61,7 +64,7 @@ using namespace opensea_parser;
     std::string util_name = "openSeaChest_LogParser";
 #endif
 
-std::string buildVersion = "1.5.4";
+std::string buildVersion = "1.5.5";
 std::string buildDate = __DATE__;
 
 ////////////////////////////
@@ -101,20 +104,17 @@ int32_t main(int argc, char *argv[])
     SHOW_STATIC_DATA_VAR                            // force the parser to be static and print out the same information all the time. aka no arrays and no data created arrays
     SHOW_VERSION_VAR
     SHOW_HELP_VAR
-    //Tool specific
     INPUT_LOG_FILE_VAR
     OUTPUT_LOG_FILE_VAR
     INPUT_LOG_FILE_FOUND_VAR
     INPUT_LOG_TYPE_VAR
     OUTPUT_LOG_PRINT_VAR
-    //OUTPUTPATH_VAR
-    //OUTPUTFILE_VAR
 
     int args = 0;
     uint8_t argIndex = 0;
     int32_t optionIndex = 0;
+    constexpr size_t MAX_INPUT_DATA_SIZE = 99000; // Example bound
 
-    //add -- options to this structure DO NOT ADD OPTIONAL ARGUMENTS! Optional arguments are a GNU extension and are not supported in Unix or some compilers- TJE
     struct option longopts[] = {
         //common command line options
         HELP_LONG_OPT,
@@ -164,48 +164,66 @@ int32_t main(int argc, char *argv[])
     //get options we know we need
     while (1) //changed to while 1 in order to parse multiple options when longs options are involved
     {
-        args = getopt_long(argc, argv, "d:hfisF:Vv:q%:", longopts, &optionIndex);
+        args = static_cast<int8_t>(getopt_long(argc, argv, "d:hfisF:Vv:q%:", longopts, &optionIndex));
         if (args == -1)
         {
             break;
         }
-        //printf("Parsing arg <%u>\n", args);
         switch (args)
         {
         case 0:
             //parse long options that have no short option and required arguments here
-            if (strncmp(longopts[optionIndex].name, INPUT_LOG_LONG_OPT_STRING, strlen(longopts[optionIndex].name)) == 0)
+            if (optarg != nullptr && strncmp(longopts[optionIndex].name, INPUT_LOG_LONG_OPT_STRING, strlen(longopts[optionIndex].name)) == 0)
             {
                 if (strstr(optarg, "fromPipe"))
                 {
+                    lineInputData.reserve(MAX_INPUT_DATA_SIZE);  // Pre-allocate
                     while (std::cin >> lineinput)
                     {
-                        lineInputData.push_back(static_cast<uint8_t>(std::strtoul(lineinput.c_str(), NULL, 16)));
+                        //lineInputData.push_back(static_cast<uint8_t>(std::strtoul(lineinput.c_str(), NULL, 16)));
                         //std::cout << std::hex << std::setw(2) << std::setfill('0') << std::uppercase << static_cast<uint16_t>(lineInputData.at(lineInputData.size() - 1));
+                        if (lineInputData.size() >= MAX_INPUT_DATA_SIZE) {
+                            std::cerr << "Error: Input data exceeds maximum allowed size ("
+                                << MAX_INPUT_DATA_SIZE << " bytes)\n";
+                            break;
+                        }
+
+                        char* endptr = nullptr;
+                        errno = 0;
+                        unsigned long value = std::strtoul(lineinput.c_str(), &endptr, 16);
+
+                        // Check for conversion errors
+                        if (errno == ERANGE || value > UCHAR_MAX) {
+                            std::cerr << "Error: Value out of range for uint8_t: " << lineinput << "\n";
+                            continue;
+                        }
+                        if (endptr == lineinput.c_str() || *endptr != '\0') {
+                            std::cerr << "Error: Invalid hex input: " << lineinput << "\n";
+                            continue;
+                        }
+                        lineInputData.push_back(static_cast<uint8_t>(value));
                     }
                     INPUT_LOG_FROM_PIPE_FLAG = true;
                 }
                 else
                 {
                     INPUT_LOG_FILE_FLAG = true;
-                    INPUT_LOG_FILE_NAME.resize(sizeof(optarg));
+                    //INPUT_LOG_FILE_NAME.resize(strlen(optarg));
                     INPUT_LOG_FILE_NAME.assign(optarg);
-                    std::ifstream myFile(optarg);
-                    if (!myFile.good())
+                    if (!os_File_Exists(optarg))
                     {
                         INPUT_LOG_FILE_FOUND_FLAG = eUtilExitCodes::UTIL_EXIT_CANNOT_OPEN_FILE;
                     }
-                    myFile.close();
                 }
             }
 
 #if defined BUILD_FARM_ONLY 
-			if (strcmp(optarg, LOG_TYPE_STRING_FARM) == 0)
+			if (optarg != nullptr && strcmp(optarg, LOG_TYPE_STRING_FARM) == 0)
 			{
 				INPUT_LOG_TYPE_FLAG = eLogTypes::LOG_TYPE_FARM;
 			}
 #else
-            else if (strncmp(longopts[optionIndex].name, INPUT_LOG_TYPE_LONG_OPT_STRING, strlen(longopts[optionIndex].name)) == 0)
+            else if (optarg != nullptr && strncmp(longopts[optionIndex].name, INPUT_LOG_TYPE_LONG_OPT_STRING, strlen(longopts[optionIndex].name)) == 0)
             {
                 convert_String_To_Upper_Case(optarg);
 #if defined (INCLUDE_FARM_LOG)
@@ -286,7 +304,13 @@ int32_t main(int argc, char *argv[])
 					INPUT_LOG_TYPE_FLAG = eLogTypes::LOG_TYPE_SCSI_LOG_PAGES;
 				}
 #endif
-
+                if (strncmp(optarg, LOG_TYPE_STRING_LOG_DIRECTORY, strnlen(optarg, sizeof(LOG_TYPE_STRING_LOG_DIRECTORY))) == 0 ||
+                    strncmp(optarg, LOG_TYPE_STRING_SMART_DIRECTORY, strnlen(optarg, sizeof(LOG_TYPE_STRING_SMART_DIRECTORY))) == 0 ||
+                    strncmp(optarg, LOG_TYPE_STRING_SMART_DIR, strnlen(optarg, sizeof(LOG_TYPE_STRING_SMART_DIR))) == 0 ||
+                    strncmp(optarg, LOG_TYPE_STRING_SMART_DIR_LOG, strnlen(optarg, sizeof(LOG_TYPE_STRING_SMART_DIR_LOG))) == 0 )
+                {
+                    INPUT_LOG_TYPE_FLAG = eLogTypes::LOG_TYPE_SMART_DIRECTORY;
+                }
             }
 #endif
             else if (strcmp(longopts[optionIndex].name, PATH_LONG_OPT_STRING) == 0)
@@ -296,13 +320,16 @@ int32_t main(int argc, char *argv[])
             else if (strcmp(longopts[optionIndex].name, OUTPUT_LOG_LONG_OPT_STRING) == 0)
             {
                 OUTPUT_LOG_FILE_FLAG = true;
-                OUTPUT_LOG_FILE_NAME.resize(sizeof(optarg));
+                //OUTPUT_LOG_FILE_NAME.resize(safe_strlen(optarg));
                 OUTPUT_LOG_FILE_NAME.assign(optarg);
 
             }
             else if (strcmp(longopts[optionIndex].name, OUTPUT_LOG_PRINT_LONG_OPT_STRING) == 0)
             {
-                if (strcmp(optarg, LOG_PRINT_STRING_JSON) == 0)
+                if (optarg == nullptr) {
+                    OUTPUT_LOG_PRINT_FLAG = ePrintTypes::LOG_PRINT_JSON;  // Default
+                }
+                else if (strcmp(optarg, LOG_PRINT_STRING_JSON) == 0)
                 {
                     OUTPUT_LOG_PRINT_FLAG = ePrintTypes::LOG_PRINT_JSON;
                 }
@@ -329,7 +356,7 @@ int32_t main(int argc, char *argv[])
             }
             else
             {
-                printf("Ignoring option --%s\n",longopts[optionIndex].name);
+                std::cout << "Ignoring option--" << longopts[optionIndex].name << "\n" << std::endl;
             }
             break;
         case 1:
@@ -358,13 +385,13 @@ int32_t main(int argc, char *argv[])
             case VERBOSE_SHORT_OPT:
                 if (eVerbosityLevels::VERBOSITY_QUIET < g_verbosity)
                 {
-                    printf("You must specify a verbosity level. 0 - 4 are the valid levels\n");
+                    std::cout << "You must specify a verbosity level. 0 - 4 are the valid levels\n" << std::endl;
                 }
                 break;
             default:
                 if (eVerbosityLevels::VERBOSITY_QUIET < g_verbosity)
                 {
-                    printf("Option %c requires an argument\n", optopt);
+                    std::cout << "Option" << optopt << "requires an argument\n" << std::endl;
                 }
                 utility_Usage(true);
                 return static_cast<int>(exitCode);
@@ -394,7 +421,7 @@ int32_t main(int argc, char *argv[])
     {
         //Echo the command line back to the customer
         Echo_Command_Line(argc, argv);
-        printf("\n");
+        std::cout << "\n" << std::endl;
     }
 
     if (eVerbosityLevels::VERBOSITY_QUIET < g_verbosity)
@@ -436,8 +463,12 @@ int32_t main(int argc, char *argv[])
 	}
     if (!OUTPUT_LOG_FILE_FLAG || !INPUT_LOG_FILE_FLAG)
     {
-        std::string outputPrefix = INPUT_LOG_FILE_NAME.substr(0, INPUT_LOG_FILE_NAME.rfind('.'));
-        
+       // std::string outputPrefix = INPUT_LOG_FILE_NAME.substr(0, INPUT_LOG_FILE_NAME.rfind('.'));
+        size_t dotPos = INPUT_LOG_FILE_NAME.rfind('.');
+        std::string outputPrefix = (dotPos != std::string::npos)
+            ? INPUT_LOG_FILE_NAME.substr(0, dotPos)
+            : INPUT_LOG_FILE_NAME;
+
             switch (OUTPUT_LOG_PRINT_FLAG)
             {
             case ePrintTypes::LOG_PRINT_JSON:
@@ -458,16 +489,16 @@ int32_t main(int argc, char *argv[])
                 break;
             }
 
-        OUTPUT_LOG_FILE_NAME.resize(sizeof(outputPrefix));
+        //OUTPUT_LOG_FILE_NAME.resize(sizeof(outputPrefix));
         OUTPUT_LOG_FILE_NAME.assign(outputPrefix);
     }
 #endif
     //print out errors for unknown arguments for remaining args that haven't been processed yet
-    for (argIndex = static_cast<uint8_t>(optind); argIndex < argc; argIndex++)
+    for (argIndex = static_cast<uint8_t>(optind); argIndex < static_cast<uint8_t>( argc); argIndex++)
     {
         if (eVerbosityLevels::VERBOSITY_QUIET < g_verbosity)
         {
-            printf("Invalid argument: %s\n", argv[argIndex]);
+            std::cout << "Invalid argument : " << argv[argIndex] << "\n" << std::endl;
         }
     }
  
@@ -475,6 +506,10 @@ int32_t main(int argc, char *argv[])
     if (INPUT_LOG_FILE_FLAG)
     {
         JSONNODE *masterJson = json_new(JSON_NODE);
+        if (masterJson == nullptr) {
+            std::cerr << "Failed to allocate JSON node\n";
+            return static_cast<int>(eUtilExitCodes::UTIL_EXIT_OPERATION_MEMORY_FAILURE);
+        }
 		UtilityHeader(masterJson);
         switch (INPUT_LOG_TYPE_FLAG) 
         {
@@ -503,16 +538,39 @@ int32_t main(int argc, char *argv[])
         case   eLogTypes::LOG_TYPE_DEVICE_STATISTICS_LOG:
             {
                 CAtaDeviceStatisticsLogs *cDevicStat;
-                cDevicStat = new CAtaDeviceStatisticsLogs(INPUT_LOG_FILE_NAME, masterJson);
+                cDevicStat = new CAtaDeviceStatisticsLogs(INPUT_LOG_FILE_NAME);
                 retStatus = cDevicStat->get_Device_Stat_Status();					// All checks and parseing are done in the construtor
+                if (retStatus == eReturnValues::SUCCESS)
+                {
+                    try
+                    {
+                        retStatus = cDevicStat->ParseSCTDeviceStatLog(masterJson);
+                    }
+                    catch (...)
+                    {
+                        retStatus = eReturnValues::FAILURE;
+                    }
+                }
                 delete(cDevicStat);
             }
             break;
         case    eLogTypes::LOG_TYPE_EXT_COMPREHENSIVE_LOG:
             {
                 CExtComp *cEC;
-                cEC = new CExtComp(INPUT_LOG_FILE_NAME, masterJson);
+                cEC = new CExtComp(INPUT_LOG_FILE_NAME);
                 retStatus = cEC->get_EC_Status();									// All checks and parseing are done in the construtor
+                if (retStatus == eReturnValues::SUCCESS)
+                {
+                    try
+                    {
+                        retStatus = cEC->parse_Ext_Comp_Log(masterJson);
+                        retStatus = cEC->get_EC_Status();
+                    }
+                    catch (...)
+                    {
+                        retStatus = eReturnValues::FAILURE;
+                    }
+                }
                 delete(cEC);
             }
             break;
@@ -520,7 +578,18 @@ int32_t main(int argc, char *argv[])
             {
                 CAta_Ext_DST_Log *cDST;
                 cDST = new CAta_Ext_DST_Log(INPUT_LOG_FILE_NAME, masterJson);
-                retStatus = cDST->get_Status();
+                retStatus = cDST->get_Status();			// if eReturnValues::eReturnValues::IN_PROGRESS we can continue to print out the data
+                if (retStatus == eReturnValues::SUCCESS)
+                {
+                    try
+                    {
+                        retStatus = cDST->parse_Ext_Self_Test_Log(masterJson);
+                    }
+                    catch (...)
+                    {
+                        retStatus = eReturnValues::FAILURE;
+                    }
+                }
                 delete(cDST);
             }
             break;
@@ -531,7 +600,14 @@ int32_t main(int argc, char *argv[])
 				retStatus = cIdent->get_Identify_Information_Status();			// if eReturnValues::eReturnValues::IN_PROGRESS we can continue to print out the data
 				if (retStatus == eReturnValues::IN_PROGRESS)
 				{
-					retStatus = cIdent->print_Identify_Information(masterJson);
+                    try
+                    {
+                        retStatus = cIdent->print_Identify_Information(masterJson);
+                    }
+                    catch (...)
+                    {
+                        retStatus = eReturnValues::FAILURE;
+                    }
 				}
                 delete (cIdent);
             }
@@ -543,7 +619,14 @@ int32_t main(int argc, char *argv[])
 				retStatus = cIdData->get_identify_Status();						// if eReturnValues::eReturnValues::IN_PROGRESS we can continue to print out the data
 				if (retStatus == eReturnValues::IN_PROGRESS)
 				{
-					retStatus = cIdData->parse_Identify_Log_30(masterJson);
+                    try
+                    {
+                        retStatus = cIdData->parse_Identify_Log_30(masterJson);
+                    }
+                    catch (...)
+                    {
+                        retStatus = eReturnValues::FAILURE;
+                    }
 				}
                 delete (cIdData);
             }
@@ -555,7 +638,14 @@ int32_t main(int argc, char *argv[])
 				retStatus = cSCTTemp->get_Status();										// if eReturnValues::IN_PROGRESS we can continue to print out the data
 				if (retStatus == eReturnValues::IN_PROGRESS)
 				{
-					retStatus = cSCTTemp->print_SCT_Temp_Log();
+                    try
+                    {
+                        retStatus = cSCTTemp->print_SCT_Temp_Log();
+                    }
+                    catch(...)
+                    {
+                        retStatus = eReturnValues::FAILURE;
+                    }
 				}
                 delete (cSCTTemp);
             }
@@ -567,7 +657,14 @@ int32_t main(int argc, char *argv[])
 				retStatus = cPowerCon->get_Power_Status();								// if eReturnValues::IN_PROGRESS we can continue to print out the data
 				if (retStatus == eReturnValues::IN_PROGRESS)
 				{
-					retStatus = cPowerCon->printPowerConditionLog(masterJson);
+                    try
+                    {
+                        retStatus = cPowerCon->printPowerConditionLog(masterJson);
+                    }
+                    catch(...)
+                    {
+                        retStatus = eReturnValues::FAILURE;
+                    }   
 				}
 				delete (cPowerCon);
             }
@@ -577,9 +674,16 @@ int32_t main(int argc, char *argv[])
                 CAta_NCQ_Command_Error_Log * cNCQ;
                 cNCQ = new CAta_NCQ_Command_Error_Log(INPUT_LOG_FILE_NAME);				// constructor will make sure we read in the file and start the parseing of the binary
 				retStatus = cNCQ->get_NCQ_Command_Error_Log_Status();					// if eReturnValues::IN_PROGRESS we can continue to print out the data
-				if (retStatus == eReturnValues::IN_PROGRESS)
-				{
-					retStatus = cNCQ->get_NCQ_Command_Error_Log(masterJson);
+                if (retStatus == eReturnValues::IN_PROGRESS)
+                {
+                    try
+                    {
+                        retStatus = cNCQ->get_NCQ_Command_Error_Log(masterJson);
+                    }
+                    catch(...)
+                    {
+                        retStatus = eReturnValues::FAILURE;
+                    }
 				}
 				delete (cNCQ);
             }
@@ -587,11 +691,41 @@ int32_t main(int argc, char *argv[])
 		case eLogTypes::LOG_TYPE_SCSI_LOG_PAGES:
 			{
 				CScsiLog * cLogPages;
-				cLogPages = new CScsiLog(INPUT_LOG_FILE_NAME, masterJson);				// All checks and parseing are done in the construtor
+				cLogPages = new CScsiLog(INPUT_LOG_FILE_NAME);				// All checks and parseing are done in the construtor
 				retStatus = cLogPages->get_Log_Status();
+                if (retStatus == eReturnValues::SUCCESS)
+                {
+                    try
+                    {
+                        retStatus = cLogPages->get_Log_Parsed(masterJson);// init the data for getting the log
+                    }
+                    catch (...)
+                    {
+                        retStatus = eReturnValues::FAILURE;
+                    }
+                }						
 				delete (cLogPages);
 			}
 			break;
+        case eLogTypes::LOG_TYPE_SMART_DIRECTORY:
+            {
+                CAta_SMART_Log_Dir* cSmartDir;
+                cSmartDir = new CAta_SMART_Log_Dir(INPUT_LOG_FILE_NAME);				// constructor will make sure we read in the file and start the parseing of the binary
+                retStatus = cSmartDir->get_SMART_Log_Dir_Status();
+                if (retStatus == eReturnValues::SUCCESS)
+                {
+                    try
+                    {
+                        retStatus = cSmartDir->print_SMART_Log_Dir(masterJson);
+                    }
+                    catch(...)
+                    {
+                        retStatus = eReturnValues::FAILURE;
+                    }
+                }
+                delete (cSmartDir);
+            }
+            break;
         default:
             {
                 // set to unknown to pass through the case statement below no type set was given or didn't match
@@ -608,7 +742,7 @@ int32_t main(int argc, char *argv[])
                 exitCode = eUtilExitCodes::UTIL_EXIT_NO_ERROR;
                 if (OUTPUT_LOG_FILE_FLAG)
                 {
-                    printf("\nParsing completed with no issues \n");
+                    std::cout << "\nParsing completed with no issues \n" << std::endl;
                 }
             }
 		    break;
@@ -617,7 +751,7 @@ int32_t main(int argc, char *argv[])
                 exitCode = eUtilExitCodes::UTIL_EXIT_OPERATION_NOT_SUPPORTED;
                 if (OUTPUT_LOG_FILE_FLAG)
                 {
-                    printf("\nLog Not supported at this time \n");
+                    std::cout << "\nLog Not supported at this time \n" << std::endl;
                     json_push_back(masterJson, json_new_a("Not Supported", "Log Not Supported"));
                 }
             }
@@ -627,7 +761,7 @@ int32_t main(int argc, char *argv[])
                 exitCode = eUtilExitCodes::UTIL_EXIT_OPERATION_STILL_IN_PROGRESS;
                 if (OUTPUT_LOG_FILE_FLAG)
                 {
-                    printf("\nParsing incomplete Operation was still in progress \n");
+                    std::cout << "\nParsing incomplete Operation was still in progress \n" << std::endl;
                     json_push_back(masterJson, json_new_a("Parsing Error", "Incomplete Operation was still in progress"));
                 }
             }
@@ -637,7 +771,7 @@ int32_t main(int argc, char *argv[])
                 exitCode = eUtilExitCodes::UTIL_EXIT_OPERATION_FAILURE;
                 if (OUTPUT_LOG_FILE_FLAG)
                 {
-                    printf("\nOperation Failure \n");
+                    std::cout << "\nOperation Failure \n" << std::endl;
                     json_push_back(masterJson, json_new_a("Parsing Error", "Operation Failure"));
                 }
             }
@@ -647,7 +781,7 @@ int32_t main(int argc, char *argv[])
                 exitCode = eUtilExitCodes::UTIL_EXIT_OPERATION_ABORTED;
                 if (OUTPUT_LOG_FILE_FLAG)
                 {
-                    printf("\nAborted \n");
+                    std::cout << "\nAborted \n" << std::endl;
                     json_push_back(masterJson, json_new_a("Parsing Error", "Aborted"));
                 }
             }
@@ -657,8 +791,8 @@ int32_t main(int argc, char *argv[])
                 exitCode = eUtilExitCodes::UTIL_EXIT_OPERATION_BAD_PARAMETER;
                 if (OUTPUT_LOG_FILE_FLAG)
                 {
-                    printf("\nBad Parameter \n");
-                    printf("Check --logType\n");
+                    std::cout << "\nBad Parameter \n" << std::endl;
+                    std::cout << "Check --logType\n" << std::endl;
                     json_push_back(masterJson, json_new_a("Parsing Error", "Bad Parameter"));
                 }
             }
@@ -668,7 +802,7 @@ int32_t main(int argc, char *argv[])
                 exitCode = eUtilExitCodes::UTIL_EXIT_OPERATION_MEMORY_FAILURE;
                 if (OUTPUT_LOG_FILE_FLAG)
                 {
-                    printf("\nMemory Failure \n");
+                    std::cout << "\nMemory Failure \n" << std::endl;
                     json_push_back(masterJson, json_new_a("Parsing Error", "Memory Failure"));
                 }
             }
@@ -678,7 +812,7 @@ int32_t main(int argc, char *argv[])
                 exitCode = eUtilExitCodes::UTIL_EXIT_CANNOT_OPEN_FILE;
                 if (OUTPUT_LOG_FILE_FLAG)
                 {
-                    printf("\nCould not Open File \n");
+                    std::cout << "\nCould not Open File \n" << std::endl;
                     json_push_back(masterJson, json_new_a("Parsing Error", "Could not Open File"));
                 }
             }
@@ -688,7 +822,7 @@ int32_t main(int argc, char *argv[])
                 exitCode = eUtilExitCodes::UTIL_EXIT_VALIDATION_FAILURE;
                 if (OUTPUT_LOG_FILE_FLAG)
                 {
-                    printf("\nBinary File has Failed Validation \n");
+                    std::cout << "\nBinary File has Failed Validation \n" << std::endl;
                     json_push_back(masterJson, json_new_a("Parsing Error", "Validation Failure"));
                 }
             }
@@ -698,14 +832,14 @@ int32_t main(int argc, char *argv[])
                 exitCode = eUtilExitCodes::UTIL_EXIT_OPERATION_INVALID_LENGTH;
                 if (OUTPUT_LOG_FILE_FLAG)
                 {
-                    printf("\nBinary File With Invalid Length \n");
+                    std::cout << "\nBinary File With Invalid Length \n" << std::endl;
                     json_push_back(masterJson, json_new_a("Parsing Error", "Invalid Length"));
                 }
             }
 			break;
 		default:
             {
-                printf("\n %d failure", retStatus);
+                std::cout << "\n " << static_cast<int>(retStatus) << " failure" << std::endl;
             }
 			break;
 		}
@@ -719,8 +853,13 @@ int32_t main(int argc, char *argv[])
         else //print it to stdout. 
         {
 			std::string myFile = INPUT_LOG_FILE_NAME;				// myFile for the auto creation of the output file
-			myFile = myFile.substr(0, myFile.rfind("."));           // remove the extension from the file
-            CMessage *printMessage;
+			//myFile = myFile.substr(0, myFile.rfind("."));           
+            size_t dotPos = myFile.rfind('.');
+            // remove the extension from the file
+            if (dotPos != std::string::npos) {
+                myFile = myFile.substr(0, dotPos);
+            }
+            CMessage *printMessage = nullptr;
             if (OUTPUT_LOG_PRINT_FLAG == ePrintTypes::LOG_PRINT_JSON)         // Append output extension, .json by default
             {
                 myFile.append(".json");
@@ -760,7 +899,9 @@ int32_t main(int argc, char *argv[])
                 printMessage = new CMessage(masterJson, myFile, OUTPUT_LOG_PRINT_FLAG); // Get JSON output by default
                 std::cout << printMessage->get_Msg_JSON_Data().c_str();	// Print to the screen
             }
-            delete(printMessage);
+            if (printMessage != nullptr) {
+                delete printMessage;
+            }
         }
         json_delete(masterJson);
     }
@@ -788,28 +929,28 @@ int32_t main(int argc, char *argv[])
 void utility_Usage(bool shortUsage)
 {
     //everything needs a help option right?
-    printf("Usage\n");
-    printf("=====\n");
-    printf("\t %s {arguments} {options}\n\n", util_name.c_str());
+    std::cout << "Usage\n" << std::endl;
+    std::cout << "=====\n" << std::endl;
+    std::cout << "\t " << util_name.c_str() << "{arguments} { options }\n\n" << std::endl;
 
 
-    printf("Examples\n");
-    printf("========\n");
+    std::cout << "Examples\n" << std::endl;
+    std::cout << "========\n" << std::endl;
     //example usage
 #if defined BUILD_FARM_ONLY 
-    printf("\t%s --inputLog <filename> --printType json --outputLog <filename>\n", util_name.c_str());
+    std::cout << "\t" << util_name.c_str() << " --inputLog <filename> --printType json --outputLog <filename>\n" << std::endl;
 #else
-    printf("\t%s --inputLog <filename> --logType %s --printType json --outputLog <filename>\n", util_name.c_str(), LOG_TYPE_STRING_FARM);
+    std::cout << "\t" << util_name.c_str() << " --inputLog <filename> --logType " << LOG_TYPE_STRING_FARM <<" --printType json --outputLog <filename>\n" << std::endl;
 #endif
-	printf("\n");
+	std::cout << "\n" << std::endl;
     //return codes
-    printf("Return Codes\n");
-    printf("============\n");
+    std::cout << "Return Codes\n" << std::endl;
+    std::cout << "============\n" << std::endl;
     print_SeaChest_Util_Exit_Codes();
 
     //the test options
-    printf("Utility Arguments\n");
-    printf("=================\n");
+    std::cout << "Utility Arguments\n" << std::endl;
+    std::cout << "=================\n" << std::endl;
     //Common (across utilities) - alphabetized
     print_Input_Log_Help(shortUsage);
 #if defined BUILD_FARM_ONLY 
@@ -823,8 +964,8 @@ void utility_Usage(bool shortUsage)
     print_Log_Print_Help(shortUsage);
     
     //utility options - alphabetized
-    printf("Utility Options\n");
-    printf("===============\n");
+    std::cout << "Utility Options\n" << std::endl;
+    std::cout << "===============\n" << std::endl;
     print_Echo_Command_Line_Help(shortUsage);
     print_Help_Help(shortUsage);
     print_License_Help(shortUsage);
@@ -848,6 +989,9 @@ void utility_Usage(bool shortUsage)
 //---------------------------------------------------------------------------
 static void UtilityHeader(JSONNODE *masterData)
 {
+    if (masterData == nullptr) {
+        return;
+    }
 	// get current Time and Date 
     char timeCString[64];
     const char * constTimeCString = &timeCString[0];
@@ -856,6 +1000,9 @@ static void UtilityHeader(JSONNODE *masterData)
     memset(&localTimeBuffer, 0, sizeof(struct tm));
 	strftime(timeCString, 64, "%m-%d-%Y__%H:%M:%S", get_Localtime(&pCurrentTime, &localTimeBuffer));
 	JSONNODE *toolHeader = json_new(JSON_NODE);
+    if (toolHeader == nullptr) {
+        return;  // Or log error
+    }
 	json_set_name(toolHeader, util_name.c_str());
 	json_push_back(toolHeader, json_new_a("Utility Build Version", buildVersion.c_str()));
     json_push_back(toolHeader, json_new_a("Library Build Version", OPENSEA_PARSER_VERSION));
@@ -880,13 +1027,13 @@ static void UtilityHeader(JSONNODE *masterData)
 inline void Echo_Command_Line(int argc, char *argv[])
 {
 
-    for (int commandLineIter = 1; commandLineIter < static_cast<uint64_t>(argc); commandLineIter++)
+    for (int commandLineIter = 1; commandLineIter < static_cast<int>(argc); commandLineIter++)
     {
         if (strncmp(argv[commandLineIter], "--echoCommandLine", strlen(argv[commandLineIter])) == 0)
         {
             continue;
         }
-        printf("%s ", argv[commandLineIter]);
+        std::cout << argv[commandLineIter] << ' ';
     }
-    printf("\n");
+    std::cout << "\n" << std::endl;
 }

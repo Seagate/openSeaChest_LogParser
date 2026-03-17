@@ -3,7 +3,7 @@
 //
 // Do NOT modify or remove this copyright and license
 //
-// Copyright (c) 2015 - 2023 Seagate Technology LLC and/or its Affiliates, All Rights Reserved
+// Copyright (c) 2015 - 2026 Seagate Technology LLC and/or its Affiliates, All Rights Reserved
 //
 // This software is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,7 +17,7 @@
 #pragma once
 
 #include <string>
-#include "common.h"
+#include "common_types.h"
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -39,18 +39,19 @@ namespace opensea_parser {
     public:
 		CPrintJSON();
         explicit CPrintJSON(JSONNODE *masterData);
-        virtual ~CPrintJSON();
-        std::string get_Msg_JSON_Data(){ return m_jsonMessage; };                               //!< returns string data for printing json data 
+        ~CPrintJSON();
+        std::string get_Msg_JSON_Data() const {return m_jsonMessage; };                         //!< returns string data for printing json data 
     };
 
-    class CPrintCSV {
+    class CPrintCSV 
+    {
     private:
     #pragma pack(push, 1)
-        typedef struct _sCSVFrameData
+        struct sCSVFrameData
         {
             std::string title;                                                                  //!< title information from the node
             std::string data;                                                                   //!< Data information from the node
-        }sCSVFrameData;
+        };
     #pragma pack(pop)
         sCSVFrameData               m_csvData;                                                  //!< frame Parameter data
         sCSVFrameData				m_singleLine;												//!< line string for flatcsv formating
@@ -62,42 +63,47 @@ namespace opensea_parser {
 
     public:
         CPrintCSV();
-        virtual ~CPrintCSV();
-        std::string get_Msg_CSV(JSONNODE *masterData);											//!< returns string data for a normal CSV, comma delimited
-        std::string get_Msg_Flat_csv(JSONNODE *masterData);                                     //!< returns string data for creating a csv all on two lines, comma delimited
+        ~CPrintCSV();
+        std::string get_Msg_CSV(JSONNODE *masterData);									//!< returns string data for a normal CSV, comma delimited
+        std::string get_Msg_Flat_csv(JSONNODE *masterData);                               //!< returns string data for creating a csv all on two lines, comma delimited
 		bool createData(std::string &title, std::string &data, uint16_t numberOfTabs);          //!< creates the Data for the csv and flat csv, tab vs comma
         bool createLineData(const char* title, const char* data);                               //!< create the data for a csb that is flat only.
     };
 
-    class CPrintTXT
+    class CPrintTXT 
     {
     private:
 #pragma pack(push, 1)
-        typedef struct _sFrameData
+        struct sFrameData
         {
             std::string title;                                                                  //!< title information from the node
             std::string data;                                                                   //!< Data information from the node
-        }sFrameData;
+        };
 #pragma pack(pop)
         std::vector<sFrameData>               m_vData;                                          //!< frame Parameter data
         std::string					m_line;														//!< line string for csv formating
         
     public:
         CPrintTXT();
-        virtual ~CPrintTXT();
+        ~CPrintTXT();
         bool parse_Json_to_Text(JSONNODE *nData, uint16_t numberOfTabs);
-        bool Create_Tabs(std::string &title, const std::string &data, uint16_t numberOfTabs);    //!< creates the Data for the text tabs
-        std::string get_Msg_Text_Format(const std::string message);                              //!< returns the json data as a text string
+        void create_Tabs(std::string &title, const std::string &data, uint16_t numberOfTabs);    //!< creates the Data for the text tabs
+        void get_Array(JSONNODE* node, std::string& title, std::string& data, uint16_t numberOfTabs);
+        void get_Node(JSONNODE* node, std::string& title, const std::string& data, uint16_t numberOfTabs);
+        void get_String_Or_Bool(JSONNODE* node, std::string& title, std::string& data, uint16_t numberOfTabs);
+        void get_Number(JSONNODE* node, std::string& title, std::string& data, uint16_t numberOfTabs);
+        std::string get_Msg_Text_Format();                              //!< returns the json data as a text string
     };
 
-    class CPrintProm {
+    class CPrintProm
+    {
     private:
         // PromQL metric in format: metric_key{label_key="label_value", ...} metric_value
-        typedef struct metric {
+        struct metric {
             std::string key;                                                                            // Stores key in Prometheus format
             std::map<std::string, std::string> labelMap;                                                // Map of labels
             std::string value;                                                                          // Stores value for metric
-        } metric;
+        };
         std::vector<metric> m_metricList;                                                               // List of metrics
         std::string serialNumber;                                                                       // Serial number of current drive
         std::string toPrometheusKey(std::string key);                                                   // Converts a key to Prometheus' desired format
@@ -114,7 +120,7 @@ namespace opensea_parser {
         std::string printProm();                                                                        // Takes key-value pairs in struct, prints to string
     };
 
-    class CMessage : public CPrintJSON, public  CPrintTXT, public CPrintCSV, public CPrintProm
+    class CMessage final : public CPrintJSON, public  CPrintTXT, public CPrintCSV, public CPrintProm
     {
     private:
         JSONNODE *msgData;
@@ -126,7 +132,7 @@ namespace opensea_parser {
     public:
 		explicit CMessage(JSONNODE *masterData);
         CMessage(JSONNODE *masterData, std::string fileName, ePrintTypes toolPrintType);
-        virtual ~CMessage();
+        ~CMessage();
         void Msg(char *message);
         int WriteBuffer();
 

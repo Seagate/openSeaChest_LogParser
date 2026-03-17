@@ -1,7 +1,7 @@
 //
 // Do NOT modify or remove this copyright and license
 //
-// Copyright (c) 2012 - 2024 Seagate Technology LLC and/or its Affiliates, All Rights Reserved
+// Copyright (c) 2012 - 2026 Seagate Technology LLC and/or its Affiliates, All Rights Reserved
 //
 // This software is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,7 +16,8 @@
 
 
 #include <string>
-#include "common.h"
+#include "common_types.h"
+#include "time_utils.h"
 #include <iostream>
 #include "Opensea_Parser_Helper.h"
 
@@ -86,6 +87,7 @@ enum class eUtilExitCodes
 #define LOG_NAME_PRINT_STRING_POWER_CONDITION_LOG	            "powerConditionLog"
 #define LOG_NAME_PRINT_STRING_NCQ_COMMAND_ERROR_LOG	            "ncqErrorLog"
 #define LOG_NAME_PRINT_STRING_SCSI_LOG_PAGES		            "scsiLogPages"
+#define LOG_NAME_PRINT_STRING_SMART_DIR_LOG			            "smartDirLog"
 
 
 #define LOG_TYPE_STRING_FARM_LOG                                "FARMLOG"
@@ -116,6 +118,10 @@ enum class eUtilExitCodes
 #define LOG_TYPE_STRING_SAS_LOG_PAGES							"SASLOGPAGES"
 #define LOG_TYPE_STRING_SAS										"SAS"
 #define LOG_TYPE_STRING_SCSI									"SCSI"
+#define LOG_TYPE_STRING_LOG_DIRECTORY							"LOGDIRECTORY"		
+#define LOG_TYPE_STRING_SMART_DIRECTORY							"SMARTDIRECTORY"
+#define LOG_TYPE_STRING_SMART_DIR								"SMARTDIR"
+#define LOG_TYPE_STRING_SMART_DIR_LOG							"SMARTDIRLOG"
 
 
 #define INPUT_LOG_TYPE_FLAG eLogTypes

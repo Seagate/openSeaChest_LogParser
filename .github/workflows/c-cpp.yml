@@ -1,22 +1,51 @@
+# SPDX-License-Identifier: MPL-2.0
 name: C/C++ CI
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true' # Set at the workflow level
+  
 on:
   push:
-    branches: [ develop, master, release/* ]
+    branches: [ develop, master, release/*, feature/*, hotfix/* ]
   pull_request:
     branches: [ develop ]
+    
+permissions:
+  contents: read
+  actions: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
 
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4.1.1
       with:
         submodules: recursive
+        
+    - name: Cache build
+      uses: actions/cache@v4
+      with:
+        path: Make/gcc/build
+        key: ${{ runner.os }}-build-${{ github.sha }}
+        restore-keys: |
+          ${{ runner.os }}-build-    
 
-    - name: make
+    - name: Build project
       run: |
+        set -e
         cd Make/gcc
         make farm && make clean_all && make release
+        
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4.3.1
+      with:
+        name: release-build
+        path: Make/gcc/release   
+        retention-days: 7
