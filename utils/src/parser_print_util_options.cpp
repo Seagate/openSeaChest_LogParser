@@ -1281,11 +1281,16 @@ void CPrintProm::setSerialNumber(JSONNODE *nData) {
     while (it_json != json_end(nData)) {
         if (json_type(*it_json) == JSON_STRING) {
             json_char *jsonName = json_name(*it_json);
-            if (std::string(jsonName) == "Serial Number") {
-                json_char *currentValue = json_as_string(*it_json);
-                serialNumber = std::string(currentValue);
-                break;
+            if (jsonName != M_NULLPTR)
+            {
+                if (std::string(jsonName) == "Serial Number") {
+                    json_char* currentValue = json_as_string(*it_json);
+                    serialNumber = std::string(currentValue);
+                    json_free(currentValue);
+                    break;
+                }
             }
+            json_free(jsonName);
             // Recursively run this method if the type is a node
         } else if (json_type(*it_json) == JSON_NODE) {
             JSONNODE_ITERATOR it_jsonNode = json_begin(*it_json);
