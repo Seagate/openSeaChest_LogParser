@@ -3,6 +3,7 @@ name: C/C++ CI
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true' # Set at the workflow level
+  CXXFLAGS: -std=c++17
   
 on:
   push:
