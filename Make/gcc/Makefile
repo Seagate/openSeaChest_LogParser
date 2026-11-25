@@ -17,7 +17,7 @@ MAJOR=0
 #Change the Minor version when new features are added. 
 MINOR=2
 #Change the patch version when only bug fixes are made.
-PATCH=4
+PATCH=5
 
 
 UTIL_SRC_DIR=../../utils/src
@@ -27,7 +27,7 @@ STRIP ?= strip
 TOOL_CHAIN=gcc
 LIB_FILE_OUTPUT_DIR=lib
 CXXFLAGS = -Wall -Wextra -Werror=old-style-cast -Wshadow -Wmaybe-uninitialized -Wvla -Wfloat-equal \
-    -Wlogical-op -Wdouble-promotion -Wformat-security -std=c++11
+    -Wlogical-op -Wdouble-promotion -Wformat-security -std=c++17
 CFLAGS ?= -Wall -Wextra
 ARCHIVE ?= ar
 ARCH=x86_$(shell getconf LONG_BIT)
