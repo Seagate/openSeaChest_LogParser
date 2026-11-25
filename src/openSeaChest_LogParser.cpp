@@ -22,7 +22,7 @@
 #include <unistd.h>
 #include <getopt.h>
 #elif defined (_WIN32)
-#include "getopt.h"
+#include "getopt_utils.h"
 #else
 #error "OS Not Defined or known"
 #endif
@@ -64,7 +64,7 @@ using namespace opensea_parser;
     std::string util_name = "openSeaChest_LogParser";
 #endif
 
-std::string buildVersion = "1.5.5";
+std::string buildVersion = "1.5.6";
 std::string buildDate = __DATE__;
 
 ////////////////////////////
@@ -111,7 +111,7 @@ int32_t main(int argc, char *argv[])
     OUTPUT_LOG_PRINT_VAR
 
     int args = 0;
-    uint8_t argIndex = 0;
+    int argIndex = 0;
     int32_t optionIndex = 0;
     constexpr size_t MAX_INPUT_DATA_SIZE = 99000; // Example bound
 
@@ -180,8 +180,6 @@ int32_t main(int argc, char *argv[])
                     lineInputData.reserve(MAX_INPUT_DATA_SIZE);  // Pre-allocate
                     while (std::cin >> lineinput)
                     {
-                        //lineInputData.push_back(static_cast<uint8_t>(std::strtoul(lineinput.c_str(), NULL, 16)));
-                        //std::cout << std::hex << std::setw(2) << std::setfill('0') << std::uppercase << static_cast<uint16_t>(lineInputData.at(lineInputData.size() - 1));
                         if (lineInputData.size() >= MAX_INPUT_DATA_SIZE) {
                             std::cerr << "Error: Input data exceeds maximum allowed size ("
                                 << MAX_INPUT_DATA_SIZE << " bytes)\n";
@@ -208,7 +206,6 @@ int32_t main(int argc, char *argv[])
                 else
                 {
                     INPUT_LOG_FILE_FLAG = true;
-                    //INPUT_LOG_FILE_NAME.resize(strlen(optarg));
                     INPUT_LOG_FILE_NAME.assign(optarg);
                     if (!os_File_Exists(optarg))
                     {
@@ -227,8 +224,8 @@ int32_t main(int argc, char *argv[])
             {
                 convert_String_To_Upper_Case(optarg);
 #if defined (INCLUDE_FARM_LOG)
-                if (strncmp(optarg, LOG_TYPE_STRING_FARM_LOG, strnlen(optarg, sizeof(LOG_TYPE_STRING_FARM_LOG))) == 0 || 
-                    strncmp(optarg, LOG_TYPE_STRING_FARM,strnlen(optarg,sizeof(LOG_TYPE_STRING_FARM))) == 0)
+                if (optarg != nullptr && (strcmp(optarg, LOG_TYPE_STRING_FARM_LOG) == 0 ||
+                    strcmp(optarg, LOG_TYPE_STRING_FARM) == 0))
                 {
                     INPUT_LOG_TYPE_FLAG = eLogTypes::LOG_TYPE_FARM;
                 }
@@ -320,7 +317,7 @@ int32_t main(int argc, char *argv[])
             else if (strcmp(longopts[optionIndex].name, OUTPUT_LOG_LONG_OPT_STRING) == 0)
             {
                 OUTPUT_LOG_FILE_FLAG = true;
-                //OUTPUT_LOG_FILE_NAME.resize(safe_strlen(optarg));
+                OUTPUT_LOG_FILE_NAME.resize(safe_strlen(optarg));
                 OUTPUT_LOG_FILE_NAME.assign(optarg);
 
             }
@@ -463,7 +460,6 @@ int32_t main(int argc, char *argv[])
 	}
     if (!OUTPUT_LOG_FILE_FLAG || !INPUT_LOG_FILE_FLAG)
     {
-       // std::string outputPrefix = INPUT_LOG_FILE_NAME.substr(0, INPUT_LOG_FILE_NAME.rfind('.'));
         size_t dotPos = INPUT_LOG_FILE_NAME.rfind('.');
         std::string outputPrefix = (dotPos != std::string::npos)
             ? INPUT_LOG_FILE_NAME.substr(0, dotPos)
@@ -489,12 +485,11 @@ int32_t main(int argc, char *argv[])
                 break;
             }
 
-        //OUTPUT_LOG_FILE_NAME.resize(sizeof(outputPrefix));
         OUTPUT_LOG_FILE_NAME.assign(outputPrefix);
     }
 #endif
     //print out errors for unknown arguments for remaining args that haven't been processed yet
-    for (argIndex = static_cast<uint8_t>(optind); argIndex < static_cast<uint8_t>( argc); argIndex++)
+    for (argIndex = static_cast<int>(optind); argIndex < static_cast<int>( argc); argIndex++)
     {
         if (eVerbosityLevels::VERBOSITY_QUIET < g_verbosity)
         {
@@ -513,32 +508,61 @@ int32_t main(int argc, char *argv[])
 		UtilityHeader(masterJson);
         switch (INPUT_LOG_TYPE_FLAG) 
         {
-        case eLogTypes::LOG_TYPE_FARM:
+            case eLogTypes::LOG_TYPE_FARM:
             {
-            CFARMLog* CFarm;
                 if (INPUT_LOG_FROM_PIPE_FLAG)
                 {
                     uint8_t* plineInputData;
-                    plineInputData = lineInputData.data();
-                    CFarm = new CFARMLog(plineInputData, lineInputData.size(), SHOW_STATUS_BIT_FLAG, SHOW_STATIC_DATA_FLAG);
-                    
+                    if (!lineInputData.empty())
+                    {
+                        plineInputData = lineInputData.data();
+                        auto cFarm = std::make_unique<CFARMLog>(plineInputData, lineInputData.size(), SHOW_STATUS_BIT_FLAG, SHOW_STATIC_DATA_FLAG);
+                        if (cFarm->get_FARM_Status() == eReturnValues::IN_PROGRESS) // if IN_PROGRESS we can continue to print out the data
+                        {
+                            try
+                            {
+                                retStatus = cFarm->parse_Device_Farm_Log(masterJson);
+                            }
+                            catch (...)
+                            {
+                                retStatus = eReturnValues::MEMORY_FAILURE;
+                            }
+                        }
+                        else
+                        {
+                            retStatus = cFarm->get_FARM_Status();
+                        }
+                    }
+                    else
+                    {
+                        std::cout << "No data was read from the pipe" << std::endl;
+                        return static_cast<int>(eUtilExitCodes::UTIL_EXIT_ERROR_IN_COMMAND_LINE);
+                    }
                 }
                 else
                 {
-                    CFarm = new CFARMLog(INPUT_LOG_FILE_NAME, SHOW_STATUS_BIT_FLAG, SHOW_STATIC_DATA_FLAG);
+                    auto cFarm = std::make_unique<CFARMLog>(INPUT_LOG_FILE_NAME, SHOW_STATUS_BIT_FLAG, SHOW_STATIC_DATA_FLAG);
+                    if (cFarm->get_FARM_Status() == eReturnValues::IN_PROGRESS) // if IN_PROGRESS we can continue to print out the data
+                    {
+                        try
+                        {
+                            retStatus = cFarm->parse_Device_Farm_Log(masterJson);
+                        }
+                        catch (...)
+                        {
+                            retStatus = eReturnValues::MEMORY_FAILURE;
+                        }
+                    }
+                    else
+                    {
+                        retStatus = cFarm->get_FARM_Status();
+                    }
                 }
-                retStatus = CFarm->get_FARM_Status();								// check to make sure we read in the file form the construtor.
-                if (retStatus == eReturnValues::IN_PROGRESS)										// if eReturnValues::IN_PROGRESS we can continue to parse, else retStatus holds the error information
-                {
-                    retStatus = CFarm->parse_Device_Farm_Log(masterJson);
-                }
-                delete(CFarm);
             }
             break;
-        case   eLogTypes::LOG_TYPE_DEVICE_STATISTICS_LOG:
+            case   eLogTypes::LOG_TYPE_DEVICE_STATISTICS_LOG:
             {
-                CAtaDeviceStatisticsLogs *cDevicStat;
-                cDevicStat = new CAtaDeviceStatisticsLogs(INPUT_LOG_FILE_NAME);
+                auto cDevicStat = std::make_unique <CAtaDeviceStatisticsLogs>(INPUT_LOG_FILE_NAME);
                 retStatus = cDevicStat->get_Device_Stat_Status();					// All checks and parseing are done in the construtor
                 if (retStatus == eReturnValues::SUCCESS)
                 {
@@ -551,13 +575,11 @@ int32_t main(int argc, char *argv[])
                         retStatus = eReturnValues::FAILURE;
                     }
                 }
-                delete(cDevicStat);
             }
             break;
-        case    eLogTypes::LOG_TYPE_EXT_COMPREHENSIVE_LOG:
+            case    eLogTypes::LOG_TYPE_EXT_COMPREHENSIVE_LOG:
             {
-                CExtComp *cEC;
-                cEC = new CExtComp(INPUT_LOG_FILE_NAME);
+                auto cEC = std::make_unique <CExtComp>(INPUT_LOG_FILE_NAME);
                 retStatus = cEC->get_EC_Status();									// All checks and parseing are done in the construtor
                 if (retStatus == eReturnValues::SUCCESS)
                 {
@@ -571,13 +593,11 @@ int32_t main(int argc, char *argv[])
                         retStatus = eReturnValues::FAILURE;
                     }
                 }
-                delete(cEC);
             }
             break;
         case    eLogTypes::LOG_TYPE_EXT_DST_LOG:
             {
-                CAta_Ext_DST_Log *cDST;
-                cDST = new CAta_Ext_DST_Log(INPUT_LOG_FILE_NAME, masterJson);
+                auto cDST = std::make_unique <CAta_Ext_DST_Log>( INPUT_LOG_FILE_NAME, masterJson);
                 retStatus = cDST->get_Status();			// if eReturnValues::eReturnValues::IN_PROGRESS we can continue to print out the data
                 if (retStatus == eReturnValues::SUCCESS)
                 {
@@ -590,13 +610,11 @@ int32_t main(int argc, char *argv[])
                         retStatus = eReturnValues::FAILURE;
                     }
                 }
-                delete(cDST);
             }
             break;
         case eLogTypes::LOG_TYPE_IDENTIFY_LOG:
             {
-                CAta_Identify_log * cIdent;
-                cIdent = new CAta_Identify_log(INPUT_LOG_FILE_NAME);			// constructor will make sure we read in the file and start the parseing of the binary
+                auto cIdent = std::make_unique <CAta_Identify_log>(INPUT_LOG_FILE_NAME);			// constructor will make sure we read in the file and start the parseing of the binary
 				retStatus = cIdent->get_Identify_Information_Status();			// if eReturnValues::eReturnValues::IN_PROGRESS we can continue to print out the data
 				if (retStatus == eReturnValues::IN_PROGRESS)
 				{
@@ -609,13 +627,11 @@ int32_t main(int argc, char *argv[])
                         retStatus = eReturnValues::FAILURE;
                     }
 				}
-                delete (cIdent);
             }
 			break;
         case eLogTypes::LOG_TYPE_IDENTIFY_DEVICE_DATA:
             {
-                CAta_Identify_Log_30 *cIdData = NULL;
-                cIdData = new CAta_Identify_Log_30( INPUT_LOG_FILE_NAME);		// constructor will make sure we read in the file and start the parseing of the binary
+                auto cIdData = std::make_unique < CAta_Identify_Log_30>( INPUT_LOG_FILE_NAME);		// constructor will make sure we read in the file and start the parseing of the binary
 				retStatus = cIdData->get_identify_Status();						// if eReturnValues::eReturnValues::IN_PROGRESS we can continue to print out the data
 				if (retStatus == eReturnValues::IN_PROGRESS)
 				{
@@ -628,13 +644,11 @@ int32_t main(int argc, char *argv[])
                         retStatus = eReturnValues::FAILURE;
                     }
 				}
-                delete (cIdData);
             }
             break;
         case eLogTypes::LOG_TYPE_SCT_TEMP_LOG:
             {
-                CSAtaDevicStatisticsTempLogs *cSCTTemp;
-                cSCTTemp = new CSAtaDevicStatisticsTempLogs(INPUT_LOG_FILE_NAME, masterJson);	// constructor will make sure we read in the file and start the parseing of the binary
+                auto cSCTTemp = std::make_unique <CSAtaDevicStatisticsTempLogs>(INPUT_LOG_FILE_NAME, masterJson);	// constructor will make sure we read in the file and start the parseing of the binary
 				retStatus = cSCTTemp->get_Status();										// if eReturnValues::IN_PROGRESS we can continue to print out the data
 				if (retStatus == eReturnValues::IN_PROGRESS)
 				{
@@ -647,13 +661,11 @@ int32_t main(int argc, char *argv[])
                         retStatus = eReturnValues::FAILURE;
                     }
 				}
-                delete (cSCTTemp);
             }
             break;
         case eLogTypes::LOG_TYPE_POWER_CONDITION_LOG:
             {
-                CAtaPowerConditionsLog * cPowerCon;
-                cPowerCon = new CAtaPowerConditionsLog(INPUT_LOG_FILE_NAME);			// constructor will make sure we read in the file and start the parseing of the binary
+                auto cPowerCon = std::make_unique <CAtaPowerConditionsLog>(INPUT_LOG_FILE_NAME);			// constructor will make sure we read in the file and start the parseing of the binary
 				retStatus = cPowerCon->get_Power_Status();								// if eReturnValues::IN_PROGRESS we can continue to print out the data
 				if (retStatus == eReturnValues::IN_PROGRESS)
 				{
@@ -666,13 +678,11 @@ int32_t main(int argc, char *argv[])
                         retStatus = eReturnValues::FAILURE;
                     }   
 				}
-				delete (cPowerCon);
             }
 			break;
         case eLogTypes::LOG_TYPE_NCQ_CMD_ERROR_LOG:
             {
-                CAta_NCQ_Command_Error_Log * cNCQ;
-                cNCQ = new CAta_NCQ_Command_Error_Log(INPUT_LOG_FILE_NAME);				// constructor will make sure we read in the file and start the parseing of the binary
+                auto cNCQ = std::make_unique <CAta_NCQ_Command_Error_Log>(INPUT_LOG_FILE_NAME);				// constructor will make sure we read in the file and start the parseing of the binary
 				retStatus = cNCQ->get_NCQ_Command_Error_Log_Status();					// if eReturnValues::IN_PROGRESS we can continue to print out the data
                 if (retStatus == eReturnValues::IN_PROGRESS)
                 {
@@ -685,13 +695,11 @@ int32_t main(int argc, char *argv[])
                         retStatus = eReturnValues::FAILURE;
                     }
 				}
-				delete (cNCQ);
             }
 			break;
 		case eLogTypes::LOG_TYPE_SCSI_LOG_PAGES:
 			{
-				CScsiLog * cLogPages;
-				cLogPages = new CScsiLog(INPUT_LOG_FILE_NAME);				// All checks and parseing are done in the construtor
+				auto cLogPages = std::make_unique <CScsiLog>(INPUT_LOG_FILE_NAME);
 				retStatus = cLogPages->get_Log_Status();
                 if (retStatus == eReturnValues::SUCCESS)
                 {
@@ -704,13 +712,11 @@ int32_t main(int argc, char *argv[])
                         retStatus = eReturnValues::FAILURE;
                     }
                 }						
-				delete (cLogPages);
 			}
 			break;
         case eLogTypes::LOG_TYPE_SMART_DIRECTORY:
             {
-                CAta_SMART_Log_Dir* cSmartDir;
-                cSmartDir = new CAta_SMART_Log_Dir(INPUT_LOG_FILE_NAME);				// constructor will make sure we read in the file and start the parseing of the binary
+                auto cSmartDir = std::make_unique <CAta_SMART_Log_Dir>(INPUT_LOG_FILE_NAME);				// constructor will make sure we read in the file and start the parseing of the binary
                 retStatus = cSmartDir->get_SMART_Log_Dir_Status();
                 if (retStatus == eReturnValues::SUCCESS)
                 {
@@ -723,7 +729,6 @@ int32_t main(int argc, char *argv[])
                         retStatus = eReturnValues::FAILURE;
                     }
                 }
-                delete (cSmartDir);
             }
             break;
         default:
@@ -852,8 +857,7 @@ int32_t main(int argc, char *argv[])
         }
         else //print it to stdout. 
         {
-			std::string myFile = INPUT_LOG_FILE_NAME;				// myFile for the auto creation of the output file
-			//myFile = myFile.substr(0, myFile.rfind("."));           
+			std::string myFile = INPUT_LOG_FILE_NAME;				// myFile for the auto creation of the output file          
             size_t dotPos = myFile.rfind('.');
             // remove the extension from the file
             if (dotPos != std::string::npos) {
@@ -871,7 +875,6 @@ int32_t main(int argc, char *argv[])
                 myFile.append(".txt");
                 printMessage = new CMessage(masterJson, myFile, OUTPUT_LOG_PRINT_FLAG); // Get text output
                 printMessage->parse_Json_to_Text(masterJson, 0);
-                //std::cout << printMessage->get_Msg_Text_Format().c_str();	// Print to the screen
             }
             else if (OUTPUT_LOG_PRINT_FLAG == ePrintTypes::LOG_PRINT_CSV)
             {
@@ -1029,7 +1032,7 @@ inline void Echo_Command_Line(int argc, char *argv[])
 
     for (int commandLineIter = 1; commandLineIter < static_cast<int>(argc); commandLineIter++)
     {
-        if (strncmp(argv[commandLineIter], "--echoCommandLine", strlen(argv[commandLineIter])) == 0)
+        if (strcmp(argv[commandLineIter], "--echoCommandLine") == 0)
         {
             continue;
         }

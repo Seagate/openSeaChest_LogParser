@@ -178,7 +178,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;BUILD_FARM_ONLY;INCLUDE_FARM_LOG</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\..\..\..\wingetopt\src;..\..\..\..\include;..\..\..\..\opensea-common\include;..\..\..\..\libjson;..\..\..\..\opensea-parser\include;..\..\..\..\opensea-parser\include\Seagate;..\..\..\..\utils\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\include;..\..\..\..\opensea-common\include;..\..\..\..\libjson;..\..\..\..\opensea-parser\include;..\..\..\..\opensea-parser\include\Seagate;..\..\..\..\utils\include</AdditionalIncludeDirectories>
       <DebugInformationFormat>OldStyle</DebugInformationFormat>
       <IntrinsicFunctions />
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -188,8 +188,8 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\..\..\..\wingetopt\VS.2022\$(Platform)\$(Configuration);..\..\..\..\opensea-common\Make\VS.2022\opensea-common\$(Platform)\$(Configuration);..\..\..\..\opensea-parser\Make\VS.2022\opensea-parser\$(Platform)\$(Configuration)\LIB\;..\..\..\..\libjson\VS.2022\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opensea-common.lib;opensea-parser.lib;getopt.lib;statLibJson.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\..\..\opensea-common\Make\VS.2022\opensea-common\$(Platform)\$(Configuration);..\..\..\..\opensea-parser\Make\VS.2022\opensea-parser\$(Platform)\$(Configuration)\LIB\;..\..\..\..\libjson\VS.2022\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opensea-common.lib;opensea-parser.lib;statLibJson.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static-Debug|x64'">
@@ -201,20 +201,20 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;BUILD_FARM_ONLY;INCLUDE_FARM_LOG</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\..\..\..\wingetopt\src;..\..\..\..\include;..\..\..\..\opensea-common\include;..\..\..\..\libjson;..\..\..\..\opensea-parser\include;..\..\..\..\opensea-parser\include\Seagate;..\..\..\..\utils\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\include;..\..\..\..\opensea-common\include;..\..\..\..\libjson;..\..\..\..\opensea-parser\include;..\..\..\..\opensea-parser\include\Seagate;..\..\..\..\utils\include</AdditionalIncludeDirectories>
       <DebugInformationFormat>
       </DebugInformationFormat>
       <IntrinsicFunctions>
       </IntrinsicFunctions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-	  <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\..\..\..\wingetopt\VS.2022\$(Platform)\$(Configuration);..\..\..\..\opensea-common\Make\VS.2022\opensea-common\$(Platform)\$(Configuration);..\..\..\..\opensea-parser\Make\VS.2022\opensea-parser\$(Platform)\$(Configuration)\LIB\;..\..\..\..\libjson\VS.2022\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opensea-common.lib;opensea-parser.lib;getopt.lib;statLibJson.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\..\..\opensea-common\Make\VS.2022\opensea-common\$(Platform)\$(Configuration);..\..\..\..\opensea-parser\Make\VS.2022\opensea-parser\$(Platform)\$(Configuration)\LIB\;..\..\..\..\libjson\VS.2022\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opensea-common.lib;opensea-parser.lib;statLibJson.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -226,19 +226,19 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;BUILD_FARM_ONLY;INCLUDE_FARM_LOG</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\..\..\..\wingetopt\src;..\..\..\..\include;..\..\..\..\opensea-common\include;..\..\..\..\libjson;..\..\..\..\opensea-parser\include;..\..\..\..\opensea-parser\include\Seagate;..\..\..\..\utils\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\include;..\..\..\..\opensea-common\include;..\..\..\..\libjson;..\..\..\..\opensea-parser\include;..\..\..\..\opensea-parser\include\Seagate;..\..\..\..\utils\include</AdditionalIncludeDirectories>
       <DebugInformationFormat />
       <IntrinsicFunctions />
       <OmitFramePointers />
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-	  <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\..\..\..\wingetopt\VS.2022\$(Platform)\$(Configuration);..\..\..\..\opensea-common\Make\VS.2022\opensea-common\$(Platform)\$(Configuration);..\..\..\..\opensea-parser\Make\VS.2022\opensea-parser\$(Platform)\$(Configuration)\LIB\;..\..\..\..\libjson\VS.2022\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opensea-common.lib;opensea-parser.lib;getopt.lib;statLibJson.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\..\..\opensea-common\Make\VS.2022\opensea-common\$(Platform)\$(Configuration);..\..\..\..\opensea-parser\Make\VS.2022\opensea-parser\$(Platform)\$(Configuration)\LIB\;..\..\..\..\libjson\VS.2022\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opensea-common.lib;opensea-parser.lib;statLibJson.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static-Debug|Win32'">
@@ -250,7 +250,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;BUILD_FARM_ONLY;INCLUDE_FARM_LOG</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\..\..\..\wingetopt\src;..\..\..\..\include;..\..\..\..\opensea-common\include;..\..\..\..\libjson;..\..\..\..\opensea-parser\include;..\..\..\..\opensea-parser\include\Seagate;..\..\..\..\utils\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\include;..\..\..\..\opensea-common\include;..\..\..\..\libjson;..\..\..\..\opensea-parser\include;..\..\..\..\opensea-parser\include\Seagate;..\..\..\..\utils\include</AdditionalIncludeDirectories>
       <DebugInformationFormat>
       </DebugInformationFormat>
       <IntrinsicFunctions>
@@ -258,14 +258,14 @@
       <OmitFramePointers>
       </OmitFramePointers>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-	  <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\..\..\..\wingetopt\VS.2022\$(Platform)\$(Configuration);..\..\..\..\opensea-common\Make\VS.2022\opensea-common\$(Platform)\$(Configuration);..\..\..\..\opensea-parser\Make\VS.2022\opensea-parser\$(Platform)\$(Configuration)\LIB\;..\..\..\..\libjson\VS.2022\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opensea-common.lib;opensea-parser.lib;getopt.lib;statLibJson.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\..\..\opensea-common\Make\VS.2022\opensea-common\$(Platform)\$(Configuration);..\..\..\..\opensea-parser\Make\VS.2022\opensea-parser\$(Platform)\$(Configuration)\LIB\;..\..\..\..\libjson\VS.2022\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opensea-common.lib;opensea-parser.lib;statLibJson.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -280,11 +280,11 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;BUILD_FARM_ONLY;INCLUDE_FARM_LOG</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\..\..\..\wingetopt\src;..\..\..\..\include;..\..\..\..\opensea-common\include;..\..\..\..\libjson;..\..\..\..\opensea-parser\include;..\..\..\..\opensea-parser\include\Seagate;..\..\..\..\utils\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\include;..\..\..\..\opensea-common\include;..\..\..\..\libjson;..\..\..\..\opensea-parser\include;..\..\..\..\opensea-parser\include\Seagate;..\..\..\..\utils\include</AdditionalIncludeDirectories>
       <DebugInformationFormat />
       <OmitFramePointers />
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-	  <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
@@ -292,8 +292,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\..\..\..\wingetopt\VS.2022\$(Platform)\$(Configuration);..\..\..\..\opensea-common\Make\VS.2022\opensea-common\$(Platform)\$(Configuration);..\..\..\..\opensea-parser\Make\VS.2022\opensea-parser\$(Platform)\$(Configuration)\LIB\;..\..\..\..\libjson\VS.2022\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opensea-common.lib;opensea-parser.lib;getopt.lib;statLibJson.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\..\..\opensea-common\Make\VS.2022\opensea-common\$(Platform)\$(Configuration);..\..\..\..\opensea-parser\Make\VS.2022\opensea-parser\$(Platform)\$(Configuration)\LIB\;..\..\..\..\libjson\VS.2022\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opensea-common.lib;opensea-parser.lib;statLibJson.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -308,10 +308,10 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;BUILD_FARM_ONLY;INCLUDE_FARM_LOG</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\..\..\..\wingetopt\src;..\..\..\..\include;..\..\..\..\opensea-common\include;..\..\..\..\libjson;..\..\..\..\opensea-parser\include;..\..\..\..\opensea-parser\include\Seagate;..\..\..\..\utils\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\include;..\..\..\..\opensea-common\include;..\..\..\..\libjson;..\..\..\..\opensea-parser\include;..\..\..\..\opensea-parser\include\Seagate;..\..\..\..\utils\include</AdditionalIncludeDirectories>
       <DebugInformationFormat />
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-	  <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
@@ -319,40 +319,40 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\..\..\..\wingetopt\VS.2022\$(Platform)\$(Configuration);..\..\..\..\opensea-common\Make\VS.2022\opensea-common\$(Platform)\$(Configuration);..\..\..\..\opensea-parser\Make\VS.2022\opensea-parser\$(Platform)\$(Configuration)\LIB\;..\..\..\..\libjson\VS.2022\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opensea-common.lib;opensea-parser.lib;getopt.lib;statLibJson.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\..\..\opensea-common\Make\VS.2022\opensea-common\$(Platform)\$(Configuration);..\..\..\..\opensea-parser\Make\VS.2022\opensea-parser\$(Platform)\$(Configuration)\LIB\;..\..\..\..\libjson\VS.2022\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opensea-common.lib;opensea-parser.lib;statLibJson.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static-Release|Win32'">
     <Link>
-      <AdditionalLibraryDirectories>..\..\..\..\wingetopt\VS.2022\$(Platform)\$(Configuration);..\..\..\..\opensea-common\Make\VS.2022\opensea-common\$(Platform)\$(Configuration);..\..\..\..\opensea-parser\Make\VS.2022\opensea-parser\$(Platform)\$(Configuration)\LIB\;..\..\..\..\libjson\VS.2022\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opensea-common.lib;opensea-parser.lib;getopt.lib;statLibJson.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\..\..\opensea-common\Make\VS.2022\opensea-common\$(Platform)\$(Configuration);..\..\..\..\opensea-parser\Make\VS.2022\opensea-parser\$(Platform)\$(Configuration)\LIB\;..\..\..\..\libjson\VS.2022\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opensea-common.lib;opensea-parser.lib;statLibJson.lib</AdditionalDependencies>
     </Link>
     <ClCompile>
-      <AdditionalIncludeDirectories>..\..\..\..\wingetopt\src;..\..\..\..\include;..\..\..\..\opensea-common\include;..\..\..\..\libjson;..\..\..\..\opensea-parser\include;..\..\..\..\opensea-parser\include\Seagate;..\..\..\..\utils\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\include;..\..\..\..\opensea-common\include;..\..\..\..\libjson;..\..\..\..\opensea-parser\include;..\..\..\..\opensea-parser\include\Seagate;..\..\..\..\utils\include</AdditionalIncludeDirectories>
       <DebugInformationFormat />
       <Optimization />
       <IntrinsicFunctions />
       <OmitFramePointers />
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;BUILD_FARM_ONLY;INCLUDE_FARM_LOG</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-	  <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static-Release|x64'">
     <Link>
-      <AdditionalLibraryDirectories>..\..\..\..\wingetopt\VS.2022\$(Platform)\$(Configuration);..\..\..\..\opensea-common\Make\VS.2022\opensea-common\$(Platform)\$(Configuration);..\..\..\..\opensea-parser\Make\VS.2022\opensea-parser\$(Platform)\$(Configuration)\LIB\;..\..\..\..\libjson\VS.2022\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opensea-common.lib;opensea-parser.lib;getopt.lib;statLibJson.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\..\..\opensea-common\Make\VS.2022\opensea-common\$(Platform)\$(Configuration);..\..\..\..\opensea-parser\Make\VS.2022\opensea-parser\$(Platform)\$(Configuration)\LIB\;..\..\..\..\libjson\VS.2022\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opensea-common.lib;opensea-parser.lib;statLibJson.lib</AdditionalDependencies>
     </Link>
     <ClCompile>
-      <AdditionalIncludeDirectories>..\..\..\..\wingetopt\src;..\..\..\..\include;..\..\..\..\opensea-common\include;..\..\..\..\libjson;..\..\..\..\opensea-parser\include;..\..\..\..\opensea-parser\include\Seagate;..\..\..\..\utils\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\include;..\..\..\..\opensea-common\include;..\..\..\..\libjson;..\..\..\..\opensea-parser\include;..\..\..\..\opensea-parser\include\Seagate;..\..\..\..\utils\include</AdditionalIncludeDirectories>
       <DebugInformationFormat />
       <Optimization />
       <IntrinsicFunctions />
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;BUILD_FARM_ONLY;INCLUDE_FARM_LOG</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-	  <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
   </ItemDefinitionGroup>

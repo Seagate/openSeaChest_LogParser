@@ -1,9 +1,11 @@
-openSeaChest_LogParser.txt                             Revision: 01-Jan-2019
+openSeaChest_LogParser.txt                             Revision: 01-Jan-2027
 ===============================================================================
  openSeaChest_LogParser - Seagate drive utilities
- Copyright (c) 2014-2019 Seagate Technology LLC and/or its Affiliates, All Rights Reserved
- openSeaChest_LogParser Version: 0.1.1
- Build Date: Dec 07 2018
+ Copyright (c) 2018-2026 Seagate Technology LLC and/or its Affiliates
+ openSeaChest_LogParser Version: 1.5.6-2.4.7 X86_64
+ Build Date: Nov 13 2026
+ Today: Fri Nov 13 10:34:45 2026
+
 ===============================================================================
 Welcome to the openSeaChest open source project!
 
@@ -50,84 +52,136 @@ SMART Extended Comprehensive
 
 Usage
 =====
-        openSeaChest_LogParser {arguments} {options}
-
+         openSeaChest_LogParser{arguments} { options }
 Examples
 ========
-        openSeaChest_LogParser --inputLog <filename> --logType farmLog --printType json --outputFile <filename>
+        openSeaChest_LogParser --inputLog <filename> --logType FARM --printType json --outputLog <filename>
+Return Codes
+============
+        Generic/Common error codes
+        0 = No Error Found
+        1 = Error in command line options
+        2 = Invalid Device Handle or Missing Device Handle
+        3 = Operation Failure
+        4 = Operation not supported
+        5 = Operation Failed and was still in progress
+        6 = Operation Aborted
+        7 = Operation Failed for Bad Parameter in the log
+        8 = Operation had Memory Failures
+        9 = Operation Failed for Invaild Lengths in the log
+        10 = File Path Not Found
+        11 = Cannot Open File
+        12 = File Already Exists
+        13 = Not Valid for this parser
+        20 = Validation Failed
+        21 = Error in Header and Footer validation
+        22 = Parsing Failure
+        Anything else = unknown error
 
-Utility arguments
+Utility Arguments
+
 =================
+
         --inputLog [log file name]
                 Use this option to pass a log into the tool for parsing.
 
+                Use --inputLog <fromPipe> option to pass a farm log buffer into the tool for parsing.
+
         --logType [choose from list below]
-                {
-                farmLog, identify, IDDataLog, deviceStatisticsLog, extCompErrorLog,
-                sctTempLog, ncqErrorLog, powerConditionLog, extSelfTestLog, scsiLogPages
-                }
+                { farmLog, identify, identifyDeviceDataLog, deviceStatisticsLog, extCompErrorLog, smartDirLog
+				sctTempLog, ncqErrorLog, powerConditionLog, extSelfTestLog, dstLog, scsiLogPages }
 
-                Use this option to describe the type of log that is being
-                passed in.
+                Use this option to describe the type of log that is being passed in.
 
-                See below for listing of supported scsiLogPages.
+                 SCSI Log Pages List -
+                        Write Log Page, Read Log Page, Verify Log Page
+                        Application Client, Background Scan, Background Operation
+                        Cache Memory Statistics 19h 20h, Command Duration Limites Statistics 19h 21h, Environmental Reporting
+                        Error Counter, Environmental Limits, Environmental Reporting
+                        Factory Log, FARM Log 3Dh 03h, FARM Factory Log 3Dh 04h
+                        FARM Time Series Log 3Dh 10h - 1Fh, FARM Sticky Log 3Dh C0h - C7h
+                        Format Status, Informational Exceptions, Logical Block Provisioning
+                        Non-Medium Error, Pending Defects, Power Conditions
+                        Protocol Specific Port, Self-Test Results LogSolid State Media
+                        Start Stop Cycle Page, Supported Log Pages and Subpages, Supported Log Pages
+                        Temperature Log Page, Utilization, Zoned Device Statistics
 
-        --outputLog [file]
-                To set a name of the output file being generated. This option
-                will overwrite the file if it exists.
+        --showStatusBits
+                Command Line Option for the FARM Log ONLY
+                Use this option to set the parser to gather the status bytes for each field.
+                For each field the Supported byte will show TRUE or FALSE
+                For each field the Valid byte will show TRUE or FALSE
+                Device Information will not show status bytes.
+
+        --showAllHeadData
+                Command Line Option for the FARM Log ONLY
+                Use this option to set the Max Head number to 20 heads.
+                All Head Data will then show all 20 heads for each attribute.
+                If the Head is not supported and not valid a NULL will be place in the value.
+
+        --showStatic
+                Command Line Option for the FARM Log ONLY
+                Use this option to set will show all data of the FARM Log
+                This will remove all dynamic building and version controll for the data.
+                No JSON array data will be used and Head numbers will be printed out.
+
+        --outputLog [log file name]
+                To set a name of the output file being generated. This option will overwrite
+                file if it exists.
+                If no --outputLog given then data will be printed to the screen.
 
         --printType [choose from list below]
-                {csv, flatcsv, json, text}
-
+                {json, text, csv, flatcsv, prom}
                 Use this option to set the output format.
 
-                json      - prints the data in a printable json format
-                cvs       - the data flows downwards
-                flatcvs   - the data is set to flow to two rows only
+                json - prints the data in a printable json format
+                text - prints the data in a printable and human readable format
+                csv  - The data flows downwards
+                flatcsv - The data is set to flow in two rows only
+                prom - Prints the data in a format readable by Prometheus.
+
+                        If no output log is specified (with --outputLog), data is printed
+                        out to standard output and a file is automatically created.
+                        The output file will have the same name as the input file
+                        with the extension ".prom" which can be opened in any text editor.
+
+                        If an output log is specified (with --outputLog), data is printed
+                        directly to the specified file.
+
+                        [USAGE EXAMPLES]
+                        openSeaChest_LogParser --inputLog <fileName>.bin --logType farmLog --printType prom
+                                Takes in a FARM log, <fileName>.bin, prints the data in Prometheus' format
+                                to standard output, and saves the output in the current directory as <fileName>.prom.
+
+                        openSeaChest_LogParser --inputLog <inputFile>.bin --logType farmLog --printType prom --outputLog <outputFile>.prom
+                                Takes in a FARM log, <inputFile>.bin, and saves the output in the current directory
+                                <outputFile>.prom without printing to standard output.
+
 
 Utility Options
+
 ===============
+
+        --echoCommandLine
+                Shows the command line above the banner in the statndard ouput.
+                Useful when saving output to logs
+
         -h, --help
                 Show utility options and example usage (this output you see now)
-
-        -v [0-4], --verbose [0 | 1 | 2 | 3 | 4]
-                Show verbose information. Verbosity levels are
-                0 - quiet
-                1 - default
-                2 - command descriptions
-                3 - command descriptions and values
-                4 - command descriptions, values, and data buffers.
-
-                Example: -v 3 or --verbose 3
-
-        -V, --version
-                Show SeaChest version and copyright information & exit
 
         --license
                 Display the Seagate End User License Agreement (EULA).
 
-        --echoCommandLine
-                Shows the command line above the banner in the standard output.
-                Useful when saving output to logs.
+        -v [0-4], --verbose [0 | 1 | 2 | 3 | 4]
+                Show verbose information. Verbosity levels are:
+                0 - quiet
+                1 - default
+                2 - command descriptions
+                3 - command descriptions and values
+                Example: -v 3 or --verbose 3
 
-
-Return codes
-============
-        0       No Error Found
-        1       Error in command line options
-        2       Invalid Device Handle or Missing Device Handle
-        3       Operation Failure
-        4       Operation not supported
-        5       Operation Failed and was still in progress
-        6       Operation Aborted
-        7       Operation Failed for Bad Parameter in the log
-        8       Operation had Memory Failures
-        9       Operation Failed for Invalid Lengths in the log
-        10      File Path Not Found
-        11      Cannot Open File
-        12      File Already Exists
-        13      Not Valid for this parser
-        Anything else = unknown error
+        -V, --version
+                Show openSeaChest_LogParser version and copyright information & exit
 
 ================
 Tool Usage Hints

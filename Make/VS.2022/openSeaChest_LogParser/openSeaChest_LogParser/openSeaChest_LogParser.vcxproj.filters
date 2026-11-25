@@ -27,6 +27,12 @@
     <ClCompile Include="..\..\..\..\utils\src\parser_print_util_options.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="opensea-parser\src\Seagate\Farm_Common.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="opensea-parser\src\Seagate\CAta_Farm_Log.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\utils\include\EULA.h">
@@ -36,6 +42,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\utils\include\parser_print_util_options.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opensea-parser\include\Seagate\Farm_Common.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opensea-parser\include\Seagate\CAta_Farm_Log.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
