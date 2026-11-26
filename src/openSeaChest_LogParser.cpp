@@ -31,6 +31,7 @@
 #include <cstdlib>
 #include <iomanip>
 #include <fstream>
+#include <memory>
 
 #include "common_types.h"
 #include "string_utils.h"
